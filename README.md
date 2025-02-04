@@ -74,10 +74,13 @@
 ### Desenvolvedores do Projeto
 
 <div align="left" >
-
+<div>
 <a href="https://github.com/Abivisu2" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/106842046?v=4" alt="Abilio">
 </a>
+
+  ###Abilio
+</div>
 
 <a href="https://github.com/JoabeSCosta" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/165953439?v=4" alt="Joabe">
