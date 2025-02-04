@@ -1,4 +1,4 @@
-# SaleSight
+# Tema
 
 ##### Plataforma para ser aplicada em empresas que necessitam de uma melhor visualização e manipulação de suas vendas, produtos e funcionários(Vizualição de comissão por produto, metas de funcionários e funcionalidades para adicionar novos produtos e novos funcionários)
 
@@ -36,55 +36,31 @@
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" height="40" alt="github logo"  />
 </div>
 
-<p>
-	
-create table produtos(
-
-	idp serial primary key,
-	marca varchar(30),
-	modelo varchar(30),
-	ano_fabri integer,
-	ano_modelo integer,
-	combustivel varchar(30),
-	versao varchar(50),
-	km varchar(30),
-	cor varchar(30),
-	cambio varchar(30),
-	preco varchar(30),
-	localizacao varchar(60),
-	descri varchar(300),
-	image varchar(300)
-);
-select * from produtos;
-DataBase SaleSigth
-	
-</p>
-
 
 ## Requisitos Funcionais:
 
   <ul>
-    <li><strong>[RF001]</strong> Verificar o desempenho de funcionários</li>
-    <li><strong>[RF002]</strong> Verificar o produto mais requisitado</li>
-    <li><strong>[RF003]</strong> Cadastrar funcionários e produtos</li>
-    <li><strong>[RF004]</strong> Inserir os dados de vendas dos funcionários no banco de dados</li>
-    <li><strong>[RF005]</strong> Disponibilizar uma dashboard visual em tempo real para acompanhar as metas de vendas</li>
-    <li><strong>[RF006]</strong> Mostrar dados dos funcionários atualizados imediatamente</li>
-    <li><strong>[RF007]</strong> Gerar gráficos e tabelas dos dados de funcionários</li>
-    <li><strong>[RF008]</strong> Definir níveis de acesso para administrador e funcionários</li>
-    <li><strong>[RF009]</strong> Gerar relatórios customizáveis com filtros por período, vendedor, e tipo de veículo</li>
-    <li><strong>[RF010]</strong> Realizar análise comparativa entre diferentes períodos de tempo</li>
-    <li><strong>[RF011]</strong> Exibir histórico de vendas e desempenho dos vendedores</li>
+    <li><strong>[RF001]</strong> r1</li>
+    <li><strong>[RF002]</strong> r</li>
+    <li><strong>[RF003]</strong> r</li>
+    <li><strong>[RF004]</strong> r</li>
+    <li><strong>[RF005]</strong> r</li>
+    <li><strong>[RF006]</strong> r</li>
+    <li><strong>[RF007]</strong> r</li>
+    <li><strong>[RF008]</strong> r</li>
+    <li><strong>[RF009]</strong> r</li>
+    <li><strong>[RF010]</strong> r</li>
+    <li><strong>[RF011]</strong> r</li>
   </ul>
   
 ## Requisitos Não Funcionais:
 
 <ul>
-    <li><strong>[RNF001]</strong> A ferramenta deve suportar até 1000 usuários simultâneos</li>
-    <li><strong>[RNF002]</strong> O tempo de carregamento das páginas deve ser inferior a 3 segundos</li>
-    <li><strong>[RNF003]</strong> Garantir disponibilidade de 99,9% do sistema</li>
-    <li><strong>[RNF004]</strong> As transações de inserção de dados devem ser registradas</li>
-    <li><strong>[RNF005]</strong> Meta de comissão deve ser um número divisível por 4 (progress bar)</li>
+    <li><strong>[RNF001]</strong> r</li>
+    <li><strong>[RNF002]</strong> r</li>
+    <li><strong>[RNF003]</strong> r</li>
+    <li><strong>[RNF004]</strong> r</li>
+    <li><strong>[RNF005]</strong> r</li>
   
 </ul>
 
