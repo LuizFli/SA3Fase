@@ -78,18 +78,18 @@
 <a href="https://github.com/Abivisu2" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/106842046?v=4" alt="Abilio">
 </a>
- [Abivisu2] (https://github.com/Abivisu2)
+ 
 <a href="https://github.com/JoabeSCosta" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/165953439?v=4" alt="Joabe">
 </a>
- [JoabeSCosta] (https://github.com/JoabeSCosta)
+
 <a href="https://github.com/LuizFli" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/166057870?v=4" alt="Luiz">
 </a>
- [LuizFli] (https://github.com/LuizFli)
+ 
 <a href="https://github.com/GigioRazzante" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/166645555?v=4" alt="Giovani">
 </a>
- [GigioRazzante] (https://github.com/GigioRazzante)
+ 
   
 </div>
