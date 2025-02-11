@@ -78,16 +78,16 @@
 <a href="https://github.com/Abivisu2" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/106842046?v=4" alt="Abilio">
 </a>
-<p align="left"></p>
+
  
 <a href="https://github.com/JoabeSCosta" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/165953439?v=4" alt="Joabe">
 </a>
-<p align="left"></p>
+
 <a href="https://github.com/LuizFli" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/166057870?v=4" alt="Luiz">
 </a>
-<p align="left"></p>
+
 <a href="https://github.com/GigioRazzante" target="_blank">
     <img width="115" src="https://avatars.githubusercontent.com/u/166645555?v=4" alt="Giovani">
 </a>
