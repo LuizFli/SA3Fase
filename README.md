@@ -2,9 +2,9 @@
 
 ##### Em um mercado automotivo altamente competitivo, a eficiência na gestão de vendas, estoque e atendimento ao cliente é essencial para o sucesso de uma concessionária. A SaleSight é uma plataforma inovadora desenvolvida para otimizar a administração de concessionárias, proporcionando maior controle sobre veículos, clientes e processos internos.
 
-Com uma interface intuitiva e funcionalidades avançadas, o sistema permite a gestão completa do estoque de automóveis, acompanhamento de vendas, controle financeiro e gerenciamento de equipes, garantindo maior produtividade e uma experiência aprimorada para clientes e colaboradores. Além disso, oferece integração com sistemas de financiamento, fornecedores e análise de desempenho, auxiliando na tomada de decisões estratégicas.
+##### Com uma interface intuitiva e funcionalidades avançadas, o sistema permite a gestão completa do estoque de automóveis, acompanhamento de vendas, controle financeiro e gerenciamento de equipes, garantindo maior produtividade e uma experiência aprimorada para clientes e colaboradores. Além disso, oferece integração com sistemas de financiamento, fornecedores e análise de desempenho, auxiliando na tomada de decisões estratégicas.
 
-Nosso objetivo é transformar a operação da concessionária em um processo ágil, organizado e eficiente, impulsionando o crescimento e a satisfação dos clientes..
+##### Nosso objetivo é transformar a operação da concessionária em um processo ágil, organizado e eficiente, impulsionando o crescimento e a satisfação dos clientes..
 
 <p align="center"><img src="http://img.shields.io/static/v1?label=STATUS&message=EM%20DESENVOLVIMENTO&color=GREEN&style=for-the-badge"/></p>
 
