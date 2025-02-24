@@ -44,17 +44,17 @@
 ## Requisitos Funcionais:
 
   <ul>
-    <li><strong>[RF001]</strong> Cadastrar novos veículos (marca, modelo, ano, cor, preço, quilometragem, etc.).</li>
-    <li><strong>[RF002]</strong> Atualizar informações dos veículos disponíveis.</li>
-    <li><strong>[RF003]</strong> Histórico de compras e interações com a concessionária.</li>
-    <li><strong>[RF004]</strong> Controle de contas a pagar e a receber.</li>
-    <li><strong>[RF005]</strong> Cadastro e gerenciamento de vendedores e outros colaboradores.</li>
-    <li><strong>[RF006]</strong> Controle de comissões e metas de vendas.</li>
-    <li><strong>[RF007]</strong> Painel com indicadores de vendas, estoque e desempenho.</li>
-    <li><strong>[RF008]</strong> Definir níveis de acesso para administrador e funcionários</li>
-    <li><strong>[RF009]</strong> Gerar relatórios customizáveis com filtros por período, vendedor, e tipo de veículo</li>
-    <li><strong>[RF010]</strong> Realizar análise comparativa entre diferentes períodos de tempo</li>
-    <li><strong>[RF011]</strong> Exibir histórico de vendas e desempenho dos vendedores</li>
+    <li><strong>[RF001]</strong> Cadastrar novos veículos (marca, modelo, ano, cor, preço, quilometragem, etc.).</li> [Giovani]
+    <li><strong>[RF002]</strong> Atualizar informações dos veículos disponíveis.</li> [Giovani]
+    <li><strong>[RF003]</strong> Histórico de compras e interações com a concessionária.</li> [Abilio]
+    <li><strong>[RF004]</strong> Controle de contas a pagar e a receber.</li> [Joabe]
+    <li><strong>[RF005]</strong> Cadastro e gerenciamento de vendedores e outros colaboradores.</li> [Joabe]
+    <li><strong>[RF006]</strong> Controle de comissões e metas de vendas.</li> [Joabe]
+    <li><strong>[RF007]</strong> Painel com indicadores de vendas, estoque e desempenho.</li> [Abilio]
+    <li><strong>[RF008]</strong> Definir níveis de acesso para administrador e funcionários</li> [Luiz Felipe]
+    <li><strong>[RF009]</strong> Gerar relatórios customizáveis com filtros por período, vendedor, e tipo de veículo</li> [Abilio]
+    <li><strong>[RF010]</strong> Realizar análise comparativa entre diferentes períodos de tempo</li> [Luiz Felipe]
+    <li><strong>[RF011]</strong> Exibir histórico de vendas e desempenho dos vendedores</li> [Luiz Felipe]
   </ul>
   
 ## Requisitos Não Funcionais:
@@ -70,9 +70,8 @@
 
 ## Protótipo de páginas
 
-##### Realizado no Figma:
-
- [Figma-Templates](https://www.figma.com/design/D3nMK9UnZpaAejK6rxgtfW/Login_Sign-up-Templates-(Desktop)-(Community)?node-id=0-1&t=vSZAtuAhFl2IExx9-1)
+   <img src="https://i.imgur.com/grkY8Am.png" alt="Cadastro">
+   <img src="https://i.imgur.com/iE7ZEu6.png" alt="Login">
   
   
 ### Desenvolvedores do Projeto
