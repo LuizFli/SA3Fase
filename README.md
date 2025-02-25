@@ -46,15 +46,12 @@
   <ul>
     <li><strong>[RF001]</strong> Cadastrar novos veículos (marca, modelo, ano, cor, preço, quilometragem, etc.).</li> [Giovani]
     <li><strong>[RF002]</strong> Atualizar informações dos veículos disponíveis.</li> [Giovani]
-    <li><strong>[RF003]</strong> Histórico de compras e interações com a concessionária.</li> [Abilio]
-    <li><strong>[RF004]</strong> Controle de contas a pagar e a receber.</li> [Joabe]
-    <li><strong>[RF005]</strong> Cadastro e gerenciamento de vendedores e outros colaboradores.</li> [Joabe]
-    <li><strong>[RF006]</strong> Controle de comissões e metas de vendas.</li> [Joabe]
-    <li><strong>[RF007]</strong> Painel com indicadores de vendas, estoque e desempenho.</li> [Abilio]
-    <li><strong>[RF008]</strong> Definir níveis de acesso para administrador e funcionários</li> [Luiz Felipe]
-    <li><strong>[RF009]</strong> Gerar relatórios customizáveis com filtros por período, vendedor, e tipo de veículo</li> [Abilio]
-    <li><strong>[RF010]</strong> Realizar análise comparativa entre diferentes períodos de tempo</li> [Luiz Felipe]
-    <li><strong>[RF011]</strong> Exibir histórico de vendas e desempenho dos vendedores</li> [Luiz Felipe]
+    <li><strong>[RF003]</strong> Histórico de vendas da organização (lucros e comissão,etc...).</li> [Abilio]
+    <li><strong>[RF004]</strong> Histórico de vendas do funcionário.</li> [Abilio]
+    <li><strong>[RF005]</strong> Cadastro e gerenciamento de funcionários da organização.</li> [Joabe]
+    <li><strong>[RF006]</strong> Painel com indicadores do estoque.</li> [Abilio]
+    <li><strong>[RF007]</strong> Definir níveis de acesso para administrador e funcionários</li> [Luiz Felipe]
+    <li><strong>[RF008]</strong> Gerar relatórios com filtros por período, vendedor. </li> [Abilio]
   </ul>
   
 ## Requisitos Não Funcionais:
@@ -65,6 +62,7 @@
     <li><strong>[RNF003]</strong> O tempo de resposta da interface não deve exceder 2 segundos.</li>
     <li><strong>[RNF004]</strong> Possuir um design acessível para usuários com diferentes níveis de experiência.</li>
     <li><strong>[RNF005]</strong> Diferentes níveis de acesso (administrador, vendedor).</li>
+    <li><strong>[RNF005]</strong> Criar uma interface intuitiva</li>
   
 </ul>
 
