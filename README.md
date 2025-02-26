@@ -44,14 +44,16 @@
 ## Requisitos Funcionais:
 
   <ul>
-    <li><strong>[RF001]</strong> Cadastrar novos veículos (marca, modelo, ano, cor, preço, quilometragem, etc.).</li> [Giovani]
-    <li><strong>[RF002]</strong> Atualizar informações dos veículos disponíveis.</li> [Giovani]
-    <li><strong>[RF003]</strong> Histórico de vendas da organização (lucros e comissão,etc...).</li> [Abilio]
-    <li><strong>[RF004]</strong> Histórico de vendas do funcionário.</li> [Abilio]
-    <li><strong>[RF005]</strong> Cadastro e gerenciamento de funcionários da organização.</li> [Joabe]
-    <li><strong>[RF006]</strong> Painel com indicadores do estoque.</li> [Abilio]
-    <li><strong>[RF007]</strong> Definir níveis de acesso para administrador e funcionários</li> [Luiz Felipe]
-    <li><strong>[RF008]</strong> Gerar relatórios com filtros por período, vendedor. </li> [Abilio]
+    <li><strong>[RF001]</strong> Definir níveis de acesso para administrador e funcionários</li> [Abílio]
+    <li><strong>[RF002]</strong> Cadastro e gerenciamento de funcionários da organização.</li> [Abílio]
+    <li><strong>[RF002]</strong> Cadastro de vendas(informações da venda, produto e comprador).</li> [Joabe]
+    <li><strong>[RF002]</strong> Cadastrar bancos de compradores.</li> [Joabe]
+    <li><strong>[RF003]</strong> Cadastrar produtos novos.</li> [Giovani]
+    <li><strong>[RF004]</strong> Atualizar informações dos produtos disponíveis.</li> [Giovani]
+    <li><strong>[RF005]</strong> Painel com indicadores do estoque.</li> [Giovani]
+    <li><strong>[RF006]</strong> Histórico de vendas da organização (lucros e comissão,etc...).</li> [Luiz Felipe]
+    <li><strong>[RF007]</strong> Histórico de vendas do funcionário.</li> [Luiz Felipe]
+    <li><strong>[RF008]</strong> Gerar relatórios com filtros por período, vendedor. </li> [Luiz Felipe]
   </ul>
   
 ## Requisitos Não Funcionais:
@@ -62,7 +64,7 @@
     <li><strong>[RNF003]</strong> O tempo de resposta da interface não deve exceder 2 segundos.</li>
     <li><strong>[RNF004]</strong> Possuir um design acessível para usuários com diferentes níveis de experiência.</li>
     <li><strong>[RNF005]</strong> Diferentes níveis de acesso (administrador, vendedor).</li>
-    <li><strong>[RNF005]</strong> Criar uma interface intuitiva</li>
+    <li><strong>[RNF006]</strong> Criar uma interface intuitiva</li>
   
 </ul>
 
