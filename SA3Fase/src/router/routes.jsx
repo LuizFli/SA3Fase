@@ -16,21 +16,11 @@ const router = createBrowserRouter([
     { path: "/cadastroFun", element: <CadastroFuncionario /> },
     { path: "/gerenciaFun", element: <GerenciaFuncionario /> },
     { path: "/gerenciaAcesso", element: <GerenciaAcesso /> },
-
-    // {path: "/gerenFunc", element: <AlterarCad />},
-    // {path: "/cadastroFunc", element: <CadastroFunc />},
-    // {path: "/config", element: <Config />},
-    // {path: "/login", element: <Login />},
-    // { path: "/produtos", element: <Produtos /> },
     { path: "/estoque", element: <EstoqueProdutos /> },
-    // {path: "/desempenho", element: <Desempenho />},
     { path: "/cadProduto", element: <CadastroProduto /> },
     { path: "/historicoVenda", element: <HistoricoVendas /> },
     { path: "/relatorio", element: <Relatorio /> },
-    // {path: "/historico", element: <Historico/>},
-    // {path: "/editarProduto", element: <EditarProduto/>},
-    // {path: "/alterarFunc", element: <AlterarFunc/>}
-
+    
 ])
 
 export default router;

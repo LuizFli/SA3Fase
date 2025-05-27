@@ -65,7 +65,7 @@ function BarraNavegacao() {
                 </Box>
                 <Box sx={{ width: '88%', border: '1px solid black', borderRadius: '5px', gap: '15%' }}>
 
-                    <Link to="/maisVendidos" className='link'>
+                    <Link to="/estoque" className='link'>
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '4%', marginLeft: '2%' }}>
                             <Stack className="iconesidebar">
                                 <img src="./imagens/directions_car.png" />
