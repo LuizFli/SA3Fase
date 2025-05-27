@@ -27,7 +27,7 @@ function BarraNavegacao() {
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '4%', marginLeft: '2%' }} >
 
                             <Stack className="iconesidebar">
-                                <img src="./imagens/Group 2.png" />
+                                <img src="./public/imagens/Group 2.png" />
                             </Stack>
 
                             <Stack>
@@ -42,7 +42,7 @@ function BarraNavegacao() {
                     <Link to="/desempenho" className='link'>
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '4%', marginLeft: '2%' }}>
                             <Stack className="iconesidebar">
-                                <img src="./imagens/TrendUp.png" />
+                                <img src="./public/imagens/TrendUp.png" />
                             </Stack>
                             <Stack>
                                 <Typography className="textsidebar" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Funcionarios</Typography>
@@ -55,7 +55,7 @@ function BarraNavegacao() {
                     <Link to="/produtos" className='link' >
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '4%', marginLeft: '2%' }}>
                             <Stack className="iconesidebar">
-                                <img src="./imagens/CirclesFour.png" />
+                                <img src="./public/imagens/CirclesFour.png" />
                             </Stack>
                             <Stack>
                                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000', textDecoration: 'none' }}>Produtos</Typography>
@@ -68,7 +68,7 @@ function BarraNavegacao() {
                     <Link to="/estoque" className='link'>
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '4%', marginLeft: '2%' }}>
                             <Stack className="iconesidebar">
-                                <img src="./imagens/directions_car.png" />
+                                <img src="./public/imagens/directions_car.png" />
                             </Stack>
                             <Stack>
                                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Estoque</Typography>
@@ -81,8 +81,8 @@ function BarraNavegacao() {
 
                     <Link to="/config" className='link'>
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '4%', marginLeft: '2%' }}>
-                            <Box className="iconesidebar">
-                                <img src="./imagens/Settings.png" />
+                            <Box className="iconesidebar" >
+                                <img src="./public/imagens/Settings.png" alt=""/>
                             </Box>
                             <Stack>
                                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Configurações</Typography>
@@ -95,7 +95,7 @@ function BarraNavegacao() {
                     <Link to="/login" className='link'>
                         <Box sx={{ display: 'flex', flexDirection: 'row', gap: '4%', marginLeft: '2%' }}>
                             <Stack className="iconesidebar">
-                                <img src="./imagens/Log out.png" />
+                                <img src="./public/imagens/Log out.png" />
                             </Stack>
                             <Stack>
                                 <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Sair</Typography>

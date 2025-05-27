@@ -7,7 +7,7 @@ import FragmentoHistorico from '../components/FragmentoHistorico';
 function HistoricoVendas() {
   return (
     <div>
-      <Box component="section" sx={{ p: 0, m: 0, border: '1px solid grey', width: 'auto-complete', height: '96vh', display: 'flex', alignItems: 'top', justifyContent: 'center', flexDirection: 'row' }}>
+      <Box component="section" sx={{ p: 0, m: 0, border: '1px solid grey', width: 'auto-complete', height: '96vh', display: 'flex', alignItems: 'top', justifyContent: 'center', flexDirection: 'row', backgroundColor:'#EBDFD7' }}>
             <Box sx={{width:'12%', height:'100%'}}>
                 <BarraNavegacao />
             </Box>
