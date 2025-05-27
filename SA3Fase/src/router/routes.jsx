@@ -8,6 +8,7 @@ import Relatorio from "../pages/Relatorio";
 import CadastroFuncionario from "../pages/CadastroFuncionario";
 import GerenciaFuncionario from "../pages/GerenciaFuncionario";
 import GerenciaAcesso from "../pages/GerenciaAcesso";
+import TesteGraficos from "../pages/TesteGraficos";
 
 
 const router = createBrowserRouter([
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     { path: "/cadProduto", element: <CadastroProduto /> },
     { path: "/historicoVenda", element: <HistoricoVendas /> },
     { path: "/relatorio", element: <Relatorio /> },
+    { path: "/graficos", element: <TesteGraficos /> },
     
 ])
 
