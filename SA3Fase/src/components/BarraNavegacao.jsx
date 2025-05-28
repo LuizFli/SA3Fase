@@ -8,7 +8,7 @@ function BarraNavegacao() {
         <Box sx={{ width: '100%', height: '100%', backgroundColor: '#070605', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
 
             <Box sx={{display:'flex',flexDirection:'column' ,height:'20%', width:'100%', alignItems:'center'}}>
-
+ 
                 <Box>
                     <Stack className="icon-navbar">
                         <img src="./public/imagens/icon2.png" alt="" />
