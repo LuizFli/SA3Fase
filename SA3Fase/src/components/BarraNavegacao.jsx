@@ -5,7 +5,7 @@ import './BarraNavegacao.css'
 
 function BarraNavegacao() {
     return (
-        <Box sx={{ width: '100%', height: '100%', backgroundColor: 'grey', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <Box sx={{ width: '100%', height: '100%', backgroundColor: '#070605', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
 
             <Box sx={{display:'flex',flexDirection:'column' ,height:'20%', width:'100%', alignItems:'center'}}>
 
@@ -16,7 +16,7 @@ function BarraNavegacao() {
                 </Box>
 
                 <Box>
-                    <h2>Sale<span className="span-navbar">Sigth</span></h2>
+                    <h2 className='h2-navbar'>Sale<span className="span-navbar">Sigth</span></h2>
                 </Box>
             </Box>
 
@@ -31,7 +31,7 @@ function BarraNavegacao() {
                             </Stack>
 
                             <Stack>
-                                <Typography className="textsidebar" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Inicio</Typography>
+                                <Typography className="textsidebar" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>Inicio</Typography>
                             </Stack>
 
                         </Box>
@@ -45,7 +45,7 @@ function BarraNavegacao() {
                                 <img src="./public/imagens/TrendUp.png" />
                             </Stack>
                             <Stack>
-                                <Typography className="textsidebar" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Funcionarios</Typography>
+                                <Typography className="textsidebar" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>Funcionarios</Typography>
                             </Stack>
                         </Box>
                     </Link>
@@ -58,7 +58,7 @@ function BarraNavegacao() {
                                 <img src="./public/imagens/CirclesFour.png" />
                             </Stack>
                             <Stack>
-                                <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000', textDecoration: 'none' }}>Produtos</Typography>
+                                <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Produtos</Typography>
                             </Stack>
                         </Box>
                     </Link>
@@ -72,7 +72,7 @@ function BarraNavegacao() {
                                 <img src="./public/imagens/Settings.png" alt=""/>
                             </Box>
                             <Stack>
-                                <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Configurações</Typography>
+                                <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>Configurações</Typography>
                             </Stack>
                         </Box>
                     </Link>
@@ -85,7 +85,7 @@ function BarraNavegacao() {
                                 <img src="./public/imagens/Log out.png" />
                             </Stack>
                             <Stack>
-                                <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#000000' }}>Sair</Typography>
+                                <Typography sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>Sair</Typography>
                             </Stack>
                         </Box>
                     </Link>

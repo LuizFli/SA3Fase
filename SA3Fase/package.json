@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "install-all": "npm install @mui/material @emotion/react @emotion/styled react-router-dom react-router react react-dom @nivo/core @nivo/bar @nivo/line @nivo/pie",
+    "install-all": "npm install @mui/material @emotion/react @emotion/styled react-router-dom react-router react react-dom @nivo/core @nivo/bar @nivo/line @nivo/pie @mui/icons-material",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
     "@nivo/bar": "^0.99.0",
     "@nivo/core": "^0.99.0",
