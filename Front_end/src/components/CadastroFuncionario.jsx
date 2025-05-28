@@ -8,11 +8,11 @@ function CadastroFuncionario() {
 
       <Box sx={{ p: 0, m: '0', width: '100vw', height: '100vh', backgroundColor: 'whitesmoke', display: 'flex', flexDirection: 'row' }}>
 
-        <Box sx={{ p: '0', m: '0', width: '10%', height: '100%', backgroundColor: 'cyan', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ p: '0', m: '0', width: '17%', height: '100%', backgroundColor: 'cyan', display: 'flex', flexDirection: 'column' }}>
           <NavBar />
         </Box>
 
-        <Box sx={{ p: '0', m: '0', width: '90%', height: '100%', backgroundColor: 'gray', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ p: '0', m: '0', width: '83%', height: '100%', backgroundColor: 'gray', display: 'flex', flexDirection: 'column' }}>
 
           <Box sx={{ p: '0', m: '0', width: '100%', height: '15%', backgroundColor: 'whitesmoke', display: 'flex', flexDirection: 'row' }}>
 
@@ -40,18 +40,7 @@ function CadastroFuncionario() {
                 <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
                 <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
               </Stack>
-              {/* 
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-
-
-
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField> */}
+  
 
             </Stack>
 
