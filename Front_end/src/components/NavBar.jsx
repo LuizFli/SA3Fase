@@ -56,7 +56,7 @@ export default function PermanentSidebar() {
     { text: 'Funcionários', icon: <People />, path: '/funcionarios' },
     { text: 'Produtos', icon: <Apps />, path: '/produtos' },
     { text: 'Configurações', icon: <Settings />, path: '/configuracoes' },
-    { text: 'Sair', icon: <Logout />, path: '/logout' },
+    { text: 'Sair', icon: <Logout />, path: '/login' },
   ];
 
   const isActive = (path) => location.pathname === path;

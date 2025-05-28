@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "install-all": "npm install @mui/material @emotion/react @emotion/styled react-router-dom react-router react react-dom @nivo/core @nivo/bar @nivo/line @nivo/pie @mui/icons-material @mui/x-date-pickers date-fns",
+    "install-all": "npm install @mui/material @emotion/react @emotion/styled react-router-dom react-router react react-dom @nivo/core @nivo/bar @nivo/line @nivo/pie @mui/icons-material @mui/x-date-pickers date-fns formik yup",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -21,10 +21,12 @@
     "@nivo/line": "^0.99.0",
     "@nivo/pie": "^0.99.0",
     "date-fns": "^4.1.0",
+    "formik": "^2.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.6.1",
-    "react-router-dom": "^7.6.1"
+    "react-router-dom": "^7.6.1",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
