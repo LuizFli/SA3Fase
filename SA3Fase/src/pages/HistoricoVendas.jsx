@@ -109,12 +109,12 @@ function HistoricoVendas() {
         display: 'flex', 
         backgroundColor: '#EBDFD7' 
       }}>
-        <Box sx={{ width: '12%' }}>
+        <Box sx={{ width: '16%', backgroundColor:'black'}}>
           <NavBar/>
         </Box>
 
         <Box sx={{ 
-          width: '88%', 
+          width: '80%', 
           p: 3,
           display: 'flex', 
           flexDirection: 'column'
