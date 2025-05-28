@@ -6,7 +6,6 @@ function Funcionario() {
   return (
     <div>
       <CadastroFuncionario />
-      
     </div>
   )
 }
