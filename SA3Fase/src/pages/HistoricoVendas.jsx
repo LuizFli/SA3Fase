@@ -32,7 +32,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ptBR from 'date-fns/locale/pt-BR';
-import BarraNavegacao from '../components/BarraNavegacao';
+import NavBar from '../components/NavBar';
 
 function HistoricoVendas() {
   const theme = useTheme();
@@ -110,7 +110,7 @@ function HistoricoVendas() {
         backgroundColor: '#EBDFD7' 
       }}>
         <Box sx={{ width: '12%' }}>
-          <BarraNavegacao />
+          <NavBar/>
         </Box>
 
         <Box sx={{ 
