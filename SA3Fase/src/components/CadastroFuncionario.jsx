@@ -1,6 +1,6 @@
 import { Avatar, Box, Stack, TextField, Typography } from '@mui/material'
 import React from 'react'
-
+import NavBar from './NavBar'
 
 function CadastroFuncionario() {
   return (
@@ -9,7 +9,7 @@ function CadastroFuncionario() {
       <Box sx={{ p: 0, m: '0', width: '100vw', height: '100vh', backgroundColor: 'whitesmoke', display: 'flex', flexDirection: 'row' }}>
 
         <Box sx={{ p: '0', m: '0', width: '10%', height: '100%', backgroundColor: 'cyan', display: 'flex', flexDirection: 'column' }}>
-
+          <NavBar />
         </Box>
 
         <Box sx={{ p: '0', m: '0', width: '90%', height: '100%', backgroundColor: 'gray', display: 'flex', flexDirection: 'column' }}>
@@ -29,7 +29,7 @@ function CadastroFuncionario() {
 
           <Box sx={{ p: '0', m: '0', width: '100%', height: '85%', backgroundColor: 'pink', display: 'flex', flexDirection: 'row' }}>
 
-            <Stack direction="column" sx={{ width: '100%', backgroundColor: 'gray'}}>
+            <Stack direction="column" sx={{ width: '100%', backgroundColor: 'gray' }}>
 
               <Stack direction="row" size={{ xs: 12 }} sx={{ p: '20px', m: 0, backgroundColor: 'white', borderRadius: '20px' }}>
                 <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
@@ -37,8 +37,8 @@ function CadastroFuncionario() {
               </Stack>
 
               <Stack direction="row" size={{ xs: 12 }} sx={{ p: '20px', m: 0, backgroundColor: 'white', borderRadius: '20px' }}>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
-              <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
+                <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
+                <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>
               </Stack>
               {/* 
               <TextField size='small' id="nome" label="Nome Completo" variant="outlined" sx={{ width: '30%' }}></TextField>

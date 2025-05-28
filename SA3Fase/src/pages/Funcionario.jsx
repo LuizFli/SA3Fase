@@ -6,7 +6,7 @@ function Funcionario() {
   return (
     <div>
       <CadastroFuncionario />
-      <GerenciaFuncionario />
+      
     </div>
   )
 }

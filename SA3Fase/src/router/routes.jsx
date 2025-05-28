@@ -8,6 +8,7 @@ import Relatorio from "../pages/Relatorio";
 import GerenciaAcesso from "../pages/GerenciaAcesso";
 import TesteGraficos from "../pages/TesteGraficos";
 import Funcionario from "../pages/Funcionario";
+import GerenciaFuncionario from '../components/GerenciaFuncionario'
 
 
 const router = createBrowserRouter([
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     { path: "/configuracoes", element: <HistoricoVendas /> },
     { path: "/relatorio", element: <Relatorio /> },
     { path: "/logout", element: <TesteGraficos /> },
+    { path: '/gerenciaFun' ,element: <GerenciaFuncionario />}
     
 ])
 
