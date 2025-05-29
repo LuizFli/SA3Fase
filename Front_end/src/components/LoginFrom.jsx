@@ -35,7 +35,7 @@ export default function LoginForm() {
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             await login(values.email, values.password);
-            navigate('/dashboard');
+            navigate('/');
         } catch (err) {
             console.error('Login failed:', err);
         } finally {
