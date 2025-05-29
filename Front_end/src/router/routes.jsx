@@ -13,7 +13,8 @@ import LoginPage from "../pages/LoginPage";
 
 
 const router = createBrowserRouter([
-    { path: "/", element: <Home /> },
+    { path: '/' ,element: <LoginPage /> },
+    { path: "/dashbord", element: <Home /> },
     { path: "/cadastroVenda", element: <CadastroVenda /> },
     { path: "/funcionarios", element: <Funcionario /> },
     { path: "/gerenciaAcesso", element: <GerenciaAcesso /> },
@@ -22,8 +23,7 @@ const router = createBrowserRouter([
     { path: "/configuracoes", element: <HistoricoVendas /> },
     { path: "/relatorio", element: <Relatorio /> },
     { path: "/logout", element: <TesteGraficos /> },
-    { path: '/gerenciaFun' ,element: <GerenciaFuncionario />},
-    { path: '/login' ,element: <LoginPage /> }
+    { path: '/gerenciaFun' ,element: <GerenciaFuncionario />}
 
 
     

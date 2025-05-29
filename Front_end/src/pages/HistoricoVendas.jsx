@@ -104,7 +104,9 @@ function HistoricoVendas() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
       <Box sx={{ 
-        width: '100vw', 
+        m: 0,
+        p: 0,
+        maxWidth: '100vw', 
         minHeight: '100vh', 
         display: 'flex', 
         backgroundColor: '#EBDFD7' 
