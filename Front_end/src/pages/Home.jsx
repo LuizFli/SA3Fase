@@ -7,8 +7,6 @@ function Home() {
         <PageContainer>
             <Box sx={{
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
                 height: '100%',  // Ocupa 100% do espaço disponível
                 width: '100%',   // Ocupa 100% do espaço disponível
                 p: 3             // Padding opcional
