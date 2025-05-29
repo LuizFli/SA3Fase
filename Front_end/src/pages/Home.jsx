@@ -7,14 +7,12 @@ function Home() {
         <PageContainer>
             <Box sx={{
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
                 height: '100%',  // Ocupa 100% do espaço disponível
                 width: '100%',   // Ocupa 100% do espaço disponível
                 p: 3             // Padding opcional
             }}>
                 <h1 style={{ fontSize: '2.5rem', color: '#333' }}>
-                    Bem-vindo ao <span style={{ color: '#E65F2B' }}>SaleSight</span>
+                    Bem-vindo ao <span style={{ color: 'var(--box-color)'}}>SaleSight</span>
                 </h1>
             </Box>
         </PageContainer>

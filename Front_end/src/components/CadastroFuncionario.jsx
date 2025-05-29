@@ -40,7 +40,6 @@ function CadastroFuncionario() {
             m: '0', 
             width: '100%', 
             height: '15%', 
-            backgroundColor: '#EBDFD7', 
             display: 'flex', 
             flexDirection: 'row',
             justifyContent: 'center',
@@ -67,7 +66,7 @@ function CadastroFuncionario() {
             <Box sx={{ 
               width: '90%', 
               height: '90%', 
-              backgroundColor: 'white', 
+              backgroundColor: 'var(--box-color)', 
               borderRadius: '20px',
               display: 'flex',
               flexDirection: 'column',
@@ -87,12 +86,20 @@ function CadastroFuncionario() {
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                   <TextField
                     fullWidth
-                    size='small'
+                    size="small"
                     id="dataNascimento"
                     label="Data de Nascimento"
                     type="date"
                     variant="outlined"
                     InputLabelProps={{ shrink: true }}
+                    sx={{
+                      '& input[type="date"]': {
+                        color: 'black', 
+                      },
+                      '& input[type="date"]::-webkit-calendar-picker-indicator': {
+                        filter: 'invert(1)', 
+                      },
+                    }}
                   />
                   <TextField
                     fullWidth

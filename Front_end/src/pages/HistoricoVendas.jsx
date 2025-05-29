@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState } from 'react';
 import {
   Box,
   TextField,
@@ -33,29 +33,14 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ptBR from 'date-fns/locale/pt-BR';
 import PageContainer from '../components/PageContainer';
+import { useGlobal } from '../contexts/GlobalProvider'; // Supondo que você tenha um contexto global para gerenciar os dados de vendas
+
 
 
 function HistoricoVendas() {
   const theme = useTheme();
-  const [vendas, setVendas] = useState([
-    {
-      id_produto: 1,
-      produto: 'Notebook Pro',
-      valor: 4599.99,
-      data: '2023-10-01',
-      matricula_vendedor: 'V00123',
-      auth_code: 'A1B2C3D4'
-    },
-    {
-      id_produto: 2,
-      produto: 'Smartphone Plus',
-      valor: 2299.50,
-      data: '2023-10-15',
-      matricula_vendedor: 'V00245',
-      auth_code: 'E5F6G7H8'
-    },
-    // Adicione mais dados de exemplo...
-  ]);
+  const { vendas, setVendas } = useGlobal() // Supondo que useGlobal retorna os dados de vendas
+  
 
   // Estados para paginação
   const [page, setPage] = useState(0);
@@ -267,7 +252,7 @@ function HistoricoVendas() {
                 <Table>
                   <TableHead>
                     <TableRow sx={{
-                      backgroundColor: theme.palette.primary.main,
+                      backgroundColor:'#e65f2b',
                       '& th': {
                         color: theme.palette.common.white,
                         fontSize: '1rem'

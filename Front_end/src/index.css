@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: rgba(12, 1, 1, 0.87);
-  background-color: #242424;
+  background-color: #ebdfd7;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,6 +20,11 @@ body {
   padding: 0;
 }
 
-
-
-
+:root {
+  --primary-color: #e65f2b;
+  --secondary-color: #0a0a09;
+  --accent-color: #f2eae5;
+  --background-color: #ebdfd7;
+  --box-color: #ffff;
+  --text-color: #0a0a09;
+}
