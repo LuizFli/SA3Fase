@@ -12,7 +12,7 @@ function Home() {
                 p: 3             // Padding opcional
             }}>
                 <h1 style={{ fontSize: '2.5rem', color: '#333' }}>
-                    Bem-vindo ao <span style={{ color: '#E65F2B' }}>SaleSight</span>
+                    Bem-vindo ao <span style={{ color: 'var(--box-color)'}}>SaleSight</span>
                 </h1>
             </Box>
         </PageContainer>

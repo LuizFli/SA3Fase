@@ -66,7 +66,7 @@ function CadastroFuncionario() {
             <Box sx={{ 
               width: '90%', 
               height: '90%', 
-              backgroundColor: '#f2eae5', 
+              backgroundColor: 'var(--box-color)', 
               borderRadius: '20px',
               display: 'flex',
               flexDirection: 'column',
@@ -86,20 +86,19 @@ function CadastroFuncionario() {
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                   <TextField
                     fullWidth
-                    size='small'
+                    size="small"
                     id="dataNascimento"
                     label="Data de Nascimento"
                     type="date"
                     variant="outlined"
                     InputLabelProps={{ shrink: true }}
                     sx={{
+                      '& input[type="date"]': {
+                        color: 'black', 
+                      },
                       '& input[type="date"]::-webkit-calendar-picker-indicator': {
-                        filter: 'invert(1)', // Inverte a cor (útil se o fundo for escuro)
-                        // Ou use:
-                        opacity: 1,
-                        background: '',
-                        color: 'red', // Cor desejada
-                      }
+                        filter: 'invert(1)', 
+                      },
                     }}
                   />
                   <TextField
