@@ -1,8 +1,11 @@
 import React from 'react';
 import { Box, Typography, Paper, Container } from '@mui/material';
 import PageContainer from '../components/PageContainer';
+import useGlobal from '../contexts/GlobalProvider'
 
 function CadastroVenda() {
+
+  const { vendas, setVendas } = useGlobal()
   return (
     <PageContainer>
       <Container maxWidth="lg" sx={{ py: 4 }}>
