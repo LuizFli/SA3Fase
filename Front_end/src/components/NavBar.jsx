@@ -9,12 +9,14 @@ const NavbarContainer = styled(Box)(({ theme }) => ({
   width: drawerWidth,
   height: '100vh',
   backgroundColor: '#070605',
-  position: 'static',
+  position: 'fixed',
   left: 0,
   top: 0,
   padding: theme.spacing(2, 0),
   borderRight: '1px solid rgba(255, 255, 255, 0.12)',
   overflow: 'hidden',
+  [theme.breakpoints.down('md')]: {
+    display: 'none'}
 }));
 
 const LogoContainer = styled(Box)({

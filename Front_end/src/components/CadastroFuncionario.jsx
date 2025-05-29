@@ -12,22 +12,18 @@ function CadastroFuncionario() {
   }
 
   return (
-    <div style={{ overflow: 'hidden' }}>
+    
 
       <Box sx={{ 
         p: 0, 
         m: '0', 
-        width: '100vw', 
-        height: '100vh', 
+        width: '100%', 
+        height: '100%', 
         backgroundColor: 'whitesmoke', 
         display: 'flex', 
         flexDirection: 'row',
         overflow: 'hidden'
       }}>
-
-          <NavBar />
-       
-
         <Box sx={{ 
           p: '0', 
           m: '0', 
@@ -44,7 +40,6 @@ function CadastroFuncionario() {
             m: '0', 
             width: '100%', 
             height: '15%', 
-            backgroundColor: '#EBDFD7', 
             display: 'flex', 
             flexDirection: 'row',
             justifyContent: 'center',
@@ -71,7 +66,7 @@ function CadastroFuncionario() {
             <Box sx={{ 
               width: '90%', 
               height: '90%', 
-              backgroundColor: 'white', 
+              backgroundColor: '#f2eae5', 
               borderRadius: '20px',
               display: 'flex',
               flexDirection: 'column',
@@ -181,7 +176,7 @@ function CadastroFuncionario() {
 
       </Box>
 
-    </div>
+    
   )
 }
 

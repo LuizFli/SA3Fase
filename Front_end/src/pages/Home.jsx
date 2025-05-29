@@ -1,19 +1,21 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import Navbar from '../components/NavBar'
+import PageContainer from '../components/PageContainer' // Importe o componente criado anteriormente
 
 function Home() {
     return (
-        <Box sx={{display:'flex', height: '96vh', width:'96vw' }}>
-            <Box sx={{height:'100%', width:'12%'}}>
-                <Navbar />
-
+        <PageContainer>
+            <Box sx={{
+                display: 'flex',
+                height: '100%',  // Ocupa 100% do espaço disponível
+                width: '100%',   // Ocupa 100% do espaço disponível
+                p: 3             // Padding opcional
+            }}>
+                <h1 style={{ fontSize: '2.5rem', color: '#333' }}>
+                    Bem-vindo ao <span style={{ color: '#E65F2B' }}>SaleSight</span>
+                </h1>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width:'80%' }}>
-                <h1>Bem-vindo ao SaleSight</h1>
-            </Box>
-
-        </Box>
+        </PageContainer>
     )
 }
 

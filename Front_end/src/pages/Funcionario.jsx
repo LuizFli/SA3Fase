@@ -1,12 +1,13 @@
 import React from 'react'
+import { Box, Container } from '@mui/material'
+import PageContainer from '../components/PageContainer'
 import CadastroFuncionario from '../components/CadastroFuncionario'
-import GerenciaFuncionario from '../components/GerenciaFuncionario'
 
 function Funcionario() {
   return (
-    <div>
-      <CadastroFuncionario />
-    </div>
+    <PageContainer>
+          <CadastroFuncionario />       
+    </PageContainer>
   )
 }
 
