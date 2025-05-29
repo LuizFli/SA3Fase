@@ -21,12 +21,13 @@ import {
 import { Add, Search, Circle } from '@mui/icons-material';
 import PageContainer from '../components/PageContainer';
 import React from 'react';
+import { useGlobal } from '../contexts/GlobalProvider';
 
 // Dados mockados para os produtos
 
 
 function EstoqueProdutos() {
-  const {p}
+  const {produtos , setProdutos} = useGlobal()
   return (
     <PageContainer>
       <Box sx={{
