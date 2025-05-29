@@ -40,7 +40,6 @@ function CadastroFuncionario() {
             m: '0', 
             width: '100%', 
             height: '15%', 
-            backgroundColor: '#EBDFD7', 
             display: 'flex', 
             flexDirection: 'row',
             justifyContent: 'center',
@@ -67,7 +66,7 @@ function CadastroFuncionario() {
             <Box sx={{ 
               width: '90%', 
               height: '90%', 
-              backgroundColor: 'white', 
+              backgroundColor: '#f2eae5', 
               borderRadius: '20px',
               display: 'flex',
               flexDirection: 'column',
