@@ -12,22 +12,18 @@ function CadastroFuncionario() {
   }
 
   return (
-    <div style={{ overflow: 'hidden' }}>
+    
 
       <Box sx={{ 
         p: 0, 
         m: '0', 
-        width: '100vw', 
-        height: '100vh', 
+        width: '100%', 
+        height: '100%', 
         backgroundColor: 'whitesmoke', 
         display: 'flex', 
         flexDirection: 'row',
         overflow: 'hidden'
       }}>
-
-          <NavBar />
-       
-
         <Box sx={{ 
           p: '0', 
           m: '0', 
@@ -181,7 +177,7 @@ function CadastroFuncionario() {
 
       </Box>
 
-    </div>
+    
   )
 }
 
