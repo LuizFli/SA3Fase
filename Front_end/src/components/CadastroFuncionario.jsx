@@ -92,6 +92,15 @@ function CadastroFuncionario() {
                     type="date"
                     variant="outlined"
                     InputLabelProps={{ shrink: true }}
+                    sx={{
+                      '& input[type="date"]::-webkit-calendar-picker-indicator': {
+                        filter: 'invert(1)', // Inverte a cor (útil se o fundo for escuro)
+                        // Ou use:
+                        opacity: 1,
+                        background: '',
+                        color: 'red', // Cor desejada
+                      }
+                    }}
                   />
                   <TextField
                     fullWidth
