@@ -52,11 +52,11 @@ export default function PermanentSidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { text: 'Inicio', icon: <Home />, path: '/' },
+    { text: 'Inicio', icon: <Home />, path: '/dashbord' },
     { text: 'Funcionários', icon: <People />, path: '/funcionarios' },
     { text: 'Produtos', icon: <Apps />, path: '/produtos' },
     { text: 'Configurações', icon: <Settings />, path: '/configuracoes' },
-    { text: 'Sair', icon: <Logout />, path: '/login' },
+    { text: 'Sair', icon: <Logout />, path: '/' },
   ];
 
   const isActive = (path) => location.pathname === path;
