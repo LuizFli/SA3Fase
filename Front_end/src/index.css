@@ -20,6 +20,10 @@ body {
   padding: 0;
 }
 
-
-
-
+:root {
+  --primary-color: #e65f2b;
+  --secondary-color: #0a0a09;
+  --accent-color: #e94e77;
+  --background-color: #ebdfd7;
+  --text-color: #0a0a09;
+}
