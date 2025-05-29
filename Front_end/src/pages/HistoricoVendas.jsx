@@ -267,7 +267,7 @@ function HistoricoVendas() {
                 <Table>
                   <TableHead>
                     <TableRow sx={{
-                      backgroundColor: theme.palette.primary.main,
+                      backgroundColor:'#e65f2b',
                       '& th': {
                         color: theme.palette.common.white,
                         fontSize: '1rem'
