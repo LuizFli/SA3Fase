@@ -21,10 +21,12 @@ function CadastroFuncionario() {
     cidade: '',
     estado: '', 
     cep: '',
-    
-
+    senha: '',
+    confirmacaoSenha: ''
 
   })
+
+  
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
@@ -135,7 +137,7 @@ function CadastroFuncionario() {
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                  <TextField fullWidth size='small' id="Cpf" label="CPF" variant="outlined" value={cpf} onChange={(e) => setCpf(e.target.value)}></TextField>
+                  <TextField fullWidth size='small' id="Cpf" label="CPF" variant="outlined"></TextField>
                   <TextField fullWidth size='small' id="Rg" label="RG" variant="outlined"></TextField>
                 </Stack>
 
