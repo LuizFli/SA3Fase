@@ -6,7 +6,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 function CadastroFuncionario() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [sexo, setSexo] = React.useState('')
-  const [funcionarios, setFuncionarios] = useState({
+  const [funcionario, setFuncionario] = useState({
     nome: '',
     usuario: '',
     dataNascimento: '',
@@ -26,7 +26,20 @@ function CadastroFuncionario() {
 
   })
 
-  
+  function mudarValores(e) {
+    const { id, value } = e.target;
+    setFuncionario({
+      ...funcionario,
+      [id]: value
+    });
+  }
+  function Cadastrar() {
+    
+  };
+
+  function ApagarDados() {
+    
+  };
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
@@ -99,8 +112,8 @@ function CadastroFuncionario() {
               <Stack direction="column" sx={{ width: '90%', padding: '20px' }}>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                  <TextField fullWidth size='small' id="nome" label="Nome Completo" variant="outlined"></TextField>
-                  <TextField fullWidth size='small' id="nomeUsuario" label="Nome de usuário" variant="outlined"></TextField>
+                  <TextField fullWidth size='small' id="nome" label="Nome Completo" variant="outlined" onChange={mudarValores} value={funcionario.nome}></TextField>
+                  <TextField fullWidth size='small' id="usuario" label="Nome de usuário" variant="outlined" onChange={mudarValores} value={funcionario.usuario}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
@@ -120,6 +133,8 @@ function CadastroFuncionario() {
                         filter: 'invert(1)', 
                       },
                     }}
+
+                    value={funcionario.dataNascimento}
                   />
                   <TextField
                     fullWidth
@@ -128,7 +143,7 @@ function CadastroFuncionario() {
                     label="Sexo"
                     select
                     variant="outlined"
-                    value={sexo}
+                    value={funcionario.sexo}
                     onChange={(e) => setSexo(e.target.value)}
                   >
                     <MenuItem value="M">Masculino</MenuItem>
@@ -137,28 +152,28 @@ function CadastroFuncionario() {
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                  <TextField fullWidth size='small' id="Cpf" label="CPF" variant="outlined"></TextField>
-                  <TextField fullWidth size='small' id="Rg" label="RG" variant="outlined"></TextField>
+                  <TextField fullWidth size='small' id="Cpf" label="CPF" variant="outlined" value={funcionario.cpf}></TextField>
+                  <TextField fullWidth size='small' id="Rg" label="RG" variant="outlined" value={funcionario.rg}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                  <TextField fullWidth size='small' id="Email" label="E-mail" type="email" variant="outlined"></TextField>
-                  <TextField fullWidth size='small' id="telefone" label="Telefone" variant="outlined"></TextField>
+                  <TextField fullWidth size='small' id="Email" label="E-mail" type="email" variant="outlined" value={funcionario.email}></TextField>
+                  <TextField fullWidth size='small' id="telefone" label="Telefone" variant="outlined" value={funcionario.telefone}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                  <TextField fullWidth size='small' id="cargo" label="Cargo do funcionário" variant="outlined"></TextField>
+                  <TextField fullWidth size='small' id="cargo" label="Cargo do funcionário" variant="outlined" value={funcionario.cargo}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                  <TextField fullWidth size='small' id="rua" label="Endereço / Nome da Rua" variant="outlined"></TextField>
-                  <TextField size='small' id="numero" label="Número" variant="outlined" sx={{ width: '120px' }}></TextField>
+                  <TextField fullWidth size='small' id="rua" label="Endereço / Nome da Rua" variant="outlined" value={funcionario.rua}></TextField>
+                  <TextField size='small' id="numero" label="Número" variant="outlined" sx={{ width: '120px' }} value={funcionario.numero}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                  <TextField fullWidth size='small' id="cidade" label="Cidade" variant="outlined"></TextField>
-                  <TextField size='small' id="estado" label="Estado" variant="outlined" sx={{ width: '120px' }}></TextField>
-                  <TextField size='small' id="cep" label="CEP" variant="outlined" sx={{ width: '120px' }}></TextField>
+                  <TextField fullWidth size='small' id="cidade" label="Cidade" variant="outlined" value={funcionario.cidade}></TextField>
+                  <TextField size='small' id="estado" label="Estado" variant="outlined" sx={{ width: '120px' }} value={funcionario.estado}></TextField>
+                  <TextField size='small' id="cep" label="CEP" variant="outlined" sx={{ width: '120px' }} value={funcionario.cep}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
@@ -178,6 +193,7 @@ function CadastroFuncionario() {
                         </InputAdornment>
                       )
                     }}
+                    value={funcionario.senha}
                   />
                   <TextField
                     fullWidth
@@ -186,12 +202,14 @@ function CadastroFuncionario() {
                     label="Confirmação de senha"
                     type={showPassword ? 'text' : 'password'}
                     variant="outlined"
+                    
+                    value={funcionario.confirmacaoSenha}
                   />
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px', justifyContent: 'center' }}>
-                  <Button sx={{ backgroundColor: 'orange', color: 'white', width: '200px' }}>Cadastrar Dados</Button>
-                  <Button sx={{ backgroundColor: '#ff6961', color: 'white', width: '200px' }}>Cancelar/Apagar</Button>
+                  <Button sx={{ backgroundColor: 'orange', color: 'white', width: '200px' }} onClick={Cadastrar}>Cadastrar Dados</Button>
+                  <Button sx={{ backgroundColor: '#ff6961', color: 'white', width: '200px' }} onClick={ApagarDados}>Cancelar/Apagar</Button>
                 </Stack>
 
               </Stack>
@@ -207,5 +225,6 @@ function CadastroFuncionario() {
     
   )
 }
+
 
 export default CadastroFuncionario
