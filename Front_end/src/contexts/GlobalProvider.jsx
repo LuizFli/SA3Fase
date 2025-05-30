@@ -13,25 +13,7 @@ export function GlobalProvider({ children }) {
     { id: 4, marca: 'Fiat', modelo: 'Argo', ano: 2020, cor: 'Vermelho', km: 40000, placa: 'KLM1N23' },
     { id: 5, marca: 'Hyundai', modelo: 'HB20', ano: 2022, cor: 'Cinza', km: 18000, placa: 'OPQ4R56' },
   ]);
-  const [vendas, setVendas] = useState([
-    {
-      id_produto: 1,
-      produto: 'Notebook Pro',
-      valor: 4599.99,
-      data: '2023-10-01',
-      matricula_vendedor: 'V00123',
-      auth_code: 'A1B2C3D4'
-    },
-    {
-      id_produto: 2,
-      produto: 'Smartphone Plus',
-      valor: 2299.50,
-      data: '2023-10-15',
-      matricula_vendedor: 'V00245',
-      auth_code: 'E5F6G7H8'
-    },
-    // Adicione mais dados de exemplo...
-  ]);
+  const [vendas, setVendas] = useState([]);
   
   // Qualquer dado/função que você queira compartilhar globalmente
   const value = {
