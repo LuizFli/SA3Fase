@@ -1,11 +1,32 @@
 import { Avatar, Box, Button, Stack, TextField, Typography, MenuItem, InputAdornment, IconButton } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import NavBar from './NavBar'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 function CadastroFuncionario() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [sexo, setSexo] = React.useState('')
+  const [funcionarios, setFuncionarios] = useState({
+    nome: '',
+    usuario: '',
+    dataNascimento: '',
+    sexo: '',
+    cpf: '',
+    rg: '',
+    email: '',
+    telefone: '',
+    cargo: '',
+    rua: '', 
+    numero: '',
+    cidade: '',
+    estado: '', 
+    cep: '',
+    senha: '',
+    confirmacaoSenha: ''
+
+  })
+
+  
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword)
@@ -55,7 +76,6 @@ function CadastroFuncionario() {
             m: '0', 
             width: '100%', 
             height: '85%', 
-            backgroundColor: '#EBDFD7', 
             display: 'flex', 
             flexDirection: 'column',
             justifyContent: 'center',
