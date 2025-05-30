@@ -16,11 +16,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import PageContainer from '../components/PageContainer';
-<<<<<<< HEAD
-import {useGlobal} from '../contexts/GlobalProvider'
-=======
 import { useGlobal } from '../contexts/GlobalProvider';
->>>>>>> ae1791b05467f4299bdb662c4edad35760a5de74
 
 function CadastroVenda() {
   const { produtos = [], vendas, setVendas } = useGlobal();
@@ -106,11 +102,8 @@ function CadastroVenda() {
     }
   };
 
-<<<<<<< HEAD
-  const { vendas, setVendas } = useGlobal()
 
-=======
->>>>>>> ae1791b05467f4299bdb662c4edad35760a5de74
+
   return (
     <PageContainer>
       <Box sx={{
