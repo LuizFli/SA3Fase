@@ -1,187 +1,103 @@
-import { 
-  Box, 
-  Typography, 
-  Paper, 
-  Button, 
-  TextField, 
-  InputAdornment,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Avatar,
-  Badge,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel
-} from '@mui/material';
-import { Add, Search, Circle } from '@mui/icons-material';
-import PageContainer from '../components/PageContainer';
 import React from 'react';
+import { 
+  Box as Container, 
+  Typography as Texto,
+  Paper as Painel,
+  Button as Botao,
+  TextField as CampoTexto,
+  Avatar as Avatar
+} from '@mui/material';
+import { Add as Adicionar, Search as Buscar } from '@mui/icons-material';
+import PageContainer from '../components/PageContainer';
 import { useGlobal } from '../contexts/GlobalProvider';
-
-// Dados mockados para os produtos
-
+import ProdutoEstoque from '../components/ProdutoEstoque';
 
 function EstoqueProdutos() {
-  const {produtos , setProdutos} = useGlobal()
+  const { produtos, setProdutos } = useGlobal();
+
+  const apagarProduto = (id) => {
+    const novosProdutos = produtos.filter(produto => produto.id !== id);
+    setProdutos(novosProdutos);
+  };
+
   return (
     <PageContainer>
-      <Box sx={{
-        width: '100%',
-        height: '100%',
-        p: 3,
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: '#f5f5f5'
+      <Container sx={{ 
+        padding: '20px', 
+        backgroundColor: '#f5f5f5', 
+        height: '100vh',
+        boxSizing: 'border-box'
       }}>
-        {/* Header */}
-        <Paper elevation={3} sx={{
-          p: 3,
-          mb: 3,
-          display: 'flex',
+        
+        <Painel elevation={3} sx={{ 
+          padding: '15px 20px',
+          marginBottom: '20px', 
+          display: 'flex', 
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          borderRadius: '10px'
         }}>
-          <Typography variant="h4" component="h2" sx={{
-            fontWeight: 'bold',
-            color: 'primary.main'
+          <Texto variant="h4" sx={{ 
+            fontWeight: 'bold', 
+            color: '#333',
+            fontSize: '1.8rem'
           }}>
             Estoque de Produtos
-          </Typography>
+          </Texto>
           
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            {/* Status online */}
-            <Badge
-              overlap="circular"
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              badgeContent={
-                <Circle sx={{ color: '#4caf50', fontSize: '0.8rem' }} />
-              }
-            >
-              <Avatar 
-                alt="User Avatar" 
-                src="/static/images/avatar/1.jpg" 
-                sx={{ width: 40, height: 40 }}
-              />
-            </Badge>
+          <Container sx={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <Avatar 
+              alt="Usuário" 
+              src="/static/images/avatar/1.jpg" 
+              sx={{ width: 45, height: 45 }} 
+            />
             
-            {/* Botão Adicionar Produto */}
-            <Button
+            <Botao
               variant="contained"
               color="success"
-              startIcon={<Add />}
-              sx={{
-                textTransform: 'none',
-                fontWeight: 'bold',
-                px: 3
+              startIcon={<Adicionar />}
+              sx={{ 
+                fontWeight: 'bold', 
+                padding: '8px 20px',
+                borderRadius: '8px',
+                fontSize: '0.9rem'
               }}
+              onClick={() => window.location.href = '/cadProduto'}
             >
               Adicionar Produto
-            </Button>
-          </Box>
-        </Paper>
+            </Botao>
+          </Container>
+        </Painel>
+        
 
-        {/* Área de Filtros e Busca */}
-        <Paper elevation={2} sx={{ p: 2, mb: 3 }}>
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 2,
-            alignItems: 'center',
-            flexWrap: 'wrap'
-          }}>
-            {/* Barra de busca */}
-            <TextField
+        <Painel elevation={2} sx={{ 
+          padding: '15px',
+          marginBottom: '20px',
+          borderRadius: '10px'
+        }}>
+          <Container sx={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <CampoTexto
               placeholder="Buscar"
               variant="outlined"
               size="small"
+              fullWidth
               InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
+                startAdornment: <Buscar />,
+                sx: { borderRadius: '20px' }
               }}
-              sx={{ 
-                flexGrow: 1,
-                maxWidth: 400,
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '20px'
-                }
-              }}
+              sx={{ maxWidth: '400px' }}
             />
-            
-            {/* Filtro dropdown */}
-            <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel>Ordenar por</InputLabel>
-              <Select
-                label="Ordenar por"
-                defaultValue="recentes"
-              >
-                <MenuItem value="recentes">Mais recentes</MenuItem>
-                <MenuItem value="antigos">Mais antigos</MenuItem>
-                <MenuItem value="marca">Marca (A-Z)</MenuItem>
-                <MenuItem value="ano">Ano (mais novo)</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        </Paper>
+          </Container>
+        </Painel>
 
-        {/* Tabela de Produtos */}
-        <Paper elevation={2} sx={{
-          flex: 1,
-          overflow: 'auto'
+        <Painel elevation={2} sx={{ 
+          width: '100%',
+          overflow: 'auto',
+          borderRadius: '10px'
         }}>
-          <TableContainer>
-            <Table stickyHeader>
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Marca</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Modelo</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Ano</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Cor</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Km</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Placa</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Ações</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {produtos.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>{product.marca}</TableCell>
-                    <TableCell>{product.modelo}</TableCell>
-                    <TableCell>{product.ano}</TableCell>
-                    <TableCell>{product.cor}</TableCell>
-                    <TableCell>{product.km.toLocaleString('pt-BR')}</TableCell>
-                    <TableCell>{product.placa}</TableCell>
-                    <TableCell>{product.id}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: '#FF9D00',
-                          color: 'white',
-                          '&:hover': {
-                            backgroundColor: '#e68a00'
-                          },
-                          textTransform: 'none',
-                          fontWeight: 'bold'
-                        }}
-                      >
-                        Editar
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Box>
+          <ProdutoEstoque produtos={produtos} apagarProduto={apagarProduto} />
+        </Painel>
+      </Container>
     </PageContainer>
   );
 }
