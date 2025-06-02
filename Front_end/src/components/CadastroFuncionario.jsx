@@ -145,9 +145,11 @@ function CadastroFuncionario() {
                     variant="outlined"
                     value={sexo}
                     onChange={(e) => setSexo(e.target.value)}
+                    onBlur={() => setFuncionario({ ...funcionario, sexo })} // Update funcionario state when sexo changes
                   >
                     <MenuItem value="M">Masculino</MenuItem>
                     <MenuItem value="F">Feminino</MenuItem>
+                    
                   </TextField>
                 </Stack>
 
