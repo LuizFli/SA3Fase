@@ -14,23 +14,32 @@ const ListaFuncionarios = () => {
         {
             id: 1,
             nome: "João Silva",
-            cargo: "Vendedor Sênior",
+            matricula: "65asd65sa4",
+            cpf: "123.456.789-00",
+            telefone: "(11) 98765-4321",
             foto: "",
             meta: 50,
+            email:'joaosilva@gmail.com',
         },
         {
             id: 2,
             nome: "Maria Oliveira",
-            cargo: "Vendedor Pleno",
+            matricula: "65asd65sa4",
+            cpf: "123.456.789-00",
+            telefone: "(11) 98765-4321",
             foto: "",
             meta: 40,
+            email:'mariaOliveira@gmail.com',
         },
         {
             id: 3,
             nome: "Carlos Souza",
-            cargo: "Vendedor Júnior",
+            matricula: "65asd65sa4",
+            cpf: "123.456.789-00",
+            telefone: "(11) 98765-4321",
             foto: "",
             meta: 30,
+            email:'carlosSouza@gmail.com',
         }
     ];
 

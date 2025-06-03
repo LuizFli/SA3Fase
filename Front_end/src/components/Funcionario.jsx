@@ -11,10 +11,24 @@ import {
   TableRow,
   AccordionDetails,
   AccordionSummary,
-  Accordion
-
+  Accordion,
+  Avatar
 } from '@mui/material';
-const Funcionario = ({funcionario}) => {
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { styled } from '@mui/material/styles';
+const Funcionario = ({ funcionario }) => {
+
+  const StyledExpandIcon = styled(PlayArrowIcon)({
+    color: 'blue',
+    '&:hover': {
+      color: 'darkblue',
+    },
+    transition: 'transform 0.3s ease',
+    // Aplica a rotação quando o pai (AccordionSummary) estiver expandido
+    '.MuiAccordionSummary-root.Mui-expanded &': {
+      transform: 'rotate(30deg)',
+    },
+  });
 
 
   return (
@@ -22,59 +36,64 @@ const Funcionario = ({funcionario}) => {
 
     <Accordion>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />} // Ícone de seta para expandir
+        expandIcon={<StyledExpandIcon />} // Ícone de seta para expandir
         aria-controls="panel-content"
         id="panel-header"
       >
-        <Box>
-          <TableContainer sx={{ mt: 3 }}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{
-                  backgroundColor: '#e65f2b',
-                  '& th': {
-                    color: '#fff',
-                    fontSize: '1rem'
-                  }
-                }}>
-                  <TableCell>ID Produto</TableCell>
-                  <TableCell>Produto</TableCell>
-                  <TableCell align="right">Valor</TableCell>
-                  <TableCell>Data</TableCell>
-                  <TableCell>Vendedor</TableCell>
-                  <TableCell>Auth Code</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+        <Box sx={{width:'94%'}}>
+          <TableContainer sx={{ border:'none'}}>
+            <Table sx={{border:'none'}}>
+              <TableBody sx={{border:'none'}}>
+                
+                <TableRow sx={{border:'none'}}>
+                  
+                  <TableCell rowSpan={2} sx={{ width: '10%', verticalAlign: 'middle' , border:'none'}}>
+                    <Avatar
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        fontSize: '2rem'
+                      }}
+                    />
+                  </TableCell>
 
-                <TableRow>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell align="right">
-                    
+                  <TableCell
+                    rowSpan={2}
+                    sx={{
+                      width: '20%',
+                      verticalAlign: 'middle',
+                      fontSize: '1.5rem',
+                      padding: '16px',
+                      border: 'none',
+                    }}
+                  >
+                    {funcionario.nome}
                   </TableCell>
-                  <TableCell>
-                    
-                  </TableCell>
-                  <TableCell></TableCell>
-                  <TableCell sx={{ fontFamily: 'monospace' }}>
 
-                  </TableCell>
+                  
+                  <TableCell sx={{ maWidth: '15%', fontWeight: 'bold' , fontSize:'20px'}}>Matrícula</TableCell>
+                  <TableCell sx={{ width: '20%', fontWeight: 'bold' , fontSize:'20px'}}>Email</TableCell>
+                  <TableCell sx={{ width: '20%', fontWeight: 'bold' , fontSize:'20px'}}>Telefone</TableCell>
+                  <TableCell sx={{ width: '15%', fontWeight: 'bold' , fontSize:'20px'}}>CPF</TableCell>
                 </TableRow>
-                : (
+
+                
                 <TableRow>
-                  <TableCell colSpan={6} align="center">
-                    Nenhum resultado encontrado
-                  </TableCell>
+                  
+                  <TableCell sx={{border:'none', fontSize:'17px'}}>{funcionario.matricula}</TableCell>
+                  <TableCell sx={{border:'none', fontSize:'17px'}}>{funcionario.email}</TableCell>
+                  <TableCell sx={{border:'none', fontSize:'17px'}}>{funcionario.telefone}</TableCell>
+                  <TableCell sx={{border:'none', fontSize:'17px'}}>{funcionario.cpf}</TableCell>
                 </TableRow>
-                )
               </TableBody>
             </Table>
           </TableContainer>
         </Box>
       </AccordionSummary>
       <AccordionDetails>
-        <GraficoBar meta={funcionario.meta} />
+        <Box sx={{ display: 'flex', height: '100%', width: '92%'}}>
+          <GraficoBar meta={funcionario.meta} />
+        </Box>
       </AccordionDetails>
     </Accordion>
   );
