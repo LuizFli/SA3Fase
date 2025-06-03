@@ -2,15 +2,16 @@ import React from 'react'
 import { Box, Button, Container } from '@mui/material'
 import PageContainer from '../components/PageContainer'
 import CadastroFuncionario from '../components/CadastroFuncionario'
-import { Navigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 function Funcionarios() {
+  const navigate = useNavigate();
 
   const handleCadastro = () => {
-    <Navigate to="/cadastroFuncionario" />
+    navigate("/cadastrofun");
   }
   const handleLista = () => {
-    <Navigate to="/listaFuncionarios" />
+    navigate("/listaFuncionarios");
   }
 
   return (

@@ -12,6 +12,7 @@ import TesteGraficos from "../pages/TesteGraficos";
 import GerenciaFuncionario from '../components/GerenciaFuncionario';
 import LoginPage from "../pages/LoginPage";
 import ListaFuncionarios from "../pages/ListaFuncionarios";
+import CadastroFuncionario from "../components/CadastroFuncionario";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,8 @@ const router = createBrowserRouter([
       { path: "/relatorio", element: <Relatorio /> },
       { path: "/logout", element: <TesteGraficos /> },
       { path: '/gerenciaFun', element: <GerenciaFuncionario /> },
-      { path: '/listaFuncionarios', element: <ListaFuncionarios /> } // Rota de login
+      { path: '/listaFuncionarios', element: <ListaFuncionarios /> },
+      { path: '/cadastrofun', element: <CadastroFuncionario/> } // Rota de login
     ]
   }
 ]);
