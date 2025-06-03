@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import NavBar from './NavBar'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router'
+import { useEffect } from 'react'
 
 function CadastroFuncionario() {
   const [showPassword, setShowPassword] = React.useState(false)
@@ -13,15 +14,7 @@ function CadastroFuncionario() {
   const [indiceEdicao, setIndiceEdicao] = useState(null);
 
 
-  // Efeito para carregar dados quando em modo de edição
-  useEffect(() => {
-    if (location.state?.funcionarioParaEditar) {
-      setFuncionario(location.state.funcionarioParaEditar);
-      setModoEdicao(true);
-      setIndiceEdicao(location.state.indiceParaEditar);
-    }
-  }, [location]);
-
+  
   const [funcionario, setFuncionario] = useState({
     nome: '',
     usuario: '',
@@ -39,8 +32,17 @@ function CadastroFuncionario() {
     cep: '',
     senha: '',
     confirmacaoSenha: ''
-
+    
   })
+
+  // Efeito para carregar dados quando em modo de edição
+  useEffect(() => {
+    if (location.state?.funcionarioParaEditar) {
+      setFuncionario(location.state.funcionarioParaEditar);
+      setModoEdicao(true);
+      setIndiceEdicao(location.state.indiceParaEditar);
+    }
+  }, [location]);
 
   function mudarValores(e) {
     const { id, value } = e.target;
