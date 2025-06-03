@@ -3,7 +3,7 @@ import { Box, Container } from '@mui/material'
 import PageContainer from '../components/PageContainer'
 import CadastroFuncionario from '../components/CadastroFuncionario'
 
-function Funcionario() {
+function Funcionarios() {
   return (
     <PageContainer>
           <CadastroFuncionario />       
@@ -11,4 +11,4 @@ function Funcionario() {
   )
 }
 
-export default Funcionario
+export default Funcionarios;
