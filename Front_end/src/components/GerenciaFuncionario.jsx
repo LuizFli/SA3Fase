@@ -176,7 +176,7 @@ function GerenciamentoFuncionarios() {
                 variant="contained"
                 color="primary"
                 sx={{ width: '200px' }}
-                onClick={() => navigate('/funcionarios')}
+                onClick={() => navigate('/cadastrofun')}
               >
                 Adicionar Funcionário
               </Button>
