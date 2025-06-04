@@ -11,7 +11,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import LineChart from "../graphics/LineChart";
 import RadialChart from "../graphics/RadialChart";
 import BarChart from "../graphics/BarChart";
-import CalendarCard from "../graphics/CalendarCard";
+import SaleChart from "../graphics/SaleChart";
 
 const TesteGraficos = () => {
   return (
@@ -59,7 +59,7 @@ const TesteGraficos = () => {
         {/* Linha Inferior - 3 cards com gráficos do primeiro código */}
         <Box sx={{ 
           display: 'flex',
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
           gap: 3,
           width: '95%',
           margin: '0 auto',
@@ -67,7 +67,7 @@ const TesteGraficos = () => {
         }}>
           <RadialChart />
           <BarChart />
-          <CalendarCard />
+          <SaleChart />
         </Box>
       </Box>
     </LocalizationProvider>

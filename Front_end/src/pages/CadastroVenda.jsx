@@ -19,7 +19,7 @@ import PageContainer from '../components/PageContainer';
 import { useGlobal } from '../contexts/GlobalProvider';
 
 function CadastroVenda() {
-  const { produtos = [], vendas, setVendas } = useGlobal();
+  const { produtos = [], vendas, setVendas, funcionarios = [], setFuncionarios } = useGlobal();
 
   const [formData, setFormData] = useState({
     id_produto: '',
@@ -52,7 +52,7 @@ function CadastroVenda() {
         setFormData(prev => ({
           ...prev,
           veiculo: `${veiculoSelecionado.marca} ${veiculoSelecionado.modelo}`,
-          valor: 50000 // Valor padrão ou você pode calcular com base nos dados do veículo
+          valor: veiculoSelecionado.valor || 0
         }));
       }
     }
@@ -69,8 +69,21 @@ function CadastroVenda() {
     const newErrors = {};
 
     if (!formData.id_produto) newErrors.id_produto = 'Selecione um veículo';
-    if (!formData.matricula_vendedor) newErrors.matricula_vendedor = 'Matrícula é obrigatória';
+    
+    // Validação da matrícula
+    if (!formData.matricula_vendedor) {
+      newErrors.matricula_vendedor = 'Matrícula é obrigatória';
+    } else {
+      const funcionarioExiste = funcionarios.some(
+        f => f.matricula === formData.matricula_vendedor
+      );
+      if (!funcionarioExiste) {
+        newErrors.matricula_vendedor = 'Matrícula não encontrada';
+      }
+    }
+    
     if (!formData.auth_code) newErrors.auth_code = 'Código de autorização é obrigatório';
+    if (formData.valor <= 0) newErrors.valor = 'O valor deve ser positivo';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -79,16 +92,51 @@ function CadastroVenda() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
+    if (!validateForm()) return;
+
+    try {
+      // Encontrar o funcionário pela matrícula
+      const funcionarioIndex = funcionarios.findIndex(
+        f => f.matricula === formData.matricula_vendedor
+      );
+
+      if (funcionarioIndex === -1) {
+        setErrors(prev => ({
+          ...prev,
+          matricula_vendedor: 'Funcionário não encontrado'
+        }));
+        return;
+      }
+
+      // Criar nova venda
       const novaVenda = {
         ...formData,
+        id: vendas.length > 0 ? Math.max(...vendas.map(v => v.id)) + 1 : 1,
         data: formData.data.format('YYYY-MM-DD'),
         valor: Number(formData.valor),
-        produto: formData.veiculo // Usando o nome do veículo como "produto"
+        produto: formData.veiculo,
+        status: 'concluida'
       };
 
+      // Atualizar vendas
       setVendas([...vendas, novaVenda]);
 
+      // Atualizar funcionário - somar valor da venda ao total
+      const funcionariosAtualizados = [...funcionarios];
+      const vendaTotalAtual = parseFloat(funcionariosAtualizados[funcionarioIndex].financeiro.vendaTotal) || 0;
+      const novaVendaTotal = vendaTotalAtual + novaVenda.valor;
+      
+      funcionariosAtualizados[funcionarioIndex] = {
+        ...funcionariosAtualizados[funcionarioIndex],
+        financeiro: {
+          ...funcionariosAtualizados[funcionarioIndex].financeiro,
+          vendaTotal: novaVendaTotal.toString()
+        }
+      };
+
+      setFuncionarios(funcionariosAtualizados);
+
+      // Reset form
       setFormData({
         id_produto: '',
         veiculo: '',
@@ -99,6 +147,9 @@ function CadastroVenda() {
       });
 
       alert('Venda cadastrada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao cadastrar venda:', error);
+      alert('Ocorreu um erro ao cadastrar a venda');
     }
   };
 

@@ -24,7 +24,7 @@ const Funcionario = ({ funcionario }) => {
       color: '#e65f2b',
     },
     transition: 'transform 0.3s ease',
-   
+
     '.MuiAccordionSummary-root.Mui-expanded &': {
       transform: 'rotate(-90deg)', // rotação do ícone quando expandido
     },
@@ -35,19 +35,29 @@ const Funcionario = ({ funcionario }) => {
       console.error("O valor fornecido não é um número.");
       return "R$ 0,00";
     }
-  
+
     return valor.toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL'
     });
   }
-
+  function calcularPorcentagem(valorParcial, valorTotal) {
+    if (valorTotal === 0) return 0;
+    const porcentagem = (valorParcial / valorTotal) * 100;
+    return parseFloat(porcentagem.toFixed(2));
+  }
+  function formatarPorcentagem(valorNumerico) {
+    return valorNumerico.toFixed(2) + '%';
+  }
+  function calcularValorPorcentagem(valorTotal, porcentagem) {
+    return (valorTotal * porcentagem) / 100;
+  }
   return (
 
 
-    <Accordion sx={{mb:'10px', borderRadius:'5px'}}>
+    <Accordion sx={{ mb: '10px', borderRadius: '5px' }}>
       <AccordionSummary
-        expandIcon={<StyledExpandIcon />} 
+        expandIcon={<StyledExpandIcon />}
         aria-controls="panel-content"
         id="panel-header"
       >
