@@ -2,10 +2,21 @@ import { Avatar, Box, Button, Stack, TextField, Typography, MenuItem, InputAdorn
 import React, { useState } from 'react'
 import NavBar from './NavBar'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { useLocation, useNavigate } from 'react-router'
+import { useEffect } from 'react'
+import { useGlobal } from '../contexts/GlobalProvider'
 
 function CadastroFuncionario() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [sexo, setSexo] = React.useState('')
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [modoEdicao, setModoEdicao] = useState(false);
+  const [indiceEdicao, setIndiceEdicao] = useState(null);
+  const { funcionarios, setFuncionarios } = useGlobal(); // Assuming you have a context or state management for funcionarios
+
+
+  
   const [funcionario, setFuncionario] = useState({
     nome: '',
     usuario: '',
@@ -22,9 +33,24 @@ function CadastroFuncionario() {
     estado: '', 
     cep: '',
     senha: '',
-    confirmacaoSenha: ''
-
+    confirmacaoSenha: '',
+    foto: '',
+    financeiro: {
+      meta: '',
+      vendaTotal: '',
+      comissao: ''
+    }
+    
   })
+
+  // UseEfeito para carregar dados quando em modo de edição
+  useEffect(() => {
+    if (location.state?.funcionarioParaEditar) {
+      setFuncionario(location.state.funcionarioParaEditar);
+      setModoEdicao(true);
+      setIndiceEdicao(location.state.indiceParaEditar);
+    }
+  }, [location]);
 
   function mudarValores(e) {
     const { id, value } = e.target;
@@ -33,11 +59,65 @@ function CadastroFuncionario() {
       [id]: value
     });
   }
+  
   function Cadastrar() {
+
+    if(!funcionario.nome || !funcionario.usuario){
+      alert("Preencha todos os campos")
+      return
+    }
+
+    // Obter lista existente ou criar nova
+    const listaFuncionarios = JSON.parse(localStorage.getItem('funcionarios') || '[]');
+
+    if (modoEdicao) {
+      // Modo edição - atualiza o funcionário existente
+      listaFuncionarios[indiceEdicao] = funcionario;
+      alert("Funcionário atualizado com sucesso!");
+    }
     
+    // Verificar se usuário já existe
+    const usuarioExistente = listaFuncionarios.some(
+      f => f.usuario === funcionario.usuario
+    );
+    
+    if(usuarioExistente) {
+      alert('Já existe um funcionário com este nome de usuário');
+      return;
+    }
+    // setFuncionarios(...,funcionario); ARMAZENAMENTO GLOBAL
+    // Adicionar novo funcionário
+    listaFuncionarios.push(funcionario);
+
+    // Salvar lista atualizada
+    localStorage.setItem('funcionarios', JSON.stringify(listaFuncionarios));
+
+    // Redirecionar para a página de gerenciamento
+    navigate('/gerenciaFun');
+   
   };
 
+
   function ApagarDados() {
+
+    setFuncionario({
+    nome: '',
+    usuario: '',
+    dataNascimento: '',
+    sexo: '',
+    cpf: '',
+    rg: '',
+    email: '',
+    telefone: '',
+    cargo: '',
+    rua: '', 
+    numero: '',
+    cidade: '',
+    estado: '', 
+    cep: '',
+    senha: '',
+    confirmacaoSenha: ''
+    })
     
   };
 
@@ -133,7 +213,7 @@ function CadastroFuncionario() {
                         filter: 'invert(1)', 
                       },
                     }}
-
+                    onChange={mudarValores}
                     value={funcionario.dataNascimento}
                   />
                   <TextField
@@ -145,9 +225,11 @@ function CadastroFuncionario() {
                     variant="outlined"
                     value={sexo}
                     onChange={(e) => setSexo(e.target.value)}
+                    onBlur={() => setFuncionario({ ...funcionario, sexo })} // Update funcionario state when sexo changes
                   >
                     <MenuItem value="M">Masculino</MenuItem>
                     <MenuItem value="F">Feminino</MenuItem>
+                    
                   </TextField>
                 </Stack>
 
@@ -167,13 +249,13 @@ function CadastroFuncionario() {
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                   <TextField fullWidth size='small' id="rua" label="Endereço / Nome da Rua" variant="outlined" onChange={mudarValores} value={funcionario.rua}></TextField>
-                  <TextField size='small' id="numero" label="Número" variant="outlined" sx={{ width: '120px' }} onChange={mudarValores} value={funcionario.numero}></TextField>
+                  <TextField type='' size='small' id="numero" label="Número" variant="outlined" sx={{ width: '120px' }} onChange={mudarValores} value={funcionario.numero}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                   <TextField fullWidth size='small' id="cidade" label="Cidade" variant="outlined" onChange={mudarValores} value={funcionario.cidade}></TextField>
-                  <TextField size='small' id="estado" label="Estado" variant="outlined" sx={{ width: '120px' }} onChange={mudarValores} value={funcionario.estado}></TextField>
-                  <TextField size='small' id="cep" label="CEP" variant="outlined" sx={{ width: '120px' }} onChange={mudarValores} value={funcionario.cep}></TextField>
+                  <TextField type='text' size='small' id="estado" label="Estado" variant="outlined" sx={{ width: '400px' }} onChange={mudarValores} value={funcionario.estado}></TextField>
+                  <TextField type='text' size='small' id="cep" label="CEP" variant="outlined" sx={{ width: '220px' }} onChange={mudarValores} value={funcionario.cep}></TextField>
                 </Stack>
 
                 <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
