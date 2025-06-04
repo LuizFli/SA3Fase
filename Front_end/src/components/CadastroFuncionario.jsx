@@ -35,7 +35,7 @@ function CadastroFuncionario() {
     
   })
 
-  // Efeito para carregar dados quando em modo de edição
+  // UseEfeito para carregar dados quando em modo de edição
   useEffect(() => {
     if (location.state?.funcionarioParaEditar) {
       setFuncionario(location.state.funcionarioParaEditar);

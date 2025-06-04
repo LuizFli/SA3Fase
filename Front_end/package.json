@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "install-all": "npm install @mui/material @emotion/react @emotion/styled react-router-dom react-router react react-dom @nivo/core @nivo/bar @nivo/line @nivo/pie @mui/icons-material dayjs @mui/x-date-pickers date-fns formik yup @mui/x-date-pickers date-fns react-apexcharts apexcharts",
+    "install-all": "npm install @mui/material @emotion/react @emotion/styled react-router-dom react-router react react-dom @nivo/core @nivo/bar @nivo/line @nivo/pie @mui/icons-material dayjs @mui/x-date-pickers date-fns formik yup @mui/x-date-pickers date-fns react-apexcharts apexcharts react-input-mask",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -27,8 +27,8 @@
     "react": "^19.1.0",
     "react-apexcharts": "^1.7.0",
     "react-dom": "^19.1.0",
-    "react-router": "^7.6.1",
-    "react-router-dom": "^7.6.1",
+    "react-router": "^7.6.2",
+    "react-router-dom": "^7.6.2",
     "yup": "^1.6.1"
   },
   "devDependencies": {
