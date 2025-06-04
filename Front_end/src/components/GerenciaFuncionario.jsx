@@ -8,7 +8,7 @@ function GerenciamentoFuncionarios() {
   const [funcionarios, setFuncionarios] = useState([])
   const [showPassword, setShowPassword] = useState({})
   const navigate = useNavigate();
-  
+
   // Carrega os funcionários do localStorage quando o componente é montado
   useEffect(() => {
     carregarFuncionarios();
@@ -28,7 +28,7 @@ function GerenciamentoFuncionarios() {
     }))
   }
 
-   //Botão para editar dados de um funcionário
+  //Botão para editar dados de um funcionário
   const editarDados = (index) => {
     navigate('/funcionarios', {
       state: {
@@ -36,10 +36,10 @@ function GerenciamentoFuncionarios() {
         indiceParaEditar: index
       }
     });
-    
+
     const novosFuncionarios = [...funcionarios]
     novosFuncionarios.
-    setFuncionarios(novosFuncionarios)
+      setFuncionarios(novosFuncionarios)
     localStorage.setItem('funcionarios', JSON.stringify(novosFuncionarios))
   }
 
@@ -52,58 +52,58 @@ function GerenciamentoFuncionarios() {
   }
 
   return (
-    <Box sx={{ 
-      p: 0, 
-      m: '0', 
-      width: '100%', 
-      height: '100%', 
-      backgroundColor: 'whitesmoke', 
-      display: 'flex', 
+    <Box sx={{
+      p: 0,
+      m: '0',
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'whitesmoke',
+      display: 'flex',
       flexDirection: 'row',
       overflow: 'hidden'
     }}>
-      <Box sx={{ 
-        p: '0', 
-        m: '0', 
-        width: '100%', 
-        height: '100%', 
-        backgroundColor: '#EBDFD7', 
-        display: 'flex', 
+      <Box sx={{
+        p: '0',
+        m: '0',
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#EBDFD7',
+        display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden'
       }}>
 
-        <Box sx={{ 
-          p: '0', 
-          m: '0', 
-          width: '100%', 
-          height: '15%', 
-          display: 'flex', 
+        <Box sx={{
+          p: '0',
+          m: '0',
+          width: '100%',
+          height: '15%',
+          display: 'flex',
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center'
         }}>
-          <Typography variant="h3" component="h2" sx={{color: '#133337', fontWeight: 'bold'}}>
+          <Typography variant="h3" component="h2" sx={{ color: '#133337', fontWeight: 'bold' }}>
             Gerenciamento de Funcionários
           </Typography>
         </Box>
 
-        <Box sx={{ 
-          p: '0', 
-          m: '0', 
-          width: '100%', 
-          height: '85%', 
-          display: 'flex', 
+        <Box sx={{
+          p: '0',
+          m: '0',
+          width: '100%',
+          height: '85%',
+          display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           overflow: 'hidden'
         }}>
 
-          <Box sx={{ 
-            width: '90%', 
-            height: '90%', 
-            backgroundColor: 'var(--box-color)', 
+          <Box sx={{
+            width: '90%',
+            height: '90%',
+            backgroundColor: 'var(--box-color)',
             borderRadius: '20px',
             display: 'flex',
             flexDirection: 'column',
@@ -146,12 +146,16 @@ function GerenciamentoFuncionarios() {
                         </TableCell>
                         <TableCell>
                           <Stack direction="row" spacing={1}>
-                            <IconButton color="primary" aria-label="editar" onClick={() => editarDados(index)}>
-                              <Edit />
-                            </IconButton>
-                            <IconButton color="error" aria-label="deletar" onClick={() => handleDelete(index)}>
-                              <Delete />
-                            </IconButton>
+                            <Button sx={{ backgroundColor: 'var(--secondary-color)', width: '90px' }} aria-label="editar" onClick={() => editarDados(index)}>
+                              <IconButton >
+                                <Edit sx={{ color: 'white' }} />
+                              </IconButton>
+                            </Button>
+                            <Button sx={{backgroundColor: 'var(--primary-color)',width: '90px' }} aria-label="deletar" onClick={() => handleDelete(index)}>
+                              <IconButton >
+                                <Delete sx={{color: 'white'}}/>
+                              </IconButton>
+                            </Button>
                           </Stack>
                         </TableCell>
                       </TableRow>
@@ -168,19 +172,33 @@ function GerenciamentoFuncionarios() {
             </TableContainer>
 
             <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-              <Button 
-                variant="contained" 
-                color="primary" 
+              <Button
+                variant="contained"
+                color="primary"
                 sx={{ width: '200px' }}
-                onClick={() => navigate('/funcionarios')}
+                onClick={() => navigate('/cadastrofun')}
               >
                 Adicionar Funcionário
               </Button>
 
-              <Button 
-                variant="contained" 
-                color="secondary" 
-                sx={{ width: '200px' }}
+
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: '#4CAF50',
+                  color: 'white',
+                  width: '200px',
+                  '&:hover': { backgroundColor: '#3e8e41' }
+                }}
+                onClick={carregarFuncionarios}
+              >
+                Atualizar Lista
+              </Button>
+
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ width: '200px', backgroundColor: "var(--primary-color)" }}
                 onClick={() => {
                   localStorage.removeItem('funcionarios')
                   setFuncionarios([])
@@ -189,18 +207,6 @@ function GerenciamentoFuncionarios() {
                 Limpar Todos
               </Button>
 
-              <Button 
-                variant="contained" 
-                sx={{ 
-                backgroundColor: '#4CAF50', 
-                color: 'white',
-                width: '200px',
-                '&:hover': { backgroundColor: '#3e8e41' }
-                }}
-                onClick={carregarFuncionarios}
-              >
-                Atualizar Lista
-              </Button>
             </Stack>
 
           </Box>

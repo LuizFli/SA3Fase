@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../components/MainLayout"; // Novo componente de layout
 import Home from "../pages/Home";
 import EstoqueProdutos from "../pages/EstoqueProdutos";
-import CadastroProduto from "../pages/CadastroProduto";
 import CadastroVenda from "../pages/CadastroVenda";
 import Funcionario from "../pages/Funcionarios";
 import GerenciaAcesso from "../pages/GerenciaAcesso";
@@ -28,7 +27,6 @@ const router = createBrowserRouter([
       { path: "/funcionarios", element: <Funcionario /> },
       { path: "/gerenciaAcesso", element: <GerenciaAcesso /> },
       { path: "/produtos", element: <EstoqueProdutos /> },
-      { path: "/cadProduto", element: <CadastroProduto /> },
       { path: "/configuracoes", element: <HistoricoVendas /> },
       { path: "/relatorio", element: <Relatorio /> },
       { path: "/logout", element: <TesteGraficos /> },
