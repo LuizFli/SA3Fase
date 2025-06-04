@@ -4,12 +4,15 @@ import {
     Box,
 } from '@mui/material';
 import Funcionario from '../components/Funcionario';
-
 import PageContainer from '../components/PageContainer';
+import { useGlobal } from '../contexts/GlobalProvider';
+
+    
 
 
 
 const ListaFuncionarios = () => {
+    const { funcionarios, setFuncionarios } = useGlobal()
     const funcionariosData = [
         {
             id: 1,

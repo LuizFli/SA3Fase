@@ -4,6 +4,7 @@ import NavBar from './NavBar'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router'
 import { useEffect } from 'react'
+import { useGlobal } from '../contexts/GlobalProvider'
 
 function CadastroFuncionario() {
   const [showPassword, setShowPassword] = React.useState(false)
@@ -12,6 +13,7 @@ function CadastroFuncionario() {
   const navigate = useNavigate();
   const [modoEdicao, setModoEdicao] = useState(false);
   const [indiceEdicao, setIndiceEdicao] = useState(null);
+  const { funcionarios, setFuncionarios } = useGlobal(); // Assuming you have a context or state management for funcionarios
 
 
   
@@ -31,7 +33,13 @@ function CadastroFuncionario() {
     estado: '', 
     cep: '',
     senha: '',
-    confirmacaoSenha: ''
+    confirmacaoSenha: '',
+    foto: '',
+    financeiro: {
+      meta: '',
+      vendaTotal: '',
+      comissao: ''
+    }
     
   })
 
@@ -77,7 +85,7 @@ function CadastroFuncionario() {
       alert('Já existe um funcionário com este nome de usuário');
       return;
     }
-
+    // setFuncionarios(...,funcionario); ARMAZENAMENTO GLOBAL
     // Adicionar novo funcionário
     listaFuncionarios.push(funcionario);
 
