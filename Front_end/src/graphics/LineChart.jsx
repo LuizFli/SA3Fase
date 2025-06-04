@@ -5,10 +5,10 @@ import { Box, Typography, Paper } from '@mui/material';
 const LineChart = () => {
   const options = {
     chart: { type: 'line', toolbar: { show: false } },
-    colors: ['#FF9130', '#00FF66'],
+    colors: ['#e65f2b', '#00FF66'],
     stroke: { curve: 'smooth', width: 3 },
     xaxis: { categories: ['FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL'] },
-    legend: { show: true, position: 'top', markers: { radius: 5 } },
+    legend: { show: true, position: 'top',horizontalAlign: "right", markers: { radius: 5 } },
   };
 
   const series = [
@@ -17,9 +17,9 @@ const LineChart = () => {
   ];
 
   return (
-    <Paper elevation={3} sx={{ p: 3, borderRadius: 4, width: '95%' }}>
+    <Paper elevation={3} sx={{ p: 3, borderRadius: 4, width: '100%' }}>
       <Typography variant="h6" sx={{ fontWeight: 'bold' }}>R$ 102.5M</Typography>
-      <Typography variant="body2" color="error" sx={{ mb: 2 }}>Receita Total</Typography>
+      <Typography variant="body1" color="#e65f2b" sx={{ mb: 2, fontWeight: 'bold'}}>Receita Total</Typography>
       <ReactApexChart options={options} series={series} type="line" height={250} />
     </Paper>
   );

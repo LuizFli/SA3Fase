@@ -4,7 +4,23 @@ import { Box, Typography, Paper, Select, MenuItem } from '@mui/material';
 
 const BarChart = () => {
   const options = {
-    chart: { type: 'bar', toolbar: { show: false } },
+    chart: { 
+      type: 'bar', 
+      toolbar: { show: false },
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+        animateGradually: {
+          enabled: true,
+          delay: 150
+        },
+        dynamicAnimation: {
+          enabled: true,
+          speed: 350
+        }
+      }
+    },
     plotOptions: {
       bar: {
         borderRadius: 5,
@@ -13,9 +29,21 @@ const BarChart = () => {
     },
     dataLabels: { enabled: false },
     xaxis: {
-      categories: ['M', 'T', 'W', 'Th', 'F', 'S'],
+      categories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
     },
     colors: ['#E6C5FF'],
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shade: 'dark',
+        gradientToColors: ['#9C27B0'],
+        shadeIntensity: 1,
+        type: 'vertical',
+        opacityFrom: 0.9,
+        opacityTo: 0.7,
+        stops: [0, 100]
+      }
+    }
   };
 
   const series = [
@@ -28,7 +56,7 @@ const BarChart = () => {
   return (
     <Paper elevation={3} sx={{ p: 3, borderRadius: 4, flex: 1 }}>
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="subtitle1">Ação do vendedor</Typography>
+        <Typography variant="subtitle1">Ações dos Vendedores</Typography>
         <Select size="small" value="Semana" sx={{ fontSize: '0.875rem' }} disabled>
           <MenuItem value="Semana">Semana</MenuItem>
         </Select>
