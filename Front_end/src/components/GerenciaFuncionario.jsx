@@ -123,6 +123,7 @@ function GerenciamentoFuncionarios() {
                     <TableCell>CPF</TableCell>
                     <TableCell>Telefone</TableCell>
                     <TableCell>Cargo</TableCell>
+                    <TableCell>Identificador</TableCell>
                     <TableCell>Senha</TableCell>
                     <TableCell>Ações</TableCell>
                   </TableRow>
@@ -136,6 +137,7 @@ function GerenciamentoFuncionarios() {
                         <TableCell>{funcionario.cpf}</TableCell>
                         <TableCell>{funcionario.telefone}</TableCell>
                         <TableCell>{funcionario.cargo}</TableCell>
+                        <TableCell>{funcionario.identificador}</TableCell>
                         <TableCell>
                           <Stack direction="row" alignItems="center">
                             {showPassword[index] ? funcionario.senha : '••••••••'}

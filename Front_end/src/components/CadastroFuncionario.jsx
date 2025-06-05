@@ -23,6 +23,7 @@ function CadastroFuncionario() {
     sexo: '',
     cpf: '',
     rg: '',
+    identificador: '',
     email: '',
     telefone: '',
     cargo: '',
@@ -60,8 +61,9 @@ function CadastroFuncionario() {
   }
 
   function Cadastrar() {
-
-    if (!funcionario.nome || !funcionario.usuario) {
+    
+    
+    if (!funcionario.nome || !funcionario.usuario || !funcionario.dataNascimento || !funcionario.cargo || !funcionario.cpf || !funcionario.email || !funcionario.sexo || !funcionario.rg || !funcionario.telefone || !funcionario.rua || !funcionario.numero || !funcionario.cidade || !funcionario.cep || !funcionario.estado || !funcionario.senha || !funcionario.confirmacaoSenha) {
       alert("Preencha todos os campos")
       return
     }
@@ -115,6 +117,7 @@ function CadastroFuncionario() {
       sexo: '',
       cpf: '',
       rg: '',
+      identificador: '',
       email: '',
       telefone: '',
       cargo: '',
@@ -249,6 +252,7 @@ function CadastroFuncionario() {
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                 <TextField fullWidth size='small' id="email" label="E-mail" type="email" variant="outlined" onChange={mudarValores} value={funcionario.email}></TextField>
                 <TextField fullWidth size='small' id="telefone" label="Telefone" variant="outlined" onChange={mudarValores} value={funcionario.telefone}></TextField>
+                <TextField fullWidth size='small' id="identificador" label="Identificador" variant="outlined" onChange={mudarValores} value={funcionario.identificador}></TextField>
               </Stack>
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
