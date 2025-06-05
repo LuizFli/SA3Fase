@@ -62,10 +62,21 @@ function CadastroFuncionario() {
 
   function Cadastrar() {
     
-    
-    if (!funcionario.nome || !funcionario.usuario || !funcionario.dataNascimento || !funcionario.cargo || !funcionario.cpf || !funcionario.email || !funcionario.sexo || !funcionario.rg || !funcionario.telefone || !funcionario.rua || !funcionario.numero || !funcionario.cidade || !funcionario.cep || !funcionario.estado || !funcionario.senha || !funcionario.confirmacaoSenha) {
-      alert("Preencha todos os campos")
-      return
+    const camposObrigatorios = [
+      'nome', 'usuario', 'dataNascimento', 'sexo', 'cpf', 'rg', 'identificador', 'email',
+      'telefone', 'cargo', 'rua', 'numero', 'cidade', 'estado', 'cep',
+      'senha', 'confirmacaoSenha'
+  ];
+
+  const campoFaltante = camposObrigatorios.find(campo => !funcionario[campo]);
+    if (campoFaltante) {
+        alert(`Por favor, preencha o campo ${campoFaltante}`);
+        return;
+    }
+
+    if (funcionario.senha !== funcionario.confirmacaoSenha) {
+        alert("As senhas não coincidem!");
+        return;
     }
 
     // Obter lista existente ou criar nova
@@ -77,9 +88,6 @@ function CadastroFuncionario() {
       alert("Funcionário atualizado com sucesso!");
       localStorage.setItem('funcionarios', JSON.stringify(listaFuncionarios));
     }
-
-    // Atualiza o funcionário existente
-    //listaFuncionarios[indiceEdicao] = funcionario;
 
     // Atualiza o estado global
     setFuncionarios(listaFuncionarios);
