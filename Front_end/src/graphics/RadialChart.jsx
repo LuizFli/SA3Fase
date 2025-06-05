@@ -19,7 +19,7 @@ const RadialChart = () => {
         inverseOrder: false,
         hollow: {
           margin: 5,
-          size: '48%',
+          size: '50%',
           background: 'transparent',
         },
         track: {

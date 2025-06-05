@@ -18,8 +18,8 @@ const LineChart = () => {
 
   return (
     <Paper elevation={3} sx={{ p: 3, borderRadius: 4, width: '100%' }}>
-      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>R$ 102.5M</Typography>
-      <Typography variant="body1" color="#e65f2b" sx={{ mb: 2, fontWeight: 'bold'}}>Receita Total</Typography>
+      <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Receita Total</Typography>
+      <Typography variant="body1" color="#e65f2b" sx={{ mb: 2, fontWeight: 'bold'}}>R$ 102.5M</Typography>
       <ReactApexChart options={options} series={series} type="line" height={250} />
     </Paper>
   );
