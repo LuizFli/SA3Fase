@@ -17,7 +17,7 @@ export function GlobalProvider({ children }) {
     {
       id: 1,
       nome: "João Silva",
-      matricula: "48456",
+      identificador: "48456",
       cpf: "123.456.789-00",
       telefone: "(11) 98765-4321",
       foto: "",

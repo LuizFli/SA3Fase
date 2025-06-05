@@ -26,7 +26,7 @@ function CadastroVenda() {
     veiculo: '',
     valor: '',
     data: dayjs(),
-    matricula_vendedor: '',
+    identificador_vendedor: '',
     auth_code: ''
   });
 
@@ -71,14 +71,14 @@ function CadastroVenda() {
     if (!formData.id_produto) newErrors.id_produto = 'Selecione um veículo';
     
     // Validação da matrícula
-    if (!formData.matricula_vendedor) {
-      newErrors.matricula_vendedor = 'Matrícula é obrigatória';
+    if (!formData.identificador_vendedor) {
+      newErrors.identificador_vendedor = 'Matrícula é obrigatória';
     } else {
       const funcionarioExiste = funcionarios.some(
-        f => f.matricula === formData.matricula_vendedor
+        f => f.identificador === formData.identificador_vendedor
       );
       if (!funcionarioExiste) {
-        newErrors.matricula_vendedor = 'Matrícula não encontrada';
+        newErrors.identificador_vendedor = 'Matrícula não encontrada';
       }
     }
     
@@ -97,13 +97,13 @@ function CadastroVenda() {
     try {
       // Encontrar o funcionário pela matrícula
       const funcionarioIndex = funcionarios.findIndex(
-        f => f.matricula === formData.matricula_vendedor
+        f => f.identificador === formData.identificador_vendedor
       );
 
       if (funcionarioIndex === -1) {
         setErrors(prev => ({
           ...prev,
-          matricula_vendedor: 'Funcionário não encontrado'
+          identificador_vendedor: 'Funcionário não encontrado'
         }));
         return;
       }
@@ -142,7 +142,7 @@ function CadastroVenda() {
         veiculo: '',
         valor: '',
         data: dayjs(),
-        matricula_vendedor: '',
+        identificador_vendedor: '',
         auth_code: ''
       });
 
@@ -262,12 +262,12 @@ function CadastroVenda() {
                   </LocalizationProvider>
 
                   <TextField
-                    label="Matrícula do Vendedor"
-                    name="matricula_vendedor"
-                    value={formData.matricula_vendedor}
+                    label="Identificador do Vendedor"
+                    name="identificador_vendedor"
+                    value={formData.identificador_vendedor}
                     onChange={handleChange}
-                    error={!!errors.matricula_vendedor}
-                    helperText={errors.matricula_vendedor}
+                    error={!!errors.identificador_vendedor}
+                    helperText={errors.identificador_vendedor}
                     fullWidth
                     placeholder="Ex: V00123"
                   />
@@ -300,7 +300,7 @@ function CadastroVenda() {
                         veiculo: '',
                         valor: '',
                         data: dayjs(),
-                        matricula_vendedor: '',
+                        identificador_vendedor: '',
                         auth_code: ''
                       });
                       setErrors({});

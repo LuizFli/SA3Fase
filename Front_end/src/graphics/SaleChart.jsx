@@ -18,6 +18,22 @@ const SaleChart = () => {
           gap: 2,
           overflowY: 'auto', // Adiciona barra de rolagem
           maxHeight: 240, // Define a altura máxima do conteúdo rolável
+           '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+        },
+        '&::-webkit-scrollbar-track': {
+            background: 'transparent',
+            borderRadius: '10px',
+
+        },
+        '&::-webkit-scrollbar-thumb': {
+            background: '#ebd3bb',
+            borderRadius: '10px',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+            background: '#e65f2b',
+        }
         }}
       >
         {vendas.map((venda) => (

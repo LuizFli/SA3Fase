@@ -92,7 +92,7 @@ const Funcionario = ({ funcionario }) => {
                   </TableCell>
 
 
-                  <TableCell sx={{ maWidth: '15%', fontWeight: 'bold', fontSize: '20px' }}>Matrícula</TableCell>
+                  <TableCell sx={{ maWidth: '15%', fontWeight: 'bold', fontSize: '20px' }}>Identificador</TableCell>
                   <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Email</TableCell>
                   <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Telefone</TableCell>
                   <TableCell sx={{ width: '15%', fontWeight: 'bold', fontSize: '20px' }}>CPF</TableCell>
@@ -101,7 +101,7 @@ const Funcionario = ({ funcionario }) => {
 
                 <TableRow>
 
-                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.matricula}</TableCell>
+                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.identificador}</TableCell>
                   <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.email}</TableCell>
                   <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.telefone}</TableCell>
                   <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.cpf}</TableCell>

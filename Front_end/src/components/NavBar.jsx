@@ -55,9 +55,10 @@ export default function PermanentSidebar() {
 
   const menuItems = [
     { text: 'Inicio', icon: <Home />, path: '/dashbord' },
+    { text: 'Cadastro Vendas', icon: <Edit />, path: '/cadastroVenda'},
     { text: 'Funcionários', icon: <People />, path: '/funcionarios' },
     { text: 'Produtos', icon: <Apps />, path: '/produtos' },
-    {text: 'Gerenciamento Funcionários', icon: <Edit />, path: '/gerenciaFun'},
+    { text: 'Gerenciamento Funcionários', icon: <Edit />, path: '/gerenciaFun'},
     { text: 'Configurações', icon: <Settings />, path: '/configuracoes' },
     { text: 'Sair', icon: <Logout />, path: '/' },
   ];
