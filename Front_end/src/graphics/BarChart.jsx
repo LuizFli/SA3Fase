@@ -56,7 +56,7 @@ const BarChart = () => {
   return (
     <Paper elevation={3} sx={{ p: 3, borderRadius: 4, flex: 1 }}>
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="subtitle1">Ações dos Vendedores</Typography>
+        <Typography variant="subtitle1" sx={{fontWeight: 'bold'}}>Ações dos Vendedores</Typography>
         <Select size="small" value="Semana" sx={{ fontSize: '0.875rem' }} disabled>
           <MenuItem value="Semana">Semana</MenuItem>
         </Select>

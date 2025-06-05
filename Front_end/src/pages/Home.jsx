@@ -31,21 +31,21 @@ const TesteGraficos = () => {
           justifyContent: 'space-between', 
           alignItems: 'center',
           mb: 1,
-          pl: 2,
-          pr: 2,
+          pl: 5,
+          pr: 5,
           pt: 2,
         }}>
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
               Bem-vindo Arthur Viecili
             </Typography>
-            <Typography variant="subtitle1" color="text.secondary">
+            <Typography variant="subtitle1" color="text.secondary" sx={{ fontWeight: 'bold' }}>
               Aqui está o seu painel de previsão de vendas
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton>
-              <NotificationsActiveIcon color="success" />
+              <NotificationsActiveIcon  sx={{ color: '#ff5900'}} />
             </IconButton>
             <Avatar alt="Arthur Viecili" src="https://via.placeholder.com/40" />
           </Box>

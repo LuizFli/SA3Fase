@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: rgba(12, 1, 1, 0.87);
-  background-color: #ebdfd7;
+  background-color: #EBD3BB;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,7 +24,7 @@ body {
   --primary-color: #e65f2b;
   --secondary-color: #0a0a09;
   --accent-color: #f2eae5;
-  --background-color: #ebdfd7;
+  --background-color: #EBD3BB;
   --box-color: #ffff;
   --text-color: #0a0a09;
 }

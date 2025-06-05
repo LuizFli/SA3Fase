@@ -10,8 +10,8 @@ const RadialChart = () => {
     chart: {
       type: 'radialBar',
       height: 320,
-      offsetY: -30,
-      offsetX: 20
+      offsetY: 5, // Adicionado para centralizar verticalmente
+      offsetX: 20,
     },
     plotOptions: {
       radialBar: {
@@ -31,15 +31,15 @@ const RadialChart = () => {
         },
         dataLabels: {
           total: {
-            show: false
-          }
-        }
+            show: false,
+          },
+        },
       },
     },
     colors: ['#ff5900', '#00FF66', '#f02fc2'], // Colors from the example
     stroke: {
       lineCap: 'round',
-      width: 3
+      width: 3,
     },
     labels: [`Produtos Vendidos `, `Comissões`], // Modified labels
     legend: {
@@ -48,8 +48,8 @@ const RadialChart = () => {
       offsetX: -30,
       offsetY: 10,
       formatter: function (val, opts) {
-        return val + " - " + opts.w.globals.series[opts.seriesIndex] + '%';
-      }
+        return val + ' - ' + opts.w.globals.series[opts.seriesIndex] + '%';
+      },
     },
     fill: {
       type: 'gradient',
@@ -60,9 +60,9 @@ const RadialChart = () => {
         inverseColors: true,
         opacityFrom: 1,
         opacityTo: 1,
-        stops: [0, 100]
-      }
-    }
+        stops: [0, 100],
+      },
+    },
   };
 
   const series = [vendidos, comissoes];
@@ -70,7 +70,9 @@ const RadialChart = () => {
   return (
     <Paper elevation={3} sx={{ p: 3, borderRadius: 4, flex: 1 }}>
       <Box display="flex" justifyContent="space-between">
-        <Typography variant="h6" sx={{fontWeight: 'bold'}}>Produtos Vendidos</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          Produtos Vendidos
+        </Typography>
         <Select size="small" value="2025" sx={{ fontSize: '0.875rem' }} disabled>
           <MenuItem value="2025">2025</MenuItem>
         </Select>
