@@ -15,7 +15,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+body, html {
+  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -28,3 +29,4 @@ body {
   --box-color: #ffff;
   --text-color: #0a0a09;
 }
+

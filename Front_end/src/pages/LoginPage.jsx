@@ -1,45 +1,66 @@
-import { CssBaseline, Box, Container } from '@mui/material';
-import { AuthProvider } from '../contexts/AuthContext';
-import { Login } from '@mui/icons-material';
-import React from 'react';
-import LoginHeader from '../components/LoginHeader';
-import LoginForm from '../components/LoginFrom';
-
+import { CssBaseline, Grid, Box, Typography } from '@mui/material';
+import LoginForm from '../components/LoginForm';
 
 export default function LoginPage() {
     return (
-        <AuthProvider>
+        <Grid container component="main" sx={{ height: '100vh' }}>
             <CssBaseline />
-            <Box
+            <Grid
+                size={6}
                 sx={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'grey.800',
+                    background: 'linear-gradient(135deg, #FF6D00 0%, #FF9100 100%)',
                     display: 'flex',
-                    justifyContent: 'center',
+                    flexDirection: 'column',
                     alignItems: 'center',
-                }}>
+                    justifyContent: 'center',
+                    height: '100vh',
+                    position: 'relative'
+                }}
+            >
+                <Box sx={{ textAlign: 'center', color: 'white', p: 4, zIndex: 1 }}>
+                    <Typography variant="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+                        SalesSight
+                    </Typography>
+                    <Typography variant="h5">
+                        Transformando dados em decisões
+                    </Typography>
+                </Box>
+                
+                {/* Imagem - ajuste o caminho conforme sua estrutura de arquivos */}
+                <img 
+                    src="/Imagens/PaginadeLogin.png" 
+                    alt="Ilustração de login" 
+                    style={{ 
+                        maxWidth: '80%',
+                        maxHeight: '50%',
+                        objectFit: 'contain',
+                        marginTop: '20px'
+                    }} 
+                />
+            </Grid>
 
-                <Container component="main" maxWidth="xs" sx={{ maxHeight:'80%' ,backgroundColor: 'whitesmoke', boxShadow: '0 0 10px 1px whitesmoke', borderRadius:'15px'}}>
-                    <Box
-                        sx={{
-                            marginTop: 0,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            width: '100%',
-                           
-                        }}
+            {/* Lado direito - formulário */}
+            <Grid
+                size={6}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100vh',
+                    backgroundColor: 'background.paper',
+                }}
+            >
+                <Box sx={{ width: '100%', maxWidth: 400, p: 3 }}>
+                    <Typography
+                        variant="h4"
+                        sx={{ fontWeight: 'bold', mb: 4, textAlign: 'center' }}
                     >
-                        <LoginHeader />
-                        <LoginForm />
-
-                    </Box>
-                </Container>
-            </Box>
-        </AuthProvider>
+                        Entrar & Conectar-se aos melhores relatórios de venda
+                    </Typography>
+                    
+                    <LoginForm />
+                </Box>
+            </Grid>
+        </Grid>
     );
 }

@@ -23,7 +23,6 @@ const TesteGraficos = () => {
         p: 0,
         gap: 3,
         margin: 0,
-        backgroundColor: '#EBD3BB', // Mantendo o fundo do primeiro código
       }}>
         {/* Cabeçalho (igual ao primeiro código) */}
         <Box sx={{ 
