@@ -13,50 +13,7 @@ import { useGlobal } from '../contexts/GlobalProvider';
 
 const ListaFuncionarios = () => {
     const { funcionarios, setFuncionarios } = useGlobal()
-    const funcionariosData = [
-        {
-            id: 1,
-            nome: "João Silva",
-            matricula: "65asd65sa4",
-            cpf: "123.456.789-00",
-            telefone: "(11) 98765-4321",
-            foto: "",
-            financeiro:{
-                meta: 40,
-                vendaTotal:800000,
-                comicao:20000
-            },
-            email: 'joaosilva@gmail.com',
-        },
-        {
-            id: 2,
-            nome: "Maria Oliveira",
-            matricula: "65asd65sa4",
-            cpf: "123.456.789-00",
-            telefone: "(11) 98765-4321",
-            foto: "",
-            financeiro:{
-                meta: 50,
-                vendaTotal:1000000,
-                comicao:20000
-            },
-            email: 'mariaOliveira@gmail.com',
-        },
-        {
-            id: 3,
-            nome: "Carlos Souza",
-            matricula: "65asd65sa4",
-            cpf: "123.456.789-00",
-            telefone: "(11) 98765-4321",
-            foto: "",
-            financeiro:{
-                meta: 30,
-                vendaTotal:600000,
-                comicao:20000
-            },
-            email: 'carlosSouza@gmail.com',
-        }
-    ];
+    
 
     return (
         <PageContainer>
@@ -94,7 +51,7 @@ const ListaFuncionarios = () => {
                             background: 'orange',
                         }
                     }}>
-                        {funcionariosData.map((funcionario) => (
+                        {funcionarios.map((funcionario) => (
                             <React.Fragment key={funcionario.id}>
                                 <Funcionario
                                     funcionario={funcionario}
