@@ -13,7 +13,7 @@ function CadastroFuncionario() {
   const navigate = useNavigate();
   const [modoEdicao, setModoEdicao] = useState(false);
   const [indiceEdicao, setIndiceEdicao] = useState(null);
-  const {funcionarios, setFuncionarios } = useGlobal();
+  const { funcionarios, setFuncionarios } = useGlobal();
 
 
   const [funcionario, setFuncionario] = useState({
@@ -61,22 +61,22 @@ function CadastroFuncionario() {
   }
 
   function Cadastrar() {
-    
+
     const camposObrigatorios = [
       'nome', 'usuario', 'dataNascimento', 'sexo', 'cpf', 'rg', 'identificador', 'email',
       'telefone', 'cargo', 'rua', 'numero', 'cidade', 'estado', 'cep',
       'senha', 'confirmacaoSenha'
-  ];
+    ];
 
-  const campoFaltante = camposObrigatorios.find(campo => !funcionario[campo]);
+    const campoFaltante = camposObrigatorios.find(campo => !funcionario[campo]);
     if (campoFaltante) {
-        alert(`Por favor, preencha o campo ${campoFaltante}`);
-        return;
+      alert(`Por favor, preencha o campo ${campoFaltante}`);
+      return;
     }
 
     if (funcionario.senha !== funcionario.confirmacaoSenha) {
-        alert("As senhas não coincidem!");
-        return;
+      alert("As senhas não coincidem!");
+      return;
     }
 
     // Obter lista existente ou criar nova
@@ -244,7 +244,7 @@ function CadastroFuncionario() {
                   variant="outlined"
                   value={sexo}
                   onChange={(e) => setSexo(e.target.value)}
-                  onBlur={() => setFuncionario({ ...funcionario, sexo })} // Update funcionario state when sexo changes
+                  onBlur={() => setFuncionario({ ...funcionario, sexo })} // atualizar o estado do funcionário quando o sexo muda/altera
                 >
                   <MenuItem value="M">Masculino</MenuItem>
                   <MenuItem value="F">Feminino</MenuItem>
@@ -265,6 +265,17 @@ function CadastroFuncionario() {
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                 <TextField fullWidth size='small' id="cargo" label="Cargo do funcionário" variant="outlined" onChange={mudarValores} value={funcionario.cargo}></TextField>
+                <TextField fullWidth size='small' id="foto" label="foto do funcionário" type='file' variant="outlined" onChange={mudarValores} value={funcionario.foto}
+                  InputLabelProps={{ shrink: true }}
+                  sx={{
+                    '& input[type="file"]': {
+                      color: 'black',
+                    },
+                    '& input[type="file"]::-picture': {
+                      filter: 'invert(1)',
+                    },
+                  }}
+                ></TextField>
               </Stack>
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>

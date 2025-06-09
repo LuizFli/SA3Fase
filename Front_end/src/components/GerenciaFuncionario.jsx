@@ -120,10 +120,10 @@ function GerenciamentoFuncionarios() {
                   <TableRow>
                     <TableCell>Nome</TableCell>
                     <TableCell>Usuário</TableCell>
-                    <TableCell>CPF</TableCell>
+                    <TableCell>E-mail</TableCell>
                     <TableCell>Telefone</TableCell>
                     <TableCell>Cargo</TableCell>
-                    <TableCell>Identificador</TableCell>
+                    <TableCell>Endereço/Rua</TableCell>
                     <TableCell>Senha</TableCell>
                     <TableCell>Ações</TableCell>
                   </TableRow>
@@ -134,10 +134,10 @@ function GerenciamentoFuncionarios() {
                       <TableRow key={index}>
                         <TableCell>{funcionario.nome}</TableCell>
                         <TableCell>{funcionario.usuario}</TableCell>
-                        <TableCell>{funcionario.cpf}</TableCell>
+                        <TableCell>{funcionario.email}</TableCell>
                         <TableCell>{funcionario.telefone}</TableCell>
                         <TableCell>{funcionario.cargo}</TableCell>
-                        <TableCell>{funcionario.identificador}</TableCell>
+                        <TableCell>{funcionario.rua}</TableCell>
                         <TableCell>
                           <Stack direction="row" alignItems="center">
                             {showPassword[index] ? funcionario.senha : '••••••••'}
