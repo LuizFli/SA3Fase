@@ -24,9 +24,17 @@ export default function LoginForm() {
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit}>
+        <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+                width: '100%',
+                maxWidth: '500px', // ou até mais se quiser
+                px: 2,
+            }}
+        >
             <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
-                Usuário
+                E-mail
             </Typography>
 
             <TextField
