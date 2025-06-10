@@ -35,8 +35,24 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
 
   return (
     <>
-      <ContainerTabela>
-        <Tabela sx={{ minWidth: 650 }}>
+      <ContainerTabela 
+        sx={{ 
+          maxHeight: 'calc(100vh - 300px)',
+          overflow: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#888',
+            borderRadius: '4px'
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: '#555'
+          }
+        }}
+      >
+        <Tabela sx={{ minWidth: 650 }} stickyHeader>
           <CabecalhoTabela>
             <Linha sx={{ backgroundColor: '#e0e0e0' }}>
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Marca</Celula>
@@ -109,7 +125,6 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
         </Tabela>
       </ContainerTabela>
 
-      {/* Modal de confirmação para exclusão */}
       <Modal
         open={openConfirmModal}
         onClose={handleCloseConfirmModal}

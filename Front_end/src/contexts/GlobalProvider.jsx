@@ -12,6 +12,7 @@ export function GlobalProvider({ children }) {
     { id: 3, marca: 'Chevrolet', modelo: 'Onix', ano: 2023, cor: 'Prata', km: 5000, placa: 'GHI7J89' },
     { id: 4, marca: 'Fiat', modelo: 'Argo', ano: 2020, cor: 'Vermelho', km: 40000, placa: 'KLM1N23' },
     { id: 5, marca: 'Hyundai', modelo: 'HB20', ano: 2022, cor: 'Cinza', km: 18000, placa: 'OPQ4R56' },
+    
   ]);
   const [funcionarios, setFuncionarios ] = useState([
     {
