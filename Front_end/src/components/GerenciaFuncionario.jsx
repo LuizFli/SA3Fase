@@ -33,7 +33,8 @@ function GerenciamentoFuncionarios() {
     navigate('/funcionarios', {
       state: {
         funcionarioParaEditar: funcionarios[index],
-        indiceParaEditar: index
+        indiceParaEditar: index,
+        modoEdicao: true
       }
     });
 
