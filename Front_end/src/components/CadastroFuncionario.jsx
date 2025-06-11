@@ -85,14 +85,17 @@ function CadastroFuncionario() {
     if (modoEdicao) {
       // Modo edição - atualiza o funcionário existente
       listaFuncionarios[indiceEdicao] = funcionario;
-      alert("Funcionário atualizado com sucesso!");
       localStorage.setItem('funcionarios', JSON.stringify(listaFuncionarios));
+      setFuncionarios(listaFuncionarios);
+      alert("Funcionário atualizado com sucesso!");
+      navigate('/gerenciaFun');
+      return;
     }
 
     // Atualiza o estado global
-    setFuncionarios(listaFuncionarios);
+    setFuncionarios(listaFuncionarios); //provalvelmente vai ser elimanada daqui essa linha
 
-    // Verificar se usuário já existe
+    // Modo cadastro: Verificar se usuário já existe
     const usuarioExistente = listaFuncionarios.some(
       f => f.usuario === funcionario.usuario
     );
@@ -105,14 +108,30 @@ function CadastroFuncionario() {
     // Adiciona novo funcionário
     const novaLista = [...listaFuncionarios, funcionario];
     localStorage.setItem('funcionarios', JSON.stringify(novaLista));
-
     // Atualiza o estado global
     setFuncionarios(novaLista);
-
     alert("Funcionário cadastrado com sucesso!");
     navigate('/gerenciaFun');
     ApagarDados();
 
+  };
+
+  // Validação CPF
+  const validarCPF = (cpf) => {
+    // Remove caracteres não numéricos
+    cpf = cpf.replace(/\D/g, '');
+    return cpf.length === 11 || cpf.length === 14; // 11 dígitos ou 14 com formatação
+  };
+
+  const validarRG = (rg) => {
+    rg = rg.replace(/\D/g, '');
+    // validação de RG
+    return rg.length >= 7;
+  };
+
+  const validarTelefone = (telefone) => {
+    telefone = telefone.replace(/\D/g, '');
+    return telefone.length >= 10; // DDD + número (8 ou 9 dígitos)
   };
 
 
@@ -251,13 +270,16 @@ function CadastroFuncionario() {
               </Stack>
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                <TextField fullWidth size='small' id="cpf" label="CPF" variant="outlined" onChange={mudarValores} value={funcionario.cpf}></TextField>
-                <TextField fullWidth size='small' id="rg" label="RG" variant="outlined" onChange={mudarValores} value={funcionario.rg}></TextField>
+                <TextField fullWidth size='small' id="cpf" label="CPF" variant="outlined" onChange={mudarValores} value={funcionario.cpf} error={funcionario.cpf && !validarCPF(funcionario.cpf)}
+                  helperText={funcionario.cpf && !validarCPF(funcionario.cpf) ? "CPF inválido" : ""}></TextField>
+                <TextField fullWidth size='small' id="rg" label="RG" variant="outlined" onChange={mudarValores} value={funcionario.rg} error={funcionario.rg && !validarRG(funcionario.rg)}
+                  helperText={funcionario.rg && !validarRG(funcionario.rg) ? "RG inválido (mínimo 7 dígitos)" : ""}></TextField>
               </Stack>
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                 <TextField fullWidth size='small' id="email" label="E-mail" type="email" variant="outlined" onChange={mudarValores} value={funcionario.email}></TextField>
-                <TextField fullWidth size='small' id="telefone" label="Telefone" variant="outlined" onChange={mudarValores} value={funcionario.telefone}></TextField>
+                <TextField fullWidth size='small' id="telefone" label="Telefone" variant="outlined" onChange={mudarValores} value={funcionario.telefone} error={funcionario.telefone && !validarTelefone(funcionario.telefone)}
+                  helperText={funcionario.telefone && !validarTelefone(funcionario.telefone) ? "Telefone inválido (DDD + número)" : ""}></TextField>
                 <TextField fullWidth size='small' id="identificador" label="Identificador" variant="outlined" onChange={mudarValores} value={funcionario.identificador}></TextField>
               </Stack>
 
