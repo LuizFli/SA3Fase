@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { 
-  Box, 
-  Typography,
-  Button,
-  TextField,
-  Avatar,
+  Box as Container, 
+  Typography as Texto,
+  Paper as Painel,
+  Button as Botao,
+  TextField as CampoTexto,
+  Avatar as Avatar,
   Modal,
   Grid,
   FormControl,
@@ -14,7 +15,7 @@ import {
   Snackbar,
   Alert
 } from '@mui/material';
-import { Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
+import { Add as Adicionar, Search as Buscar } from '@mui/icons-material';
 import PageContainer from '../components/PageContainer';
 import { useGlobal } from '../contexts/GlobalProvider';
 import ProdutoEstoque from '../components/ProdutoEstoque';
@@ -133,41 +134,33 @@ function EstoqueProdutos() {
 
   return (
     <PageContainer>
-      <Box sx={{ 
+      <Container sx={{ 
         padding: '20px', 
-        minHeight: '100%',
+        minHeight: '100vh',
         boxSizing: 'border-box'
       }}>
         {/* Cabeçalho */}
-        <Box sx={{ 
+        <Painel elevation={3} sx={{ 
           padding: '15px 20px',
           marginBottom: '20px', 
           display: 'flex', 
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderRadius: '10px',
-          border:'none',
-
+          borderRadius: '10px'
         }}>
-          <Typography variant="h4" sx={{ 
+          <Texto variant="h4" sx={{ 
             fontWeight: 'bold', 
             color: '#333',
             fontSize: '1.8rem'
           }}>
             Estoque de Produtos
-          </Typography>
+          </Texto>
           
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <Avatar 
-              alt="Usuário" 
-              src="/static/images/avatar/1.jpg" 
-              sx={{ width: 45, height: 45 }} 
-            />
-            
-            <Button
+          <Container sx={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <Botao
               variant="contained"
               color="success"
-              startIcon={<AddIcon />}
+              startIcon={<Adicionar />}
               sx={{ 
                 fontWeight: 'bold', 
                 padding: '8px 20px',
@@ -177,31 +170,24 @@ function EstoqueProdutos() {
               onClick={handleOpenAddModal}
             >
               Adicionar Produto
-            </Button>
-          </Box>
-        </Box>
+            </Botao>
+
+            <Avatar 
+              alt="Usuário" 
+              src="/static/images/avatar/1.jpg" 
+              sx={{ width: 45, height: 45 }} 
+            />
+          </Container>
+        </Painel>
         
-        {/* Container principal com busca e produtos */}
-        <Box sx={{ 
-          width: '100%',
-          overflow: 'auto',
-          borderRadius: '10px',
-          backgroundColor: 'white', 
-          boxShadow: 3,
-          padding: '20px',
+        {/* Barra de busca */}
+        <Painel elevation={2} sx={{ 
+          padding: '15px',
           marginBottom: '20px',
-          boxSizing: 'border-box',
-          
+          borderRadius: '10px'
         }}>
-          {/* Barra de busca integrada */}
-          <Box sx={{ 
-            display: 'flex', 
-            gap: '15px', 
-            alignItems: 'center',
-            marginBottom: '20px'
-            
-          }}>
-            <TextField
+          <Container sx={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+            <CampoTexto
               placeholder="Buscar"
               variant="outlined"
               size="small"
@@ -209,20 +195,26 @@ function EstoqueProdutos() {
               value={termoBusca}
               onChange={(e) => setTermoBusca(e.target.value)}
               InputProps={{
-                startAdornment: <SearchIcon />,
+                startAdornment: <Buscar />,
                 sx: { borderRadius: '20px' }
               }}
               sx={{ maxWidth: '400px' }}
             />
-          </Box>
+          </Container>
+        </Painel>
 
-          {/* Tabela de produtos */}
+        {/* Tabela de produtos */}
+        <Painel elevation={2} sx={{ 
+          width: '100%',
+          overflow: 'auto',
+          borderRadius: '10px'
+        }}>
           <ProdutoEstoque 
             produtos={termoBusca ? produtosFiltrados : produtos} 
             apagarProduto={apagarProduto}
             editarProduto={handleOpenEditModal} 
           />
-        </Box>
+        </Painel>
 
         {/* Modal de Adição */}
         <Modal
@@ -234,29 +226,27 @@ function EstoqueProdutos() {
             justifyContent: 'center',
           }}
         >
-          <Box sx={{
+          <Painel sx={{
             width: '80%',
             maxWidth: '800px',
             padding: '30px',
             borderRadius: '10px',
-            outline: 'none',
-            backgroundColor: 'white',
-            boxShadow: 24
+            outline: 'none'
           }}>
-            <Typography variant="h4" sx={{ 
+            <Texto variant="h4" sx={{ 
               fontWeight: 'bold', 
               color: '#333',
               fontSize: '1.8rem',
               mb: 3
             }}>
               Cadastrar Novo Produto
-            </Typography>
+            </Texto>
             
             <form onSubmit={handleAddSubmit}>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Marca"
                       name="marca"
                       value={currentProduto.marca}
@@ -273,7 +263,7 @@ function EstoqueProdutos() {
                   </FormControl>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Modelo"
                       name="modelo"
                       value={currentProduto.modelo}
@@ -290,7 +280,7 @@ function EstoqueProdutos() {
                   </FormControl>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Ano"
                       name="ano"
                       value={currentProduto.ano}
@@ -310,7 +300,7 @@ function EstoqueProdutos() {
 
                 <Grid item xs={12} md={6}>
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Quilometragem (Km)"
                       name="km"
                       value={currentProduto.km}
@@ -328,7 +318,7 @@ function EstoqueProdutos() {
                   </FormControl>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Placa"
                       name="placa"
                       value={currentProduto.placa}
@@ -367,13 +357,13 @@ function EstoqueProdutos() {
                 </Grid>
               </Grid>
 
-              <Box sx={{ 
+              <Container sx={{ 
                 display: 'flex', 
                 justifyContent: 'flex-end', 
                 gap: 2,
                 mt: 3
               }}>
-                <Button
+                <Botao
                   variant="outlined"
                   onClick={handleCloseModal}
                   sx={{
@@ -384,8 +374,8 @@ function EstoqueProdutos() {
                   }}
                 >
                   Cancelar
-                </Button>
-                <Button
+                </Botao>
+                <Botao
                   type="submit"
                   variant="contained"
                   color="success"
@@ -397,10 +387,10 @@ function EstoqueProdutos() {
                   }}
                 >
                   Salvar Produto
-                </Button>
-              </Box>
+                </Botao>
+              </Container>
             </form>
-          </Box>
+          </Painel>
         </Modal>
 
         {/* Modal de Edição */}
@@ -413,29 +403,27 @@ function EstoqueProdutos() {
             justifyContent: 'center',
           }}
         >
-          <Box sx={{
+          <Painel sx={{
             width: '80%',
             maxWidth: '800px',
             padding: '30px',
             borderRadius: '10px',
-            outline: 'none',
-            backgroundColor: 'white',
-            boxShadow: 24
+            outline: 'none'
           }}>
-            <Typography variant="h4" sx={{ 
+            <Texto variant="h4" sx={{ 
               fontWeight: 'bold', 
               color: '#333',
               fontSize: '1.8rem',
               mb: 3
             }}>
               Editar Produto
-            </Typography>
+            </Texto>
             
             <form onSubmit={handleEditSubmit}>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Marca"
                       name="marca"
                       value={currentProduto.marca}
@@ -452,7 +440,7 @@ function EstoqueProdutos() {
                   </FormControl>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Modelo"
                       name="modelo"
                       value={currentProduto.modelo}
@@ -469,7 +457,7 @@ function EstoqueProdutos() {
                   </FormControl>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Ano"
                       name="ano"
                       value={currentProduto.ano}
@@ -489,7 +477,7 @@ function EstoqueProdutos() {
 
                 <Grid item xs={12} md={6}>
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Quilometragem (Km)"
                       name="km"
                       value={currentProduto.km}
@@ -507,7 +495,7 @@ function EstoqueProdutos() {
                   </FormControl>
 
                   <FormControl fullWidth sx={{ mb: 3 }}>
-                    <TextField
+                    <CampoTexto
                       label="Placa"
                       name="placa"
                       value={currentProduto.placa}
@@ -546,13 +534,13 @@ function EstoqueProdutos() {
                 </Grid>
               </Grid>
 
-              <Box sx={{ 
+              <Container sx={{ 
                 display: 'flex', 
                 justifyContent: 'flex-end', 
                 gap: 2,
                 mt: 3
               }}>
-                <Button
+                <Botao
                   variant="outlined"
                   onClick={handleCloseModal}
                   sx={{
@@ -563,8 +551,8 @@ function EstoqueProdutos() {
                   }}
                 >
                   Cancelar
-                </Button>
-                <Button
+                </Botao>
+                <Botao
                   type="submit"
                   variant="contained"
                   color="success"
@@ -576,10 +564,10 @@ function EstoqueProdutos() {
                   }}
                 >
                   Salvar Alterações
-                </Button>
-              </Box>
+                </Botao>
+              </Container>
             </form>
-          </Box>
+          </Painel>
         </Modal>
 
         {/* Snackbar para feedback */}
@@ -593,7 +581,7 @@ function EstoqueProdutos() {
             {snackbarMessage}
           </Alert>
         </Snackbar>
-      </Box>
+      </Container>
     </PageContainer>
   );
 }
