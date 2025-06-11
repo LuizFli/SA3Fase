@@ -10,20 +10,78 @@ import {
     FormControl,
     InputAdornment,
     IconButton,
-    Link,
     Typography,
-    CircularProgress
+    FormControlLabel,
+    Checkbox,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 
-// Schema de validação
+const CustomCheckbox = styled(Checkbox)(() => ({
+    padding: 0,
+    '&:hover': {
+        backgroundColor: 'transparent',
+    },
+    '& svg': {
+        width: 23,
+        height: 24,
+    },
+    '& input': {
+        display: 'none',
+    },
+}));
+
+const icon = (
+    <Box
+        component="svg"
+        xmlns="http://www.w3.org/2000/svg"
+        width="23"
+        height="24"
+        viewBox="0 0 23 24"
+    >
+        <rect
+            y="0.71875"
+            width="21.5243"
+            height="22"
+            rx="2"
+            fill="#E65F2B"
+            fillOpacity="0.10"
+            stroke="#E65F2B"
+            strokeOpacity="0.25"
+        />
+    </Box>
+);
+
+const checkedIcon = (
+    <Box
+        component="svg"
+        xmlns="http://www.w3.org/2000/svg"
+        width="23"
+        height="24"
+        viewBox="0 0 23 24"
+    >
+        <rect
+            y="0.71875"
+            width="21.5243"
+            height="22"
+            rx="2"
+            fill="#E65F2B"
+            fillOpacity="0.10"
+            stroke="#E65F2B"
+            strokeOpacity="0.25"
+        />
+        <path
+            d="M4.8916 11.1731L9.16089 15.5367L16.6321 7.90039"
+            stroke="#E65F2B"
+            strokeWidth="1.5"
+            fill="none" 
+        />
+    </Box>
+);
+
 const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('E-mail inválido')
-        .required('E-mail é obrigatório'),
-    password: Yup.string()
-        .min(6, 'Senha deve ter no mínimo 6 caracteres')
-        .required('Senha é obrigatória')
+    email: Yup.string().required('Usuário é obrigatório'),
+    password: Yup.string().min(6, 'Senha deve ter no mínimo 6 caracteres').required('Senha é obrigatória'),
 });
 
 export default function LoginForm() {
@@ -43,9 +101,9 @@ export default function LoginForm() {
     };
 
     return (
-        <Box sx={{ width: '100%', mt: 4 }}>
+        <Box sx={{ width: '100%' }}>
             <Formik
-                initialValues={{ email: '', password: '' }}
+                initialValues={{ email: '', password: '', remember: false }}
                 validationSchema={LoginSchema}
                 onSubmit={handleSubmit}
             >
@@ -55,8 +113,8 @@ export default function LoginForm() {
                             <Field
                                 as={TextField}
                                 name="email"
-                                label="E-mail"
-                                variant="outlined"
+                                label="Email"
+                                variant="standard"
                                 fullWidth
                                 autoComplete="username"
                                 error={touched.email && Boolean(errors.email)}
@@ -70,7 +128,7 @@ export default function LoginForm() {
                                 name="password"
                                 label="Senha"
                                 type={showPassword ? 'text' : 'password'}
-                                variant="outlined"
+                                variant="standard"
                                 fullWidth
                                 autoComplete="current-password"
                                 error={touched.password && Boolean(errors.password)}
@@ -85,50 +143,56 @@ export default function LoginForm() {
                                                 {showPassword ? <VisibilityOff /> : <Visibility />}
                                             </IconButton>
                                         </InputAdornment>
-                                    )
+                                    ),
                                 }}
                             />
                         </FormControl>
 
+                        <Box
+                            sx={{
+                                mt: 3,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <FormControlLabel
+                                control={
+                                    <Field
+                                        as={CustomCheckbox}
+                                        name="remember"
+                                        icon={icon}
+                                        checkedIcon={checkedIcon}
+                                    />
+                                }
+                                label=' Lembrar-me'	
+                            />
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={isSubmitting || loading}
+                                sx={{
+                                    px: 4,
+                                    py: 1.5,
+                                    borderRadius: '30px',
+                                    backgroundColor: '#FF6B00',
+                                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                    textTransform: 'none',
+                                    '&:hover': {
+                                        backgroundColor: '#e65900',
+                                    },
+                                }}
+                            >
+                                Entrar
+                            </Button>
+                        </Box>
+
                         {error && (
-                            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                            <Typography color="error" variant="body2" sx={{ mt: 2 }}>
                                 {error}
                             </Typography>
                         )}
-
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            disabled={isSubmitting || loading}
-                            sx={{ 
-                                mt: 3, 
-                                mb: 2, 
-                                py: 1.5,
-                                backgroundColor: '#FF9D00',
-                                '&:hover': {
-                                    backgroundColor: '#E67F00',
-                                }
-                            }}
-                        >
-                            {isSubmitting || loading ? (
-                                <CircularProgress size={24} color="inherit" />
-                            ) : (
-                                'Entrar'
-                            )}
-                        </Button>
-
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Link href="/forgot-password" variant="body2" sx={{ color: '#FF9D00' }}>
-                                Esqueceu a senha?
-                            </Link>
-                            <Typography variant="body2">
-                                Não tem conta?{' '}
-                                <Link href="/register" variant="body2" sx={{ color: '#FF9D00' }}>
-                                    Cadastre-se
-                                </Link>
-                            </Typography>
-                        </Box>
                     </Form>
                 )}
             </Formik>

@@ -103,42 +103,55 @@ export default function LoginPage() {
                     </Box>
                 </Grid>
 
-                {/* Lado direito */}
                 <Grid
                     size={6}
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
                         height: '100vh',
                         px: 2,
-                        backgroundColor: 'background.paper'
+                        backgroundColor: 'background.paper',
                     }}
                 >
-                    <Box sx={{ 
-                        width: '100%', 
-                        maxWidth: 500,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center'
-                    }}>
+                    <Box
+                        sx={{
+                            width: '100%',
+                            maxWidth: 500,
+                            mx: 'auto',
+                            mt: 8, // coloca o título mais pra cima
+                            textAlign: 'center',
+                        }}
+                    >
                         <Typography
                             variant="h4"
-                            sx={{ 
-                                fontWeight: 'bold', 
-                                textAlign: 'center', 
-                                mb: 4,
-                                color: 'text.primary'
+                            sx={{
+                                fontWeight: 'bold',
+                                color: 'text.primary',
                             }}
                         >
                             Entrar & Conectar-se aos melhores relatórios de venda.
                         </Typography>
+                    </Box>
 
+                    <Box
+                        sx={{
+                            width: '100%',
+                            maxWidth: 400,
+                            flexGrow: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            // justifyContent: 'center',
+                            paddingTop: 25,
+                            alignItems: 'center',
+                            mx: 'auto',
+                        }}
+                    >
                         <LoginForm />
                     </Box>
+
                     <FloatingChatButton />
                 </Grid>
+
             </Grid>
         </AuthProvider>
     );
