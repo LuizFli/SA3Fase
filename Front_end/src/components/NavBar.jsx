@@ -54,7 +54,7 @@ export default function PermanentSidebar() {
   const location = useLocation();
 
   const menuItems = [
-    { text: 'Inicio', icon: <Home />, path: '/dashbord' },
+    { text: 'Inicio', icon: <Home />, path: '/dashboard' },
     { text: 'Cadastro Vendas', icon: <Edit />, path: '/cadastroVenda'},
     { text: 'Funcionários', icon: <People />, path: '/funcionarios' },
     { text: 'Produtos', icon: <Apps />, path: '/produtos' },
