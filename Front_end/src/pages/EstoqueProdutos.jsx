@@ -135,7 +135,6 @@ function EstoqueProdutos() {
     <PageContainer>
       <Box sx={{ 
         padding: '20px', 
-        backgroundColor: '#EBDFD7', 
         minHeight: '100%',
         boxSizing: 'border-box'
       }}>

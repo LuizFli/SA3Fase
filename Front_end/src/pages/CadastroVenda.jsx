@@ -163,7 +163,6 @@ function CadastroVenda() {
         maxWidth: '100%',
         minHeight: '100%',
         display: 'flex',
-        backgroundColor: '#EBDFD7'
       }}>
         <Box sx={{
           width: '100%',

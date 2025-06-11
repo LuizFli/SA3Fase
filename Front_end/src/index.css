@@ -7,7 +7,7 @@
 
   color-scheme: light dark;
   color: rgba(12, 1, 1, 0.87);
-  background-color: #EBD3BB;
+  background-color: var(--background-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,7 +25,7 @@ body, html {
   --primary-color: #e65f2b;
   --secondary-color: #0a0a09;
   --accent-color: #f2eae5;
-  --background-color: #EBD3BB;
+  --background-color: rgb(255, 246, 239);
   --box-color: #ffff;
   --text-color: #0a0a09;
 }

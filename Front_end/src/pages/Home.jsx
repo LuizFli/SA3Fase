@@ -18,13 +18,12 @@ const TesteGraficos = () => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box sx={{ 
         display: 'flex', 
-        flexDirection: 'column', 
-        minHeight: '100vh',
+        flexDirection: 'column',         
         p: 0,
         gap: 3,
-        margin: 0,
+        margin: 3,
       }}>
-        {/* Cabeçalho (igual ao primeiro código) */}
+    
         <Box sx={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -44,18 +43,18 @@ const TesteGraficos = () => {
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton>
-              <NotificationsActiveIcon  sx={{ color: '#ff5900'}} />
+              <NotificationsActiveIcon  sx={{ color: '#e86f40'}} />
             </IconButton>
             <Avatar alt="Arthur Viecili" src="https://via.placeholder.com/40" />
           </Box>
         </Box>
 
-        {/* Linha Superior - LineChart ocupa 100% (substitui o RevenueCard) */}
+
         <Box sx={{ display: 'flex', width: '95%', justifyContent: 'center', alignItems: 'center', margin: '0 auto' }}>
           <LineChart />
         </Box>
 
-        {/* Linha Inferior - 3 cards com gráficos do primeiro código */}
+
         <Box sx={{ 
           display: 'flex',
           gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },

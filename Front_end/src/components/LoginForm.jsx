@@ -1,117 +1,137 @@
 import { useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import {
     Box,
     Button,
     TextField,
-    FormControlLabel,
-    Checkbox,
-    Typography,
+    FormControl,
     InputAdornment,
     IconButton,
-    Stack
+    Link,
+    Typography,
+    CircularProgress
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
+// Schema de validação
+const LoginSchema = Yup.object().shape({
+    email: Yup.string()
+        .email('E-mail inválido')
+        .required('E-mail é obrigatório'),
+    password: Yup.string()
+        .min(6, 'Senha deve ter no mínimo 6 caracteres')
+        .required('Senha é obrigatória')
+});
+
 export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [remember, setRemember] = useState(false);
+    const { login, loading, error } = useAuth();
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Lógica de login aqui
+    const handleSubmit = async (values, { setSubmitting }) => {
+        try {
+            await login(values.email, values.password);
+            navigate('/dashboard');
+        } catch (err) {
+            console.error('Login failed:', err);
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (
-        <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{
-                width: '100%',
-                maxWidth: '500px', // ou até mais se quiser
-                px: 2,
-            }}
-        >
-            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
-                E-mail
-            </Typography>
+        <Box sx={{ width: '100%', mt: 4 }}>
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                validationSchema={LoginSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ errors, touched, isSubmitting }) => (
+                    <Form>
+                        <FormControl fullWidth margin="normal">
+                            <Field
+                                as={TextField}
+                                name="email"
+                                label="E-mail"
+                                variant="outlined"
+                                fullWidth
+                                autoComplete="username"
+                                error={touched.email && Boolean(errors.email)}
+                                helperText={touched.email && errors.email}
+                            />
+                        </FormControl>
 
-            <TextField
-                fullWidth
-                margin="normal"
-                required
-                type="email"
-                placeholder="Digite seu e-mail"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                sx={{ mb: 3 }}
-                variant="standard"
-            />
+                        <FormControl fullWidth margin="normal">
+                            <Field
+                                as={TextField}
+                                name="password"
+                                label="Senha"
+                                type={showPassword ? 'text' : 'password'}
+                                variant="outlined"
+                                fullWidth
+                                autoComplete="current-password"
+                                error={touched.password && Boolean(errors.password)}
+                                helperText={touched.password && errors.password}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                        </FormControl>
 
-            <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'bold' }}>
-                Senha
-            </Typography>
+                        {error && (
+                            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                                {error}
+                            </Typography>
+                        )}
 
-            <TextField
-                fullWidth
-                margin="normal"
-                required
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Digite sua senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                variant="standard"
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                onClick={() => setShowPassword(!showPassword)}
-                                edge="end"
-                            >
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                        </InputAdornment>
-                    )
-                }}
-                sx={{ mb: 2 }}
-            />
-
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4 }}>
-                <FormControlLabel
-                    control={
-                        <Checkbox
-                            checked={remember}
-                            onChange={(e) => setRemember(e.target.checked)}
-                            color="primary"
-                            sx={{
-                                color: '#FF6D00',
-                                '&.Mui-checked': {
-                                    color: '#FF6D00',
-                                },
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            disabled={isSubmitting || loading}
+                            sx={{ 
+                                mt: 3, 
+                                mb: 2, 
+                                py: 1.5,
+                                backgroundColor: '#FF9D00',
+                                '&:hover': {
+                                    backgroundColor: '#E67F00',
+                                }
                             }}
-                        />
-                    }
-                    label="Lembrar-me"
-                />
+                        >
+                            {isSubmitting || loading ? (
+                                <CircularProgress size={24} color="inherit" />
+                            ) : (
+                                'Entrar'
+                            )}
+                        </Button>
 
-                <Button
-                    variant="contained"
-                    type="submit"
-                    size="medium"
-                    sx={{
-                        px: 4,
-                        py: 1,
-                        borderRadius: 5,
-                        fontWeight: 'bold',
-                        textTransform: 'uppercase',
-                        fontSize: '0.875rem',
-                        backgroundColor: '#FF6D00',
-                    }}
-                >
-                    Entrar
-                </Button>
-            </Stack>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Link href="/forgot-password" variant="body2" sx={{ color: '#FF9D00' }}>
+                                Esqueceu a senha?
+                            </Link>
+                            <Typography variant="body2">
+                                Não tem conta?{' '}
+                                <Link href="/register" variant="body2" sx={{ color: '#FF9D00' }}>
+                                    Cadastre-se
+                                </Link>
+                            </Typography>
+                        </Box>
+                    </Form>
+                )}
+            </Formik>
         </Box>
     );
 }

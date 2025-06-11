@@ -31,12 +31,12 @@ const BarChart = () => {
     xaxis: {
       categories: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
     },
-    colors: ['#E6C5FF'],
+    colors: ['#FF6D00'],
     fill: {
       type: 'gradient',
       gradient: {
         shade: 'dark',
-        gradientToColors: ['#9C27B0'],
+        gradientToColors: ['var(--primary-color)'],
         shadeIntensity: 1,
         type: 'vertical',
         opacityFrom: 0.9,

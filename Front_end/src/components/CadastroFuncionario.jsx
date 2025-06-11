@@ -152,7 +152,6 @@ function CadastroFuncionario() {
       m: '0',
       width: '100%',
       height: '100%',
-      backgroundColor: 'whitesmoke',
       display: 'flex',
       flexDirection: 'row',
       overflow: 'hidden'
@@ -162,7 +161,6 @@ function CadastroFuncionario() {
         m: '0',
         width: '100%',
         height: '100%',
-        backgroundColor: '#EBDFD7',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden'

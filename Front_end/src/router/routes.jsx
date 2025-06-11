@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     path: '/',
     element: <MainLayout />, // Todas as rotas abaixo terão sidebar fixa
     children: [
-      { path: "/dashbord", element: <Home /> },
+      { path: "/dashboard", element: <Home /> },
       { path: "/cadastroVenda", element: <CadastroVenda /> },
       { path: "/funcionarios", element: <Funcionario /> },
       { path: "/gerenciaAcesso", element: <GerenciaAcesso /> },

@@ -2,15 +2,14 @@ import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { Box, Typography, Paper, MenuItem, Select } from '@mui/material';
 
-const vendidos = 71; // Changed to match example values
-const comissoes = 63; // Changed to match example values
+const vendidos = 71; 
+const comissoes = 63; 
 
 const RadialChart = () => {
   const options = {
     chart: {
-      type: 'radialBar',
-      height: 320,
-      offsetY: 5, // Adicionado para centralizar verticalmente
+      type: 'radialBar',  
+      offsetY: 5, 
       offsetX: 20,
     },
     plotOptions: {
@@ -30,8 +29,24 @@ const RadialChart = () => {
           margin: 3,
         },
         dataLabels: {
+          name: {
+            show: true,
+            fontSize: '18px',
+            fontWeight: 'bold',
+            offsetY: -10, // Ajuste vertical do nome (ex: "Comissões")
+          },
+          value: {
+            show: true,
+            fontSize: '16px',
+            fontWeight: 400,
+            offsetY: 10, // Ajuste vertical do valor (ex: "63%")
+            offsetX: 100,
+            formatter: function (val) {
+              return val + "%";
+            },
+          },
           total: {
-            show: false,
+            show: false, // Se quiser mostrar uma média ou total geral, ative isso
           },
         },
       },
@@ -68,7 +83,7 @@ const RadialChart = () => {
   const series = [vendidos, comissoes];
 
   return (
-    <Paper elevation={3} sx={{ p: 3, borderRadius: 4, flex: 1 }}>
+    <Paper elevation={3} sx={{ p: 3, borderRadius: 4, flex: 1, height: 282 }}>
       <Box display="flex" justifyContent="space-between">
         <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
           Produtos Vendidos
@@ -77,12 +92,9 @@ const RadialChart = () => {
           <MenuItem value="2025">2025</MenuItem>
         </Select>
       </Box>
-      <ReactApexChart 
-        options={options} 
-        series={series} 
-        type="radialBar" 
-        height={320} 
-      />
+      <Box sx={{ width: '100%', height: '100%', position: 'relative' }}>
+    <ReactApexChart options={options} series={series} type="radialBar" />
+  </Box>  
     </Paper>
   );
 };
