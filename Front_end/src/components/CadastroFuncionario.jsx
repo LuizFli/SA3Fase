@@ -93,7 +93,7 @@ function CadastroFuncionario() {
     }
 
     // Atualiza o estado global
-    setFuncionarios(listaFuncionarios); //provalvelmente vai ser elimanada daqui essa linha
+    // setFuncionarios(listaFuncionarios);
 
     // Modo cadastro: Verificar se usuário já existe
     const usuarioExistente = listaFuncionarios.some(
@@ -118,14 +118,12 @@ function CadastroFuncionario() {
 
   // Validação CPF
   const validarCPF = (cpf) => {
-    // Remove caracteres não numéricos
     cpf = cpf.replace(/\D/g, '');
     return cpf.length === 11 || cpf.length === 14; // 11 dígitos ou 14 com formatação
   };
 
   const validarRG = (rg) => {
     rg = rg.replace(/\D/g, '');
-    // validação de RG
     return rg.length >= 7;
   };
 
@@ -133,6 +131,11 @@ function CadastroFuncionario() {
     telefone = telefone.replace(/\D/g, '');
     return telefone.length >= 10; // DDD + número (8 ou 9 dígitos)
   };
+
+  const validarCEP = (cep) => {
+    cep = cep.replace(/\D/g, '');
+    return cep.length === 8
+  }
 
 
   function ApagarDados() {
@@ -228,7 +231,7 @@ function CadastroFuncionario() {
             <Stack direction="column" sx={{ width: '90%', padding: '20px' }}>
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
-                <TextField fullWidth size='small' id="nome" label="Nome Completo" variant="outlined" onChange={mudarValores} value={funcionario.nome}></TextField>
+                <TextField fullWidth size='small' id="nome" label="Nome Completo" variant="outlined" type='text' onChange={mudarValores} value={funcionario.nome}></TextField>
                 <TextField fullWidth size='small' id="usuario" label="Nome de usuário" variant="outlined" onChange={mudarValores} value={funcionario.usuario}></TextField>
               </Stack>
 
@@ -306,7 +309,9 @@ function CadastroFuncionario() {
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                 <TextField fullWidth size='small' id="cidade" label="Cidade" variant="outlined" onChange={mudarValores} value={funcionario.cidade}></TextField>
                 <TextField type='text' size='small' id="estado" label="Estado" variant="outlined" sx={{ width: '400px' }} onChange={mudarValores} value={funcionario.estado}></TextField>
-                <TextField type='text' size='small' id="cep" label="CEP" variant="outlined" sx={{ width: '220px' }} onChange={mudarValores} value={funcionario.cep}></TextField>
+                <TextField type='text' size='small' id="cep" label="CEP" variant="outlined" sx={{ width: '220px' }} onChange={mudarValores} value={funcionario.cep} error={funcionario.cep && !validarCEP(funcionario.cep)}
+                  helperText={funcionario.cep && !validarCEP(funcionario.cep) ? "CEP inválido (8 dígitos)" : ""}
+                ></TextField>
               </Stack>
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>

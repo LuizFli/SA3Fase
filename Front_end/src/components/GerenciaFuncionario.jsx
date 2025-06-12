@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Stack, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from '@mui/material'
+import { Avatar, Box, Button, Stack, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import NavBar from './NavBar'
 import { Delete, Edit, Visibility, VisibilityOff } from '@mui/icons-material'
@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router'
 function GerenciamentoFuncionarios() {
   const [funcionarios, setFuncionarios] = useState([])
   const [showPassword, setShowPassword] = useState({})
+  const [editandoIndex, setEditandoIndex] = useState(null);
+  const [funcionarioEditado, setFuncionarioEditado] = useState({});
   const navigate = useNavigate();
 
   // Carrega os funcionários do localStorage quando o componente é montado
@@ -30,19 +32,27 @@ function GerenciamentoFuncionarios() {
 
   //Botão para editar dados de um funcionário
   const editarDados = (index) => {
-    navigate('/funcionarios', {
-      state: {
-        funcionarioParaEditar: funcionarios[index],
-        indiceParaEditar: index,
-        modoEdicao: true
-      }
-    });
+    setEditandoIndex(index);
+    setFuncionarioEditado({ ...funcionarios[index] });
+  };
 
-    const novosFuncionarios = [...funcionarios]
-    novosFuncionarios.
-      setFuncionarios(novosFuncionarios)
-    localStorage.setItem('funcionarios', JSON.stringify(novosFuncionarios))
-  }
+  const salvarEdicao = () => {
+    if (editandoIndex !== null) {
+      const novosFuncionarios = [...funcionarios];
+      novosFuncionarios[editandoIndex] = funcionarioEditado;
+
+      setFuncionarios(novosFuncionarios);
+      localStorage.setItem('funcionarios', JSON.stringify(novosFuncionarios));
+
+      setEditandoIndex(null);
+      setFuncionarioEditado({});
+    }
+  };
+
+  const cancelarEdicao = () => {
+    setEditandoIndex(null);
+    setFuncionarioEditado({});
+  };
 
   //Botão para deletar um funcionário
   const handleDelete = (index) => {
@@ -131,33 +141,130 @@ function GerenciamentoFuncionarios() {
                   {funcionarios.length > 0 ? (
                     funcionarios.map((funcionario, index) => (
                       <TableRow key={index}>
-                        <TableCell>{funcionario.nome}</TableCell>
-                        <TableCell>{funcionario.usuario}</TableCell>
-                        <TableCell>{funcionario.email}</TableCell>
-                        <TableCell>{funcionario.telefone}</TableCell>
-                        <TableCell>{funcionario.cargo}</TableCell>
-                        <TableCell>{funcionario.rua}</TableCell>
                         <TableCell>
-                          <Stack direction="row" alignItems="center">
-                            {showPassword[index] ? funcionario.senha : '••••••••'}
-                            <IconButton onClick={() => handleClickShowPassword(index)} size="small">
-                              {showPassword[index] ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </Stack>
+                          {editandoIndex === index ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.nome || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, nome: e.target.value })}
+                            />
+                          ) : (
+                            funcionario.nome
+                          )}
                         </TableCell>
+
                         <TableCell>
-                          <Stack direction="row" spacing={1}>
-                            <Button sx={{ backgroundColor: 'var(--secondary-color)', width: '90px' }} aria-label="editar" onClick={() => editarDados(index)}>
-                              <IconButton >
-                                <Edit sx={{ color: 'white' }} />
-                              </IconButton>
-                            </Button>
-                            <Button sx={{backgroundColor: 'var(--primary-color)',width: '90px' }} aria-label="deletar" onClick={() => handleDelete(index)}>
-                              <IconButton >
-                                <Delete sx={{color: 'white'}}/>
-                              </IconButton>
-                            </Button>
-                          </Stack>
+                          {editandoIndex === index ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.usuario || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                            />
+                          ) : (
+                            funcionario.usuario
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {editandoIndex === index ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.email || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                            />
+                          ) : (
+                            funcionario.email
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {editandoIndex === index ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.telefone || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                            />
+                          ) : (
+                            funcionario.telefone
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {editandoIndex === index ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.cargo || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                            />
+                          ) : (
+                            funcionario.cargo
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {editandoIndex === index ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.rua || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                            />
+                          ) : (
+                            funcionario.rua
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {editandoIndex === index ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.senha || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                            />
+                          ) : (
+                            funcionario.senha
+                          )}
+                        </TableCell>
+
+                        <TableCell>
+                          {editandoIndex === index ? (
+                            <Stack direction="row" spacing={1}>
+                              <Button
+                                variant="contained"
+                                color="success"
+                                size="small"
+                                onClick={salvarEdicao}
+                              >
+                                Salvar
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                size="small"
+                                onClick={cancelarEdicao}
+                              >
+                                Cancelar
+                              </Button>
+                            </Stack>
+                          ) : (
+                            <Stack direction="row" spacing={1}>
+                              <Button
+                                sx={{ backgroundColor: 'var(--secondary-color)', width: '90px' }}
+                                onClick={() => editarDados(index)}
+                              >
+                                <IconButton>
+                                  <Edit sx={{ color: 'white' }} />
+                                </IconButton>
+                              </Button>
+                              <Button
+                                sx={{ backgroundColor: 'var(--primary-color)', width: '90px' }}
+                                onClick={() => handleDelete(index)}
+                              >
+                                <IconButton>
+                                  <Delete sx={{ color: 'white' }} />
+                                </IconButton>
+                              </Button>
+                            </Stack>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))
