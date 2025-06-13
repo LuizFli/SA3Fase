@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router'
 import { useEffect } from 'react'
 import { useGlobal } from '../contexts/GlobalProvider'
 
+
 function CadastroFuncionario() {
   const [showPassword, setShowPassword] = React.useState(false)
   const [sexo, setSexo] = React.useState('')
