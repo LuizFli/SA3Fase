@@ -24,7 +24,7 @@ function CadastroVenda() {
   const [formData, setFormData] = useState({
     id_produto: '',
     veiculo: '',
-    valor: '',
+    valor: '' ,
     data: dayjs(),
     identificador_vendedor: '',
     auth_code: ''
@@ -130,7 +130,7 @@ function CadastroVenda() {
         ...funcionariosAtualizados[funcionarioIndex],
         financeiro: {
           ...funcionariosAtualizados[funcionarioIndex].financeiro,
-          vendaTotal: novaVendaTotal.toString()
+          vendaTotal: Number(novaVendaTotal)
         }
       };
 

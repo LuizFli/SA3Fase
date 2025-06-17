@@ -24,13 +24,18 @@ export function GlobalProvider({ children }) {
       foto: "",
       financeiro:{
           meta: 40.58,
-          vendaTotal:800000,
+          vendaTotal:80000,
           comicao:20000
       },
       email: 'joaosilva@gmail.com',
   }
   ])
   const [vendas, setVendas] = useState([]);
+  const [config, setConfig] = useState({
+
+    comicao: 4, // Porcentagem de comissão
+    meta: 2000000, // Meta de vendas em reais
+  })
   
   // Qualquer dado/função que você queira compartilhar globalmente
   const value = {
@@ -41,7 +46,9 @@ export function GlobalProvider({ children }) {
     produtos , 
     setProdutos,
     funcionarios, 
-    setFuncionarios
+    setFuncionarios,
+    config,
+    setConfig
     
   };
 

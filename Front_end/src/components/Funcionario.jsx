@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import GraficoBar from './GraficoBar';
 import {
   Box,
@@ -15,8 +15,12 @@ import {
 } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { styled } from '@mui/material/styles';
+import { useGlobal } from '../contexts/GlobalProvider';
 const Funcionario = ({ funcionario }) => {
-
+  
+  
+  const { config } = useGlobal()
+ 
   const StyledExpandIcon = styled(PlayArrowIcon)({
     color: '#e65f2b',
     fontSize: '2rem', // tamanho do incone
@@ -41,6 +45,10 @@ const Funcionario = ({ funcionario }) => {
       currency: 'BRL'
     });
   }
+  // function returnavalor(valor) {
+  //   return Number(valor)
+  //   };
+  
   function calcularPorcentagem(valorParcial, valorTotal) {
     if (valorTotal === 0) return 0;
     const porcentagem = (valorParcial / valorTotal) * 100;
@@ -52,6 +60,8 @@ const Funcionario = ({ funcionario }) => {
   function calcularValorPorcentagem(valorTotal, porcentagem) {
     return (valorTotal * porcentagem) / 100;
   }
+  let vendasTotais = funcionario.financeiro.vendaTotal;
+    
   return (
 
 
@@ -90,17 +100,12 @@ const Funcionario = ({ funcionario }) => {
                   >
                     {funcionario.nome}
                   </TableCell>
-
-
                   <TableCell sx={{ maWidth: '15%', fontWeight: 'bold', fontSize: '20px' }}>Identificador</TableCell>
                   <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Email</TableCell>
                   <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Telefone</TableCell>
                   <TableCell sx={{ width: '15%', fontWeight: 'bold', fontSize: '20px' }}>CPF</TableCell>
                 </TableRow>
-
-
                 <TableRow>
-
                   <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.identificador}</TableCell>
                   <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.email}</TableCell>
                   <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.telefone}</TableCell>
@@ -115,28 +120,25 @@ const Funcionario = ({ funcionario }) => {
         <Box sx={{ display: 'flex', height: '100%', width: '100%', flexDirection: 'column' }}>
           <Box sx={{ width: '100%', height: '100%' }}>
             <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-              <Typography sx={{ ml: '50px' }}>Meta de venda:    R$ 2.000,00 (4%)</Typography>
+              <Typography sx={{ ml: '50px' }}>Meta de venda:    {formCash(config.meta)} {formatarPorcentagem(config.comicao)}</Typography>
               <Box sx={{ display: 'flex' }}>
                 <Typography sx={{ textAlign: 'center', width: '100%', height: '100%', mr: '20px' }}>
-                  {funcionario.financeiro.meta}%
+                  {calcularPorcentagem(funcionario.financeiro.vendaTotal, config.meta)}%
                 </Typography>
               </Box>
             </Box>
           </Box>
           <Box sx={{ width: '98%' }}>
-            <GraficoBar meta={funcionario.financeiro.meta} />
+            <GraficoBar meta={calcularPorcentagem(funcionario.financeiro.vendaTotal, config.meta)} />
           </Box>
-
           <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-            <Typography sx={{ ml: '50px' }}>Vendas totais:   R$ {formCash(funcionario.financeiro.vendaTotal)}</Typography>
+            <Typography sx={{ ml: '50px' }}>Vendas totais:  {formCash(vendasTotais)}</Typography>
             <Box sx={{ display: 'flex' }}>
               <Typography sx={{ textAlign: 'center', width: '100%', height: '100%', mr: '20px' }}>
-                Comissões <span style={{ color: '#e65f2b' }}>Totais</span>:  {formCash(funcionario.financeiro.comicao)}
+                Comissões <span style={{ color: '#e65f2b' }}>Totais</span>:  {formCash(calcularValorPorcentagem(funcionario.financeiro.vendaTotal, config.comicao))}
               </Typography>
             </Box>
           </Box>
-
-
         </Box>
       </AccordionDetails>
     </Accordion>
