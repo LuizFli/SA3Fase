@@ -5,6 +5,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router'
 import { useEffect } from 'react'
 import { useGlobal } from '../contexts/GlobalProvider'
+import axios from 'axios'
 
 
 function CadastroFuncionario() {
@@ -46,12 +47,23 @@ function CadastroFuncionario() {
 
   // UseEfeito para carregar dados quando em modo de edição
   useEffect(() => {
+    // const res = await axios.put(`http://localhost:3000/funcionarios`, data = funcionario)
+    // res.status
+    // res.data
     if (location.state?.funcionarioParaEditar) {
       setFuncionario(location.state.funcionarioParaEditar);
       setModoEdicao(true);
       setIndiceEdicao(location.state.indiceParaEditar);
     }
   }, [location]);
+  const atualizarFuncionario = async (dados) => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/funcionarios", dados);
+      console.log(res.status, res.data); // se quiser usar depois
+    } catch (error) {
+      console.error("Erro ao atualizar funcionário:", error);
+    }
+  };
 
   function mudarValores(e) {
     const { id, value } = e.target;
@@ -93,9 +105,6 @@ function CadastroFuncionario() {
       return;
     }
 
-    // Atualiza o estado global
-    // setFuncionarios(listaFuncionarios);
-
     // Modo cadastro: Verificar se usuário já existe
     const usuarioExistente = listaFuncionarios.some(
       f => f.usuario === funcionario.usuario
@@ -111,6 +120,9 @@ function CadastroFuncionario() {
     localStorage.setItem('funcionarios', JSON.stringify(novaLista));
     // Atualiza o estado global
     setFuncionarios(novaLista);
+    // UseEfeito para carregar dados quando em modo de edição
+
+    atualizarFuncionario(funcionario)
     alert("Funcionário cadastrado com sucesso!");
     navigate('/gerenciaFun');
     ApagarDados();
@@ -168,7 +180,6 @@ function CadastroFuncionario() {
   }
 
   return (
-
 
     <Box sx={{
       p: 0,
