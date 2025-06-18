@@ -4,6 +4,11 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "inity": "^1.0.5",
-    "pg": "^8.16.0"
+    "pg": "^8.16.1"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "install-all": "npm install axios cors express inity pg",
+    "dev": "nodemon server.js"
   }
 }
