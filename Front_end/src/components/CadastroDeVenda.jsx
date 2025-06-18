@@ -9,12 +9,9 @@ import {
   MenuItem,
   InputAdornment,
 } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { useGlobal } from '../contexts/GlobalProvider';
-
+import { Add } from '@mui/icons-material';
 function CadastroDeVenda({ onClose }) {
   const { produtos = [], vendas, setVendas, funcionarios = [] } = useGlobal();
 
@@ -55,12 +52,6 @@ function CadastroDeVenda({ onClose }) {
     }
   };
 
-  const handleDateChange = (newValue) => {
-    setFormData((prev) => ({
-      ...prev,
-      data: newValue,
-    }));
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -103,6 +94,7 @@ function CadastroDeVenda({ onClose }) {
               fullWidth
               error={!!errors.id_produto}
               helperText={errors.id_produto}
+              sx={{ width: 300 }}
             >
               <MenuItem value="">
                 <em>Selecione um veículo</em>
@@ -139,17 +131,6 @@ function CadastroDeVenda({ onClose }) {
               }}
               fullWidth
             />
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Data da Venda"
-                value={formData.data}
-                onChange={handleDateChange}
-                renderInput={(params) => <TextField {...params} fullWidth />}
-              />
-            </LocalizationProvider>
           </Grid>
 
           <Grid item xs={12} md={6}>
@@ -201,6 +182,7 @@ function CadastroDeVenda({ onClose }) {
             type="submit"
             variant="contained"
             color="success"
+            startIcon={<Add />}
             sx={{
               px: 4,
               py: 1,

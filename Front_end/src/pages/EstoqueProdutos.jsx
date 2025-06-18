@@ -160,7 +160,6 @@ function EstoqueProdutos() {
             <Botao
               variant="contained"
               color="success"
-              startIcon={<Adicionar />}
               sx={{ 
                 fontWeight: 'bold', 
                 padding: '8px 20px',
