@@ -11,6 +11,9 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
+module.exports = {
+  query: (text, params) => pool.query(text, params),
+};
 
 pool.on('error', (err) => {
   console.error('Erro no pool do banco de dados:', err);

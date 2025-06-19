@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -17,6 +17,9 @@ import {
   Grid,
   Avatar,
   Modal,
+  CircularProgress,
+  Alert,
+  Snackbar
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -28,12 +31,16 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ptBR from 'date-fns/locale/pt-BR';
+import axios from 'axios';
 import PageContainer from '../components/PageContainer';
 import CadastroDeVenda from '../components/CadastroDeVenda';
-import { useGlobal } from '../contexts/GlobalProvider';
 
 function Vendas() {
-  const { vendas } = useGlobal();
+  // Estados para dados e carregamento
+  const [vendas, setVendas] = useState([]);
+  const [totalVendas, setTotalVendas] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Estados para paginação e filtros
   const [page, setPage] = useState(0);
@@ -43,6 +50,44 @@ function Vendas() {
   const [endDate, setEndDate] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+
+  // Estado para snackbar (feedback)
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
+
+  // Buscar vendas quando os filtros ou paginação mudam
+  useEffect(() => {
+    const fetchVendas = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = {
+          page: page + 1,
+          pageSize: rowsPerPage,
+        };
+
+        if (searchTerm) params.searchTerm = searchTerm;
+        if (startDate) params.startDate = startDate.toISOString();
+        if (endDate) params.endDate = endDate.toISOString();
+
+        const response = await axios.get('/api/vendas', { params });
+        setVendas(response.data.vendas || []);
+        setTotalVendas(response.data.total || 0);
+      } catch (err) {
+        console.error('Erro ao buscar vendas:', err);
+        setError('Erro ao carregar vendas. Tente novamente mais tarde.');
+        setVendas([]);
+        setTotalVendas(0);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVendas();
+  }, [page, rowsPerPage, searchTerm, startDate, endDate]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -57,6 +102,7 @@ function Vendas() {
     setSearchTerm('');
     setStartDate(null);
     setEndDate(null);
+    setPage(0);
   };
 
   const handleOpenModal = () => {
@@ -67,19 +113,21 @@ function Vendas() {
     setOpenModal(false);
   };
 
-  // Filtragem dos dados
-  const filteredVendas = vendas.filter((venda) => {
-    const matchesSearch = Object.values(venda).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const handleCloseSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
 
-    const saleDate = new Date(venda.data);
-    const matchesDate =
-      (!startDate || saleDate >= new Date(startDate)) &&
-      (!endDate || saleDate <= new Date(endDate));
-
-    return matchesSearch && matchesDate;
-  });
+  const handleVendaCadastrada = (novaVenda) => {
+    setSnackbar({
+      open: true,
+      message: `Venda do veículo ${novaVenda.veiculo} cadastrada com sucesso!`,
+      severity: 'success'
+    });
+    // Atualiza a lista de vendas
+    setVendas(prev => [novaVenda, ...prev]);
+    setTotalVendas(prev => prev + 1);
+    handleCloseModal();
+  };
 
   return (
     <PageContainer>
@@ -219,6 +267,13 @@ function Vendas() {
             )}
           </Paper>
 
+          {/* Mensagem de erro */}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
           {/* Tabela de vendas */}
           <Paper
             elevation={2}
@@ -249,30 +304,34 @@ function Vendas() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredVendas.length > 0 ? (
-                    filteredVendas
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((venda) => (
-                        <TableRow key={venda.id_produto} hover>
-                          <TableCell>{venda.id_produto}</TableCell>
-                          <TableCell>{venda.produto}</TableCell>
-                          <TableCell align="right">
-                            {new Intl.NumberFormat('pt-BR', {
-                              style: 'currency',
-                              currency: 'BRL',
-                            }).format(venda.valor)}
-                          </TableCell>
-                          <TableCell>
-                            {new Date(venda.data).toLocaleDateString('pt-BR')}
-                          </TableCell>
-                          <TableCell>{venda.matricula_vendedor}</TableCell>
-                          <TableCell>{venda.auth_code}</TableCell>
-                        </TableRow>
-                      ))
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={6} align="center">
+                        <CircularProgress />
+                      </TableCell>
+                    </TableRow>
+                  ) : vendas.length > 0 ? (
+                    vendas.map((venda) => (
+                      <TableRow key={`${venda.id_produto}-${venda.data}-${venda.auth_code}`} hover>
+                        <TableCell>{venda.id_produto}</TableCell>
+                        <TableCell>{venda.produto}</TableCell>
+                        <TableCell align="right">
+                          {new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          }).format(venda.valor)}
+                        </TableCell>
+                        <TableCell>
+                          {new Date(venda.data).toLocaleDateString('pt-BR')}
+                        </TableCell>
+                        <TableCell>{venda.nome_vendedor || venda.identificador_vendedor}</TableCell>
+                        <TableCell>{venda.auth_code}</TableCell>
+                      </TableRow>
+                    ))
                   ) : (
                     <TableRow>
                       <TableCell colSpan={6} align="center">
-                        Nenhum resultado encontrado
+                        {error ? 'Erro ao carregar dados' : 'Nenhuma venda encontrada'}
                       </TableCell>
                     </TableRow>
                   )}
@@ -283,7 +342,7 @@ function Vendas() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={filteredVendas.length}
+              count={totalVendas}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
@@ -307,8 +366,27 @@ function Vendas() {
           justifyContent: 'center',
         }}
       >
-        <CadastroDeVenda onClose={handleCloseModal} />
+        <CadastroDeVenda
+          onClose={handleCloseModal}
+          onVendaCadastrada={handleVendaCadastrada}
+        />
       </Modal>
+
+      {/* Snackbar para feedback */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity={snackbar.severity} 
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </PageContainer>
   );
 }

@@ -8,11 +8,14 @@ import {
   Button,
   MenuItem,
   InputAdornment,
+  CircularProgress,
+  Alert
 } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { useGlobal } from '../contexts/GlobalProvider';
-import { Add } from '@mui/icons-material';
-function CadastroDeVenda({ onClose }) {
+
+function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const { produtos = [], vendas, setVendas, funcionarios = [] } = useGlobal();
 
   const [formData, setFormData] = useState({
@@ -25,6 +28,19 @@ function CadastroDeVenda({ onClose }) {
   });
 
   const [errors, setErrors] = useState({});
+  const [submitError, setSubmitError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.id_produto) newErrors.id_produto = 'Selecione um veículo';
+    if (!formData.identificador_vendedor) newErrors.identificador_vendedor = 'Informe o vendedor';
+    if (!formData.auth_code) newErrors.auth_code = 'Código de autorização é obrigatório';
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length > 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,12 +68,39 @@ function CadastroDeVenda({ onClose }) {
     }
   };
 
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError(null);
+    
+    const hasErrors = validateForm();
+    if (hasErrors) return;
 
-    // Validação e lógica de cadastro de venda
-    // (mesma lógica do CadastroVenda.jsx)
+    setLoading(true);
+    
+    try {
+      // Simulação de cadastro - substitua por chamada API real
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const novaVenda = { 
+        ...formData, 
+        id: vendas.length + 1,
+        produto: formData.veiculo,
+        data: new Date().toISOString()
+      };
+      
+      setVendas((prev) => [...prev, novaVenda]);
+      
+      if (onVendaCadastrada) {
+        onVendaCadastrada(novaVenda);
+      }
+      
+      onClose();
+    } catch (err) {
+      console.error('Erro ao cadastrar venda:', err);
+      setSubmitError('Erro ao cadastrar venda. Por favor, tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,6 +125,12 @@ function CadastroDeVenda({ onClose }) {
         Cadastrar Nova Venda
       </Typography>
 
+      {submitError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {submitError}
+        </Alert>
+      )}
+
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
@@ -95,6 +144,7 @@ function CadastroDeVenda({ onClose }) {
               error={!!errors.id_produto}
               helperText={errors.id_produto}
               sx={{ width: 300 }}
+              disabled={loading}
             >
               <MenuItem value="">
                 <em>Selecione um veículo</em>
@@ -116,6 +166,7 @@ function CadastroDeVenda({ onClose }) {
                 readOnly: true,
               }}
               fullWidth
+              disabled={loading}
             />
           </Grid>
 
@@ -128,8 +179,10 @@ function CadastroDeVenda({ onClose }) {
               type="number"
               InputProps={{
                 startAdornment: <InputAdornment position="start">R$</InputAdornment>,
+                readOnly: true,
               }}
               fullWidth
+              disabled={loading}
             />
           </Grid>
 
@@ -142,6 +195,7 @@ function CadastroDeVenda({ onClose }) {
               error={!!errors.identificador_vendedor}
               helperText={errors.identificador_vendedor}
               fullWidth
+              disabled={loading}
             />
           </Grid>
 
@@ -154,6 +208,7 @@ function CadastroDeVenda({ onClose }) {
               error={!!errors.auth_code}
               helperText={errors.auth_code}
               fullWidth
+              disabled={loading}
             />
           </Grid>
         </Grid>
@@ -169,6 +224,7 @@ function CadastroDeVenda({ onClose }) {
           <Button
             variant="outlined"
             onClick={onClose}
+            disabled={loading}
             sx={{
               px: 4,
               py: 1,
@@ -182,7 +238,8 @@ function CadastroDeVenda({ onClose }) {
             type="submit"
             variant="contained"
             color="success"
-            startIcon={<Add />}
+            startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Add />}
+            disabled={loading}
             sx={{
               px: 4,
               py: 1,
@@ -190,7 +247,7 @@ function CadastroDeVenda({ onClose }) {
               fontWeight: 'bold',
             }}
           >
-            Cadastrar Venda
+            {loading ? 'Cadastrando...' : 'Cadastrar Venda'}
           </Button>
         </Box>
       </form>
