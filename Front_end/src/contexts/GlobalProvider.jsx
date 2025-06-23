@@ -19,15 +19,15 @@ export function GlobalProvider({ children }) {
       id: 1,
       nome: "João Silva",
       identificador: "48456",
-      cpf: "123.456.789-00",
-      telefone: "(11) 98765-4321",
+      cargo: "Vendedor Pleno",
+      ultimaVenda: `R$ 8.500,00`,
       foto: "",
+      vendasTotais: '9',
       financeiro:{
           meta: 40.58,
           vendaTotal:80000,
           comicao:20000
       },
-      email: 'joaosilva@gmail.com',
   }
   ])
   const [vendas, setVendas] = useState([]);

@@ -45,9 +45,6 @@ const Funcionario = ({ funcionario }) => {
       currency: 'BRL'
     });
   }
-  // function returnavalor(valor) {
-  //   return Number(valor)
-  //   };
   
   function calcularPorcentagem(valorParcial, valorTotal) {
     if (valorTotal === 0) return 0;
@@ -101,15 +98,15 @@ const Funcionario = ({ funcionario }) => {
                     {funcionario.nome}
                   </TableCell>
                   <TableCell sx={{ maWidth: '15%', fontWeight: 'bold', fontSize: '20px' }}>Identificador</TableCell>
-                  <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Email</TableCell>
-                  <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Telefone</TableCell>
-                  <TableCell sx={{ width: '15%', fontWeight: 'bold', fontSize: '20px' }}>CPF</TableCell>
+                  <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Vendas Totais</TableCell>
+                  <TableCell sx={{ width: '20%', fontWeight: 'bold', fontSize: '20px' }}>Cargo</TableCell>
+                  <TableCell sx={{ width: '15%', fontWeight: 'bold', fontSize: '20px' }}>Última Venda Realizada</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.identificador}</TableCell>
-                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.email}</TableCell>
-                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.telefone}</TableCell>
-                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.cpf}</TableCell>
+                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.vendasTotais}</TableCell>
+                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.cargo}</TableCell>
+                  <TableCell sx={{ border: 'none', fontSize: '17px' }}>{funcionario.ultimaVenda}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

@@ -213,6 +213,7 @@ function EstoqueProdutos() {
             apagarProduto={apagarProduto}
             editarProduto={handleOpenEditModal} 
           />
+          
         </Painel>
 
         {/* Modal de Adição */}
