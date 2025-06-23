@@ -47,15 +47,22 @@ function CadastroFuncionario() {
 
   // UseEfeito para carregar dados quando em modo de edição
   useEffect(() => {
-    // const res = await axios.put(`http://localhost:3000/funcionarios`, data = funcionario)
-    // res.status
-    // res.data
-    if (location.state?.funcionarioParaEditar) {
-      setFuncionario(location.state.funcionarioParaEditar);
-      setModoEdicao(true);
-      setIndiceEdicao(location.state.indiceParaEditar);
-    }
+    const carregarFuncionarioParaEdicao = async () => {
+      if (location.state?.funcionarioParaEditar) {
+        try {
+          // 👇🏽 Adicione a requisição GET para buscar os dados atuais
+          const response = await axios.get(`http://localhost:3000/api/funcionarios/${location.state.indiceParaEditar}`);
+          setFuncionario(response.data);
+          setModoEdicao(true);
+          setIndiceEdicao(location.state.indiceParaEditar);
+        } catch (error) {
+          console.error("Erro ao carregar funcionário:", error);
+        }
+      }
+    };
+    carregarFuncionarioParaEdicao();
   }, [location]);
+
   const atualizarFuncionario = async (dados) => {
     try {
       const res = await axios.post("http://localhost:3000/api/funcionarios", dados);
@@ -65,15 +72,39 @@ function CadastroFuncionario() {
     }
   };
 
-  function mudarValores(e) {
-    const { id, value } = e.target;
-    setFuncionario({
-      ...funcionario,
-      [id]: value
-    });
-  }
+  const mudarValores = (e) => {
+    const { id, type } = e.target;
 
-  function Cadastrar() {
+    if (type === 'file') {
+      const file = e.target.files[0];
+      if (file) {
+        convertToBase64(file).then(base64 => {
+          setFuncionario({
+            ...funcionario,
+            [id]: base64
+          });
+        }).catch(error => {
+          console.error("Erro ao converter imagem:", error);
+        });
+      }
+    } else {
+      setFuncionario({
+        ...funcionario,
+        [id]: e.target.value
+      });
+    }
+  };
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const Cadastrar = async () => {
 
     const camposObrigatorios = [
       'nome', 'usuario', 'dataNascimento', 'sexo', 'cpf', 'rg', 'identificador', 'email',
@@ -92,41 +123,22 @@ function CadastroFuncionario() {
       return;
     }
 
-    // Obter lista existente ou criar nova
-    const listaFuncionarios = JSON.parse(localStorage.getItem('funcionarios') || '[]');
-
-    if (modoEdicao) {
-      // Modo edição - atualiza o funcionário existente
-      listaFuncionarios[indiceEdicao] = funcionario;
-      localStorage.setItem('funcionarios', JSON.stringify(listaFuncionarios));
-      setFuncionarios(listaFuncionarios);
-      alert("Funcionário atualizado com sucesso!");
+    try {
+      if (modoEdicao) {
+        //requisição PUT para edição
+        await axios.put(`http://localhost:3000/api/funcionarios/${indiceEdicao}`, funcionario);
+        alert("Funcionário atualizado com sucesso!");
+      } else {
+        //requisição POST para novo cadastro
+        await axios.post("http://localhost:3000/api/funcionarios", funcionario);
+        alert("Funcionário cadastrado com sucesso!");
+      }
       navigate('/gerenciaFun');
-      return;
+      ApagarDados();
+    } catch (error) {
+      console.error("Erro ao salvar funcionário:", error);
+      alert(error.response?.data?.erro || "Erro ao salvar funcionário");
     }
-
-    // Modo cadastro: Verificar se usuário já existe
-    const usuarioExistente = listaFuncionarios.some(
-      f => f.usuario === funcionario.usuario
-    );
-
-    if (usuarioExistente) {
-      alert('Já existe um funcionário com este nome de usuário');
-      return;
-    }
-
-    // Adiciona novo funcionário
-    const novaLista = [...listaFuncionarios, funcionario];
-    localStorage.setItem('funcionarios', JSON.stringify(novaLista));
-    // Atualiza o estado global
-    setFuncionarios(novaLista);
-    // UseEfeito para carregar dados quando em modo de edição
-
-    atualizarFuncionario(funcionario)
-    alert("Funcionário cadastrado com sucesso!");
-    navigate('/gerenciaFun');
-    ApagarDados();
-
   };
 
   // Validação CPF
@@ -170,7 +182,8 @@ function CadastroFuncionario() {
       estado: '',
       cep: '',
       senha: '',
-      confirmacaoSenha: ''
+      confirmacaoSenha: '',
+      foto: ''
     })
 
   };
@@ -300,7 +313,7 @@ function CadastroFuncionario() {
 
               <Stack direction="row" sx={{ p: '20px', gap: '20px' }}>
                 <TextField fullWidth size='small' id="cargo" label="Cargo do funcionário" variant="outlined" onChange={mudarValores} value={funcionario.cargo}></TextField>
-                <TextField fullWidth size='small' id="foto" label="foto do funcionário" type='file' variant="outlined" onChange={mudarValores} value={funcionario.foto}
+                <TextField fullWidth size='small' id="foto" label="foto do funcionário" type='file' variant="outlined" onChange={mudarValores}
                   InputLabelProps={{ shrink: true }}
                   sx={{
                     '& input[type="file"]': {

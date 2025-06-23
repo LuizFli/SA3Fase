@@ -79,14 +79,22 @@ const Funcionario = ({ funcionario }) => {
                 <TableRow sx={{ border: 'none' }}>
 
                   <TableCell rowSpan={2} sx={{ width: '10%', verticalAlign: 'middle', border: 'none' }}>
-                    <Avatar
-                      sx={{
-                        width: 80,
-                        height: 80,
-                        fontSize: '2rem'
-                      }}
-                    />
-                  </TableCell>
+                        <Avatar
+                          src={funcionario.foto} // Aqui vai a string Base64 da imagem
+                          sx={{
+                            width: 80,
+                            height: 80,
+                            fontSize: '2rem',
+                            // Estilos adicionais para quando não há imagem
+                            ...(!funcionario.foto && {
+                              bgcolor: 'primary.main', // Cor de fundo quando não há foto
+                            })
+                          }}
+                        >
+                          {/* Texto exibido quando não há imagem */}
+                          {!funcionario.foto && funcionario.nome?.charAt(0).toUpperCase()}
+                        </Avatar>
+                      </TableCell>
 
                   <TableCell
                     rowSpan={2}
