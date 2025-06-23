@@ -11,12 +11,13 @@ const pool = new Pool({
     rejectUnauthorized: false
   }
 });
-module.exports = {
-  query: (text, params) => pool.query(text, params),
-};
+
+// Função de query para exportar
+export const query = (text, params) => pool.query(text, params);
+
+// Exportando o pool diretamente também
+export default pool;
 
 pool.on('error', (err) => {
   console.error('Erro no pool do banco de dados:', err);
 });
-
-export default pool;
