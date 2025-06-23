@@ -6,12 +6,6 @@ import {
   Button as Botao,
   TextField as CampoTexto,
   Avatar as Avatar,
-  Modal,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Snackbar,
   Alert
 } from '@mui/material';
@@ -19,6 +13,8 @@ import { Add as Adicionar, Search as Buscar } from '@mui/icons-material';
 import PageContainer from '../components/PageContainer';
 import { useGlobal } from '../contexts/GlobalProvider';
 import ProdutoEstoque from '../components/ProdutoEstoque';
+import AdicionarModal from '../components/AdicionarModal';
+import EditarModal from '../components/EditarModal';
 
 function EstoqueProdutos() {
   const { produtos, setProdutos } = useGlobal();
@@ -27,6 +23,7 @@ function EstoqueProdutos() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [termoBusca, setTermoBusca] = useState('');
+  const [buscaId, setBuscaId] = useState('');
   const [currentProduto, setCurrentProduto] = useState({
     id: '',
     marca: '',
@@ -37,18 +34,12 @@ function EstoqueProdutos() {
     cor: ''
   });
 
-  const coresDisponiveis = [
-    'Preto',
-    'Branco',
-    'Prata',
-    'Vermelho',
-    'Azul',
-    'Cinza',
-    'Verde'
-  ];
-
   // Função para filtrar produtos
   const produtosFiltrados = produtos.filter(produto => {
+    if (buscaId) {
+      return produto.id.toString().includes(buscaId);
+    }
+    
     const termo = termoBusca.toLowerCase();
     return (
       produto.marca.toLowerCase().includes(termo) ||
@@ -95,34 +86,14 @@ function EstoqueProdutos() {
     setOpenSnackbar(false);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentProduto(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleAddSubmit = (e) => {
-    e.preventDefault();
-    const novoProduto = {
-      ...currentProduto,
-      km: Number(currentProduto.km),
-      ano: Number(currentProduto.ano)
-    };
-    setProdutos([...produtos, novoProduto]);
+  const handleAddSubmit = (produto) => {
+    setProdutos([...produtos, produto]);
     setSnackbarMessage('Produto adicionado com sucesso!');
     setOpenSnackbar(true);
     handleCloseModal();
   };
 
-  const handleEditSubmit = (e) => {
-    e.preventDefault();
-    const produtoAtualizado = {
-      ...currentProduto,
-      km: Number(currentProduto.km),
-      ano: Number(currentProduto.ano)
-    };
+  const handleEditSubmit = (produtoAtualizado) => {
     const novosProdutos = produtos.map(produto => 
       produto.id === produtoAtualizado.id ? produtoAtualizado : produto
     );
@@ -185,19 +156,37 @@ function EstoqueProdutos() {
           marginBottom: '20px',
           borderRadius: '10px'
         }}>
-          <Container sx={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+          <Container sx={{ display: 'flex', gap: '15px', alignItems: 'center', flexWrap: 'wrap' }}>
             <CampoTexto
-              placeholder="Buscar"
+              placeholder="Buscar geral"
               variant="outlined"
               size="small"
-              fullWidth
               value={termoBusca}
-              onChange={(e) => setTermoBusca(e.target.value)}
+              onChange={(e) => {
+                setTermoBusca(e.target.value);
+                setBuscaId('');
+              }}
               InputProps={{
                 startAdornment: <Buscar />,
                 sx: { borderRadius: '20px' }
               }}
-              sx={{ maxWidth: '400px' }}
+              sx={{ width: '300px' }}
+            />
+            
+            <CampoTexto
+              placeholder="Buscar por ID"
+              variant="outlined"
+              size="small"
+              value={buscaId}
+              onChange={(e) => {
+                setBuscaId(e.target.value);
+                setTermoBusca('');
+              }}
+              InputProps={{
+                startAdornment: <Buscar />,
+                sx: { borderRadius: '20px' }
+              }}
+              sx={{ width: '250px' }}
             />
           </Container>
         </Painel>
@@ -209,365 +198,29 @@ function EstoqueProdutos() {
           borderRadius: '10px'
         }}>
           <ProdutoEstoque 
-            produtos={termoBusca ? produtosFiltrados : produtos} 
+            produtos={termoBusca || buscaId ? produtosFiltrados : produtos} 
             apagarProduto={apagarProduto}
             editarProduto={handleOpenEditModal} 
           />
         </Painel>
 
         {/* Modal de Adição */}
-        <Modal
+        <AdicionarModal
           open={openAddModal}
           onClose={handleCloseModal}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Painel sx={{
-            width: '80%',
-            maxWidth: '800px',
-            padding: '30px',
-            borderRadius: '10px',
-            outline: 'none'
-          }}>
-            <Texto variant="h4" sx={{ 
-              fontWeight: 'bold', 
-              color: '#333',
-              fontSize: '1.8rem',
-              mb: 3
-            }}>
-              Cadastrar Novo Produto
-            </Texto>
-            
-            <form onSubmit={handleAddSubmit}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Marca"
-                      name="marca"
-                      value={currentProduto.marca}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Modelo"
-                      name="modelo"
-                      value={currentProduto.modelo}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Ano"
-                      name="ano"
-                      value={currentProduto.ano}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      type="number"
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Quilometragem (Km)"
-                      name="km"
-                      value={currentProduto.km}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      type="number"
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Placa"
-                      name="placa"
-                      value={currentProduto.placa}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <InputLabel>Cor</InputLabel>
-                    <Select
-                      name="cor"
-                      value={currentProduto.cor}
-                      onChange={handleInputChange}
-                      required
-                      label="Cor"
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    >
-                      {coresDisponiveis.map(cor => (
-                        <MenuItem key={cor} value={cor}>{cor}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Container sx={{ 
-                display: 'flex', 
-                justifyContent: 'flex-end', 
-                gap: 2,
-                mt: 3
-              }}>
-                <Botao
-                  variant="outlined"
-                  onClick={handleCloseModal}
-                  sx={{
-                    px: 4,
-                    py: 1,
-                    borderRadius: '8px',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Cancelar
-                </Botao>
-                <Botao
-                  type="submit"
-                  variant="contained"
-                  color="success"
-                  sx={{
-                    px: 4,
-                    py: 1,
-                    borderRadius: '8px',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Salvar Produto
-                </Botao>
-              </Container>
-            </form>
-          </Painel>
-        </Modal>
+          onSubmit={handleAddSubmit}
+          currentProduto={currentProduto}
+          setCurrentProduto={setCurrentProduto}
+        />
 
         {/* Modal de Edição */}
-        <Modal
+        <EditarModal
           open={openEditModal}
           onClose={handleCloseModal}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Painel sx={{
-            width: '80%',
-            maxWidth: '800px',
-            padding: '30px',
-            borderRadius: '10px',
-            outline: 'none'
-          }}>
-            <Texto variant="h4" sx={{ 
-              fontWeight: 'bold', 
-              color: '#333',
-              fontSize: '1.8rem',
-              mb: 3
-            }}>
-              Editar Produto
-            </Texto>
-            
-            <form onSubmit={handleEditSubmit}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Marca"
-                      name="marca"
-                      value={currentProduto.marca}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Modelo"
-                      name="modelo"
-                      value={currentProduto.modelo}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Ano"
-                      name="ano"
-                      value={currentProduto.ano}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      type="number"
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Quilometragem (Km)"
-                      name="km"
-                      value={currentProduto.km}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      type="number"
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <CampoTexto
-                      label="Placa"
-                      name="placa"
-                      value={currentProduto.placa}
-                      onChange={handleInputChange}
-                      required
-                      fullWidth
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    />
-                  </FormControl>
-
-                  <FormControl fullWidth sx={{ mb: 3 }}>
-                    <InputLabel>Cor</InputLabel>
-                    <Select
-                      name="cor"
-                      value={currentProduto.cor}
-                      onChange={handleInputChange}
-                      required
-                      label="Cor"
-                      variant="outlined"
-                      sx={{ 
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px'
-                        }
-                      }}
-                    >
-                      {coresDisponiveis.map(cor => (
-                        <MenuItem key={cor} value={cor}>{cor}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Container sx={{ 
-                display: 'flex', 
-                justifyContent: 'flex-end', 
-                gap: 2,
-                mt: 3
-              }}>
-                <Botao
-                  variant="outlined"
-                  onClick={handleCloseModal}
-                  sx={{
-                    px: 4,
-                    py: 1,
-                    borderRadius: '8px',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Cancelar
-                </Botao>
-                <Botao
-                  type="submit"
-                  variant="contained"
-                  color="success"
-                  sx={{
-                    px: 4,
-                    py: 1,
-                    borderRadius: '8px',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  Salvar Alterações
-                </Botao>
-              </Container>
-            </form>
-          </Painel>
-        </Modal>
+          onSubmit={handleEditSubmit}
+          currentProduto={currentProduto}
+          setCurrentProduto={setCurrentProduto}
+        />
 
         {/* Snackbar para feedback */}
         <Snackbar
