@@ -4,7 +4,7 @@ export default class VendaController {
   static async getVendas(req, res) {
     try {
       const { searchTerm, startDate, endDate, page = 1, pageSize = 5 } = req.query;
-      
+
       // Construção da query base
       let query = `
         SELECT 
@@ -20,7 +20,7 @@ export default class VendaController {
         JOIN funcionarios f ON v.matricula_vendedor = f.identificador
         WHERE 1=1
       `;
-      
+
       const params = [];
       let paramIndex = 1;
 
@@ -83,9 +83,29 @@ export default class VendaController {
 
   static async postVenda(req, res) {
     try {
-      const venda = req.body;
-      
-      const response = await pool.query(
+      const { id_produto, valor, identificador_vendedor } = req.body;
+      if (!id_produto || !valor || !identificador_vendedor) {
+        return res.status(400).json({ erro: "Dados incompletos" });
+      }
+
+      // 1. Verificar se o produto existe
+      const produto = await pool.query('SELECT * FROM produtos WHERE id = $1', [id_produto]);
+      if (produto.rows.length === 0) {
+        return res.status(404).json({ erro: "Produto não encontrado" });
+      }
+
+      // 2. Verificar se o vendedor existe
+      const vendedor = await pool.query(
+        'SELECT * FROM funcionarios WHERE identificador = $1',
+        [identificador_vendedor]
+      );
+
+      if (vendedor.rows.length === 0) {
+        return res.status(404).json({ erro: "Vendedor não encontrado" });
+      }
+
+      // 3. Inserir a venda
+      const novaVenda = await pool.query(
         `INSERT INTO vendas (
           id_produto, 
           valor, 
@@ -96,24 +116,27 @@ export default class VendaController {
           $1, $2, $3, $4, $5
         ) RETURNING *`,
         [
-          venda.id_produto,
-          venda.valor,
-          new Date().toISOString(), // Data atual
-          venda.matricula_vendedor,
-          venda.auth_code || this.generateAuthCode() // Gera um auth_code se não fornecido
+          id_produto,
+          valor || produto.rows[0].valor, // Usa valor do produto se não fornecido
+          new Date().toISOString(),
+          identificador_vendedor, // Agora aceita o nome do frontend
+          auth_code || this.generateAuthCode()
         ]
       );
 
-      res.status(201).json(response.rows[0]);
+      // 4. Retornar resposta enriquecida
+      res.status(201).json({
+        ...novaVenda.rows[0],
+        produto: produto.rows[0].nome,
+        nome_vendedor: vendedor.rows[0].nome
+      });
+
     } catch (error) {
       console.error("Erro ao cadastrar venda:", error);
-      res.status(500).json({ erro: "Erro ao cadastrar venda" });
+      res.status(500).json({
+        erro: "Erro ao cadastrar venda",
+        detalhes: error.message
+      });
     }
-  }
-
-  // Método auxiliar para gerar auth_code
-  static generateAuthCode() {
-    return Math.random().toString(36).substring(2, 15) + 
-           Math.random().toString(36).substring(2, 15);
   }
 }

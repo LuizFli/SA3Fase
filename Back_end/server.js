@@ -3,10 +3,12 @@ import router from './app.js';
 import cors from 'cors';
 
 const app = express();
+const PORT = 3000; // 
 app.use(cors()); // Libera todas as origens
 app.use(express.json());
+// Rotas
 app.use('/api', router);
-
-app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000');
+// Inicia o servidor
+app.listen(PORT, () => {
+  console.log(`Backend rodando em http://localhost:${PORT}`);
 });

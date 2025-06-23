@@ -11,7 +11,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  TablePagination,
   InputAdornment,
   IconButton,
   Grid,
@@ -38,13 +37,10 @@ import CadastroDeVenda from '../components/CadastroDeVenda';
 function Vendas() {
   // Estados para dados e carregamento
   const [vendas, setVendas] = useState([]);
-  const [totalVendas, setTotalVendas] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para paginação e filtros
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  // Estados para filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -58,16 +54,13 @@ function Vendas() {
     severity: 'success'
   });
 
-  // Buscar vendas quando os filtros ou paginação mudam
+  // Buscar vendas quando os filtros mudam
   useEffect(() => {
     const fetchVendas = async () => {
       setLoading(true);
       setError(null);
       try {
-        const params = {
-          page: page + 1,
-          pageSize: rowsPerPage,
-        };
+        const params = {};
 
         if (searchTerm) params.searchTerm = searchTerm;
         if (startDate) params.startDate = startDate.toISOString();
@@ -75,34 +68,22 @@ function Vendas() {
 
         const response = await axios.get('/api/vendas', { params });
         setVendas(response.data.vendas || []);
-        setTotalVendas(response.data.total || 0);
       } catch (err) {
         console.error('Erro ao buscar vendas:', err);
         setError('Erro ao carregar vendas. Tente novamente mais tarde.');
         setVendas([]);
-        setTotalVendas(0);
       } finally {
         setLoading(false);
       }
     };
 
     fetchVendas();
-  }, [page, rowsPerPage, searchTerm, startDate, endDate]);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  }, [searchTerm, startDate, endDate]);
 
   const handleResetFilters = () => {
     setSearchTerm('');
     setStartDate(null);
     setEndDate(null);
-    setPage(0);
   };
 
   const handleOpenModal = () => {
@@ -125,7 +106,6 @@ function Vendas() {
     });
     // Atualiza a lista de vendas
     setVendas(prev => [novaVenda, ...prev]);
-    setTotalVendas(prev => prev + 1);
     handleCloseModal();
   };
 
@@ -338,20 +318,6 @@ function Vendas() {
                 </TableBody>
               </Table>
             </TableContainer>
-
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={totalVendas}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              labelRowsPerPage="Itens por página:"
-              labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} de ${count}`
-              }
-            />
           </Paper>
         </Box>
       </LocalizationProvider>

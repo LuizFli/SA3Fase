@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 const VendasService = {
   async getVendas(filters = {}) {
-    const { searchTerm, startDate, endDate, page = 1, pageSize = 10 } = filters;
+    const { searchTerm, startDate, endDate } = filters;
     
     let query = 'SELECT * FROM vendas WHERE 1=1';
     const params = [];
@@ -35,10 +35,6 @@ const VendasService = {
 
     // Ordenação padrão
     query += ' ORDER BY data DESC';
-
-    // Paginação
-    query += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-    params.push(pageSize, (page - 1) * pageSize);
 
     try {
       const { rows } = await db.query(query, params);
