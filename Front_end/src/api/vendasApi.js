@@ -1,8 +1,26 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api/vendas';
+const API_URL = 'http://localhost:3000/api/vendas'; // Ajuste conforme sua configuração
 
-export const getVendas = async (filters) => {
+export const cadastrarVenda = async (vendaData) => {
+  try {
+    const response = await axios.post(API_URL, {
+      id_produto: vendaData.id_produto,
+      valor: vendaData.valor,
+      identificador_vendedor: vendaData.identificador_vendedor,
+      auth_code: vendaData.auth_code
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.erro || 'Erro ao cadastrar venda');
+  }
+};
+
+export const getVendas = async (filters = {}) => {
   try {
     const { searchTerm, startDate, endDate, page, rowsPerPage } = filters;
     
@@ -10,13 +28,12 @@ export const getVendas = async (filters) => {
     if (searchTerm) params.append('searchTerm', searchTerm);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    params.append('page', page + 1); // +1 porque o backend começa em 1
-    params.append('pageSize', rowsPerPage);
+    if (page) params.append('page', page);
+    if (rowsPerPage) params.append('pageSize', rowsPerPage);
 
     const response = await axios.get(`${API_URL}?${params.toString()}`);
     return response.data;
   } catch (error) {
-    console.error('Erro ao buscar vendas:', error);
-    throw error;
+    throw new Error(error.response?.data?.erro || 'Erro ao buscar vendas');
   }
 };

@@ -14,6 +14,7 @@ import {
 import { Add } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { useGlobal } from '../contexts/GlobalProvider';
+import { cadastrarVenda } from '../api/vendasApi';
 
 function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const { produtos = [], vendas, setVendas, funcionarios = [] } = useGlobal();
@@ -74,30 +75,35 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
     
     const hasErrors = validateForm();
     if (hasErrors) return;
-
+  
     setLoading(true);
     
     try {
-      // Simulação de cadastro - substitua por chamada API real
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const novaVenda = { 
-        ...formData, 
-        id: vendas.length + 1,
-        produto: formData.veiculo,
-        data: new Date().toISOString()
+      const vendaData = {
+        id_produto: Number(formData.id_produto),  
+        valor: Number(formData.valor),            
+        identificador_vendedor: formData.identificador_vendedor,
+        auth_code: formData.auth_code || undefined 
       };
+  
+      const novaVenda = await cadastrarVenda(vendaData);
       
-      setVendas((prev) => [...prev, novaVenda]);
-      
+      onClose();
+      setFormData({
+        id_produto: '',
+        veiculo: '',
+        valor: '',
+        identificador_vendedor: '',
+        auth_code: ''
+      });
+  
+      // Chama a callback para atualizar a lista de vendas
       if (onVendaCadastrada) {
         onVendaCadastrada(novaVenda);
       }
       
-      onClose();
     } catch (err) {
-      console.error('Erro ao cadastrar venda:', err);
-      setSubmitError('Erro ao cadastrar venda. Por favor, tente novamente.');
+      setSubmitError(err.message);
     } finally {
       setLoading(false);
     }
@@ -179,7 +185,7 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
               type="number"
               InputProps={{
                 startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                readOnly: true,
+                
               }}
               fullWidth
               disabled={loading}
