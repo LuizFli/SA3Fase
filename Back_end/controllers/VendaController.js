@@ -3,7 +3,7 @@ import pool from "../database.js";
 export default class VendaController {
   static async getVendas(req, res) {
     try {
-      const { searchTerm, startDate, endDate, page = 1, pageSize = 5 } = req.query;
+      const { searchTerm, startDate, endDate } = req.query;
 
       // Construção da query base
       let query = `
@@ -12,12 +12,12 @@ export default class VendaController {
           p.nome as produto, 
           v.valor, 
           v.data, 
-          v.matricula_vendedor, 
+          v.identificador_vendedor,
           v.auth_code,
           f.nome as nome_vendedor
         FROM vendas v
         JOIN produtos p ON v.id_produto = p.id
-        JOIN funcionarios f ON v.matricula_vendedor = f.identificador
+        JOIN funcionarios f ON v.identificador_vendedor = f.identificador
         WHERE 1=1
       `;
 
@@ -30,7 +30,7 @@ export default class VendaController {
           AND (
             p.nome ILIKE $${paramIndex} OR 
             v.id_produto::text ILIKE $${paramIndex} OR 
-            v.matricula_vendedor ILIKE $${paramIndex} OR 
+            v.identificador_vendedor ILIKE $${paramIndex} OR
             v.auth_code ILIKE $${paramIndex} OR
             f.nome ILIKE $${paramIndex}
           )
@@ -55,24 +55,11 @@ export default class VendaController {
       // Ordenação padrão
       query += ` ORDER BY v.data DESC`;
 
-      // Query para contar o total de registros
-      const countQuery = query.replace(/SELECT.*FROM/, 'SELECT COUNT(*) FROM');
-      const countResult = await pool.query(countQuery, params);
-      const total = parseInt(countResult.rows[0].count);
-
-      // Paginação
-      const offset = (page - 1) * pageSize;
-      query += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-      params.push(parseInt(pageSize), offset);
-
       // Executar query principal
       const vendasResult = await pool.query(query, params);
 
       res.status(200).json({
-        vendas: vendasResult.rows,
-        total,
-        page: parseInt(page),
-        pageSize: parseInt(pageSize)
+        vendas: vendasResult.rows
       });
 
     } catch (error) {
@@ -83,7 +70,7 @@ export default class VendaController {
 
   static async postVenda(req, res) {
     try {
-      const { id_produto, valor, identificador_vendedor } = req.body;
+      const { id_produto, valor, identificador_vendedor, auth_code } = req.body;
       if (!id_produto || !valor || !identificador_vendedor) {
         return res.status(400).json({ erro: "Dados incompletos" });
       }
@@ -110,16 +97,16 @@ export default class VendaController {
           id_produto, 
           valor, 
           data, 
-          matricula_vendedor, 
+          identificador_vendedor,
           auth_code
         ) VALUES (
           $1, $2, $3, $4, $5
         ) RETURNING *`,
         [
           id_produto,
-          valor || produto.rows[0].valor, // Usa valor do produto se não fornecido
+          valor || produto.rows[0].valor,
           new Date().toISOString(),
-          identificador_vendedor, // Agora aceita o nome do frontend
+          identificador_vendedor,
           auth_code || this.generateAuthCode()
         ]
       );
@@ -138,5 +125,9 @@ export default class VendaController {
         detalhes: error.message
       });
     }
+  }
+
+  static generateAuthCode() {
+    return Math.random().toString(36).substring(2, 10).toUpperCase();
   }
 }

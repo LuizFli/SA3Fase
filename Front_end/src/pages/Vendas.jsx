@@ -25,6 +25,7 @@ import {
   Clear as ClearIcon,
   FilterList as FilterListIcon,
   DateRange as DateRangeIcon,
+  Check as CheckIcon
 } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -40,10 +41,16 @@ function Vendas() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para filtros
-  const [searchTerm, setSearchTerm] = useState('');
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  // Estados para filtros (valores em edição)
+  const [tempSearchTerm, setTempSearchTerm] = useState('');
+  const [tempStartDate, setTempStartDate] = useState(null);
+  const [tempEndDate, setTempEndDate] = useState(null);
+  
+  // Estados para filtros aplicados
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState('');
+  const [appliedStartDate, setAppliedStartDate] = useState(null);
+  const [appliedEndDate, setAppliedEndDate] = useState(null);
+  
   const [showFilters, setShowFilters] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
@@ -54,7 +61,7 @@ function Vendas() {
     severity: 'success'
   });
 
-  // Buscar vendas quando os filtros mudam
+  // Buscar vendas quando os filtros aplicados mudam
   useEffect(() => {
     const fetchVendas = async () => {
       setLoading(true);
@@ -62,9 +69,9 @@ function Vendas() {
       try {
         const params = {};
 
-        if (searchTerm) params.searchTerm = searchTerm;
-        if (startDate) params.startDate = startDate.toISOString();
-        if (endDate) params.endDate = endDate.toISOString();
+        if (appliedSearchTerm) params.searchTerm = appliedSearchTerm;
+        if (appliedStartDate) params.startDate = appliedStartDate.toISOString();
+        if (appliedEndDate) params.endDate = appliedEndDate.toISOString();
 
         const response = await axios.get('/api/vendas', { params });
         setVendas(response.data.vendas || []);
@@ -78,12 +85,21 @@ function Vendas() {
     };
 
     fetchVendas();
-  }, [searchTerm, startDate, endDate]);
+  }, [appliedSearchTerm, appliedStartDate, appliedEndDate]);
+
+  const handleApplyFilters = () => {
+    setAppliedSearchTerm(tempSearchTerm);
+    setAppliedStartDate(tempStartDate);
+    setAppliedEndDate(tempEndDate);
+  };
 
   const handleResetFilters = () => {
-    setSearchTerm('');
-    setStartDate(null);
-    setEndDate(null);
+    setTempSearchTerm('');
+    setTempStartDate(null);
+    setTempEndDate(null);
+    setAppliedSearchTerm('');
+    setAppliedStartDate(null);
+    setAppliedEndDate(null);
   };
 
   const handleOpenModal = () => {
@@ -169,17 +185,17 @@ function Vendas() {
                   variant="outlined"
                   size="small"
                   fullWidth
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={tempSearchTerm}
+                  onChange={(e) => setTempSearchTerm(e.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
                         <SearchIcon />
                       </InputAdornment>
                     ),
-                    endAdornment: searchTerm && (
+                    endAdornment: tempSearchTerm && (
                       <InputAdornment position="end">
-                        <IconButton onClick={() => setSearchTerm('')}>
+                        <IconButton onClick={() => setTempSearchTerm('')}>
                           <ClearIcon fontSize="small" />
                         </IconButton>
                       </InputAdornment>
@@ -200,6 +216,7 @@ function Vendas() {
                 </Button>
               </Grid>
 
+
               <Grid item xs={12} sm={6} md={3}>
                 <Button
                   fullWidth
@@ -211,6 +228,17 @@ function Vendas() {
                   Limpar Filtros
                 </Button>
               </Grid>
+              <Grid item xs={12} sm={6} md={2}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CheckIcon />}
+                  onClick={handleApplyFilters}
+                >
+                  Aplicar
+                </Button>
+              </Grid>
             </Grid>
 
             {/* Filtros avançados */}
@@ -220,8 +248,8 @@ function Vendas() {
                   <Grid item xs={12} sm={6} md={3}>
                     <DatePicker
                       label="Data inicial"
-                      value={startDate}
-                      onChange={(newValue) => setStartDate(newValue)}
+                      value={tempStartDate}
+                      onChange={(newValue) => setTempStartDate(newValue)}
                       renderInput={(params) => <TextField {...params} fullWidth />}
                       inputFormat="dd/MM/yyyy"
                       components={{
@@ -233,8 +261,8 @@ function Vendas() {
                   <Grid item xs={12} sm={6} md={3}>
                     <DatePicker
                       label="Data final"
-                      value={endDate}
-                      onChange={(newValue) => setEndDate(newValue)}
+                      value={tempEndDate}
+                      onChange={(newValue) => setTempEndDate(newValue)}
                       renderInput={(params) => <TextField {...params} fullWidth />}
                       inputFormat="dd/MM/yyyy"
                       components={{
