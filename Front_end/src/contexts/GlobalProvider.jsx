@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 // Cria o contexto
 const GlobalContext = createContext();
@@ -14,6 +15,18 @@ export function GlobalProvider({ children }) {
     { id: 5, marca: 'Hyundai', modelo: 'HB20', ano: 2022, cor: 'Cinza', km: 18000, placa: 'OPQ4R56' , valor: 70000 },
     
   ]);
+  useEffect(() => {
+    const fetchProdutos = async () => {
+      try {
+        const response = await axios.get('/api/produtos');
+        setProdutos(response.data);
+      } catch (error) {
+        console.error('Erro ao carregar produtos:', error);
+      }
+    };
+    
+    fetchProdutos();
+  }, []);
   const [funcionarios, setFuncionarios ] = useState([
     {
       id: 1,

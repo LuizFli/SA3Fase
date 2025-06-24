@@ -45,3 +45,11 @@ export const getVendas = async (filters = {}) => {
     throw new Error(error.response?.data?.erro || error.response?.data?.message || 'Erro ao buscar vendas');
   }
 };
+export const limparTodasVendas = async () => {
+  try {
+    const response = await axios.delete('http://localhost:3000/api/vendas');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

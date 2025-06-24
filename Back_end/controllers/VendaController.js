@@ -144,4 +144,31 @@ export default class VendaController {
     return `${produto.marca} ${produto.modelo}` + 
            (produto.ano ? ` ${produto.ano}` : '');
   }
+  static async deleteAllVendas(req, res) {
+    try {
+      // Verificar se há autorização (opcional, mas recomendado)
+      // if (!req.user || !req.user.isAdmin) {
+      //   return res.status(403).json({ erro: "Acesso negado" });
+      // }
+  
+      // Executar a query para deletar todas as vendas
+      await pool.query('TRUNCATE TABLE vendas RESTART IDENTITY CASCADE');
+      
+      res.status(200).json({ 
+        mensagem: "Todas as vendas foram removidas com sucesso",
+        vendas_removidas: true
+      });
+  
+    } catch (error) {
+      console.error("Erro ao limpar vendas:", {
+        error: error.message,
+        stack: error.stack
+      });
+      
+      res.status(500).json({ 
+        erro: "Erro ao limpar vendas",
+        detalhes: error.message 
+      });
+    }
+  }
 }

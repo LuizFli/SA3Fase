@@ -17,7 +17,7 @@ import { useGlobal } from '../contexts/GlobalProvider';
 import { cadastrarVenda } from '../api/vendasApi';
 
 function CadastroDeVenda({ onClose, onVendaCadastrada }) {
-  const { produtos = [], vendas, setVendas, funcionarios = [] } = useGlobal();
+  const { produtos = [], funcionarios = [] } = useGlobal();
 
   const [formData, setFormData] = useState({
     id_produto: '',
@@ -33,19 +33,20 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const [loading, setLoading] = useState(false);
   const handleCurrencyChange = (event) => {
     let value = event.target.value;
-    
+
     // Remove todos os caracteres não numéricos exceto vírgula e ponto
     value = value.replace(/[^\d,.-]/g, '');
-    
+
     // Converte para formato numérico
     const numericValue = parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
-    
+
     // Atualiza o estado
     setFormData({
       ...formData,
       [event.target.name]: numericValue
     });
   };
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -80,8 +81,20 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
           veiculo: `${veiculoSelecionado.marca} ${veiculoSelecionado.modelo}`,
           valor: veiculoSelecionado.valor || 0,
         }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          veiculo: '',
+          valor: 0,
+        }));
       }
     }
+  };
+  const formatarValor = (valor) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(valor);
   };
 
   const handleSubmit = async (e) => {
@@ -165,14 +178,14 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
               error={!!errors.id_produto}
               helperText={errors.id_produto}
               sx={{ width: 300 }}
-              disabled={loading}
+              disabled={loading || produtos.length === 0}
             >
               <MenuItem value="">
                 <em>Selecione um veículo</em>
               </MenuItem>
               {produtos.map((veiculo) => (
                 <MenuItem key={veiculo.id} value={veiculo.id}>
-                  {veiculo.marca} {veiculo.modelo} - {veiculo.ano} ({veiculo.placa})
+                  {veiculo.marca} {veiculo.modelo} - {veiculo.ano} ({veiculo.placa}) - {formatarValor(veiculo.valor)}
                 </MenuItem>
               ))}
             </TextField>
