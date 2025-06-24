@@ -17,7 +17,7 @@ import { useGlobal } from '../contexts/GlobalProvider';
 import { cadastrarVenda } from '../api/vendasApi';
 
 function CadastroDeVenda({ onClose, onVendaCadastrada }) {
-  const { produtos = [], vendas, setVendas, funcionarios = [] } = useGlobal();
+  const { produtos = [], funcionarios = [] } = useGlobal();
 
   const [formData, setFormData] = useState({
     id_produto: '',
@@ -46,6 +46,7 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
       [event.target.name]: numericValue
     });
   };
+  
 
   const validateForm = () => {
     const newErrors = {};
@@ -64,14 +65,14 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
       ...prev,
       [name]: value,
     }));
-
+  
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
         [name]: null,
       }));
     }
-
+  
     if (name === 'id_produto') {
       const veiculoSelecionado = produtos.find((p) => p.id === Number(value));
       if (veiculoSelecionado) {
@@ -79,6 +80,12 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
           ...prev,
           veiculo: `${veiculoSelecionado.marca} ${veiculoSelecionado.modelo}`,
           valor: veiculoSelecionado.valor || 0,
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          veiculo: '',
+          valor: 0,
         }));
       }
     }

@@ -34,7 +34,8 @@ import ptBR from 'date-fns/locale/pt-BR';
 import axios from 'axios';
 import PageContainer from '../components/PageContainer';
 import CadastroDeVenda from '../components/CadastroDeVenda';
-import { getVendas } from '../api/vendasApi'; // Importa a função para buscar vendas
+import { getVendas, limparTodasVendas } from '../api/vendasApi'; // Importa a função para buscar vendas
+
 
 function Vendas() {
   // Estados para dados e carregamento
@@ -54,6 +55,7 @@ function Vendas() {
 
   const [showFilters, setShowFilters] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   // Estado para snackbar (feedback)
   const [snackbar, setSnackbar] = useState({
@@ -89,6 +91,33 @@ function Vendas() {
 
     fetchVendas();
   }, [appliedSearchTerm, appliedStartDate, appliedEndDate]);
+  const handleLimparTodasVendas = async () => {
+    // Confirmação antes de deletar
+    const confirmacao = window.confirm(
+      'ATENÇÃO: Isso irá apagar TODAS as vendas permanentemente. Deseja continuar?'
+    );
+    
+    if (!confirmacao) return;
+  
+    setIsClearing(true);
+    try {
+      await limparTodasVendas();
+      setVendas([]); // Limpa o estado local
+      setSnackbar({
+        open: true,
+        message: 'Todas as vendas foram removidas com sucesso!',
+        severity: 'success'
+      });
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: `Erro ao limpar vendas: ${err.response?.data?.erro || err.message}`,
+        severity: 'error'
+      });
+    } finally {
+      setIsClearing(false);
+    }
+  };
 
   const handleApplyFilters = () => {
     setAppliedSearchTerm(tempSearchTerm);
@@ -168,6 +197,22 @@ function Vendas() {
               >
                 Cadastrar Venda
               </Button>
+
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleLimparTodasVendas}
+                disabled={isClearing || vendas.length === 0}
+                sx={{
+                  fontWeight: 'bold',
+                  padding: '8px 20px',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                }}
+              >
+                {isClearing ? <CircularProgress size={24} /> : 'Limpar Todas Vendas'}
+              </Button>
+
               <Avatar alt="Usuário" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
             </Box>
           </Paper>

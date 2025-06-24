@@ -13,6 +13,7 @@ router.delete('/funcionarios:id', FuncionarioController.deleteFuncionario);
 // Vendas
 router.get('/vendas', VendasController.getVendas);
 router.post('/vendas', VendasController.postVenda);
+router.delete('/vendas', VendasController.deleteAllVendas)
 
 
 export default router;
