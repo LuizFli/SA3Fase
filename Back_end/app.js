@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.get('/funcionarios', FuncionarioController.getFuncionarios);
 router.post('/funcionarios', FuncionarioController.postFuncionario);
-router.put('/funcionarios:id', FuncionarioController.putFuncionario);
-router.delete('/funcionarios:id', FuncionarioController.deleteFuncionario);
+router.put('/funcionarios/:id', FuncionarioController.putFuncionario);
+router.delete('/funcionarios/:id', FuncionarioController.deleteFuncionario);
 
 // Vendas
 router.get('/vendas', VendasController.getVendas);
