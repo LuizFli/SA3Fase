@@ -3,8 +3,7 @@ import MainLayout from "../components/MainLayout";
 import Home from "../pages/Home";
 import EstoqueProdutos from "../pages/EstoqueProdutos";
 import Funcionario from "../pages/Funcionarios";
-import GerenciaAcesso from "../pages/GerenciaAcesso";
-import Relatorio from "../pages/Relatorio";
+import Configuracoes from "../pages/Configuracoes";
 import GerenciaFuncionario from '../components/GerenciaFuncionario';
 import LoginPage from "../pages/LoginPage";
 import ListaFuncionarios from "../pages/ListaFuncionarios";
@@ -22,9 +21,8 @@ const router = createBrowserRouter([
     children: [
       { path: "/dashboard", element: <Home /> },
       { path: "/funcionarios", element: <Funcionario /> },
-      { path: "/gerenciaAcesso", element: <GerenciaAcesso /> },
+      { path: "/configuracoes", element: <Configuracoes /> },
       { path: "/produtos", element: <EstoqueProdutos /> },
-      { path: "/relatorio", element: <Relatorio /> },
       { path: '/gerenciaFun', element: <GerenciaFuncionario /> },
       { path: '/listaFuncionarios', element: <ListaFuncionarios /> },
       { path: '/cadastrofun', element: <CadastroFuncionario/> },

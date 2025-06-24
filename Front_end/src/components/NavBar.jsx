@@ -59,7 +59,7 @@ export default function PermanentSidebar() {
     { text: 'Gerenciar Acesso', icon: <CasesIcon />, path: '/gerenciaFun' },
     { text: 'Produtos', icon: <Apps />, path: '/produtos' },
     { text: 'Vendas', icon: <Edit />, path: '/vendas'},
-    { text: 'Configurações', icon: <Settings />, path: '/gerenciaAcesso' },
+    { text: 'Configurações', icon: <Settings />, path: '/configuracoes' },
     { text: 'Sair', icon: <Logout />, path: '/' },
   ];
 

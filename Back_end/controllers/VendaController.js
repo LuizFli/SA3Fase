@@ -3,87 +3,82 @@ import pool from "../database.js";
 export default class VendaController {
   static async getVendas(req, res) {
     try {
-      const { searchTerm, startDate, endDate, page = 1, pageSize = 5 } = req.query;
-
-      // Construção da query base
+      const { searchTerm, startDate, endDate } = req.query;
+  
+      // Construção da query base com tratamento de parâmetros
       let query = `
         SELECT 
           v.id_produto, 
-          p.nome as produto, 
+          p.marca || ' ' || p.modelo as produto,  
           v.valor, 
           v.data, 
-          v.matricula_vendedor, 
+          v.identificador_vendedor,
           v.auth_code,
           f.nome as nome_vendedor
         FROM vendas v
         JOIN produtos p ON v.id_produto = p.id
-        JOIN funcionarios f ON v.matricula_vendedor = f.identificador
+        JOIN funcionarios f ON v.identificador_vendedor = f.identificador
         WHERE 1=1
       `;
-
+  
       const params = [];
-      let paramIndex = 1;
-
+      
       // Filtro de busca geral
       if (searchTerm) {
         query += `
           AND (
-            p.nome ILIKE $${paramIndex} OR 
-            v.id_produto::text ILIKE $${paramIndex} OR 
-            v.matricula_vendedor ILIKE $${paramIndex} OR 
-            v.auth_code ILIKE $${paramIndex} OR
-            f.nome ILIKE $${paramIndex}
+            p.marca ILIKE $1 OR 
+            p.modelo ILIKE $1 OR
+            v.id_produto::text ILIKE $1 OR 
+            v.identificador_vendedor ILIKE $1 OR
+            v.auth_code ILIKE $1 OR
+            f.nome ILIKE $1
           )
         `;
         params.push(`%${searchTerm}%`);
-        paramIndex++;
       }
-
+  
       // Filtro de data
       if (startDate) {
-        query += ` AND v.data >= $${paramIndex}`;
+        query += ` AND v.data >= $${params.length + 1}`;
         params.push(new Date(startDate).toISOString());
-        paramIndex++;
       }
-
+  
       if (endDate) {
-        query += ` AND v.data <= $${paramIndex}`;
+        query += ` AND v.data <= $${params.length + 1}`;
         params.push(new Date(endDate).toISOString());
-        paramIndex++;
       }
-
+  
       // Ordenação padrão
       query += ` ORDER BY v.data DESC`;
-
-      // Query para contar o total de registros
-      const countQuery = query.replace(/SELECT.*FROM/, 'SELECT COUNT(*) FROM');
-      const countResult = await pool.query(countQuery, params);
-      const total = parseInt(countResult.rows[0].count);
-
-      // Paginação
-      const offset = (page - 1) * pageSize;
-      query += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-      params.push(parseInt(pageSize), offset);
-
-      // Executar query principal
-      const vendasResult = await pool.query(query, params);
-
-      res.status(200).json({
-        vendas: vendasResult.rows,
-        total,
-        page: parseInt(page),
-        pageSize: parseInt(pageSize)
-      });
-
+  
+      // Executar query
+      const { rows } = await pool.query(query, params);
+  
+      // Verificar se há resultados
+      if (!rows || rows.length === 0) {
+        return res.status(200).json([]);
+      }
+  
+      // Retornar os dados
+      res.status(200).json(rows);
+  
     } catch (error) {
-      console.error("Erro ao buscar vendas:", error);
-      res.status(500).json({ erro: "Erro ao buscar vendas" });
+      console.error("Erro detalhado ao buscar vendas:", {
+        error: error.message,
+        stack: error.stack
+      });
+      
+      res.status(500).json({ 
+        erro: "Erro ao buscar vendas",
+        detalhes: error.message 
+      });
     }
   }
 
   static async postVenda(req, res) {
     try {
-      const { id_produto, valor, identificador_vendedor } = req.body;
+      const { id_produto, valor, identificador_vendedor, auth_code } = req.body;
       if (!id_produto || !valor || !identificador_vendedor) {
         return res.status(400).json({ erro: "Dados incompletos" });
       }
@@ -110,16 +105,16 @@ export default class VendaController {
           id_produto, 
           valor, 
           data, 
-          matricula_vendedor, 
+          identificador_vendedor,
           auth_code
         ) VALUES (
           $1, $2, $3, $4, $5
         ) RETURNING *`,
         [
           id_produto,
-          valor || produto.rows[0].valor, // Usa valor do produto se não fornecido
+          valor || produto.rows[0].valor,
           new Date().toISOString(),
-          identificador_vendedor, // Agora aceita o nome do frontend
+          identificador_vendedor,
           auth_code || this.generateAuthCode()
         ]
       );
@@ -127,7 +122,7 @@ export default class VendaController {
       // 4. Retornar resposta enriquecida
       res.status(201).json({
         ...novaVenda.rows[0],
-        produto: produto.rows[0].nome,
+        produto: `${produto.rows[0].marca} ${produto.rows[0].modelo}`,
         nome_vendedor: vendedor.rows[0].nome
       });
 
@@ -136,6 +131,43 @@ export default class VendaController {
       res.status(500).json({
         erro: "Erro ao cadastrar venda",
         detalhes: error.message
+      });
+    }
+  }
+
+  static generateAuthCode() {
+    return Math.random().toString(36).substring(2, 10).toUpperCase();
+  }
+
+  // Função auxiliar para formatar o nome do produto (opcional)
+  static formatProdutoNome(produto) {
+    return `${produto.marca} ${produto.modelo}` + 
+           (produto.ano ? ` ${produto.ano}` : '');
+  }
+  static async deleteAllVendas(req, res) {
+    try {
+      // Verificar se há autorização (opcional, mas recomendado)
+      // if (!req.user || !req.user.isAdmin) {
+      //   return res.status(403).json({ erro: "Acesso negado" });
+      // }
+  
+      // Executar a query para deletar todas as vendas
+      await pool.query('TRUNCATE TABLE vendas RESTART IDENTITY CASCADE');
+      
+      res.status(200).json({ 
+        mensagem: "Todas as vendas foram removidas com sucesso",
+        vendas_removidas: true
+      });
+  
+    } catch (error) {
+      console.error("Erro ao limpar vendas:", {
+        error: error.message,
+        stack: error.stack
+      });
+      
+      res.status(500).json({ 
+        erro: "Erro ao limpar vendas",
+        detalhes: error.message 
       });
     }
   }

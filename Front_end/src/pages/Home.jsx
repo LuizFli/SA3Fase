@@ -45,7 +45,7 @@ const TesteGraficos = () => {
             <IconButton>
               <NotificationsActiveIcon  sx={{ color: '#e86f40'}} />
             </IconButton>
-            <Avatar alt="Arthur Viecili" src="https://via.placeholder.com/40" />
+            <Avatar alt="Arthur Viecili" src="/Imagens/Adm.png" />
           </Box>
         </Box>
 

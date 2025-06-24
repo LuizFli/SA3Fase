@@ -31,7 +31,7 @@ export default class FuncionarioController {
           cidade, estado, cep, senha, foto
         ]
       );
-      
+
       res.status(201).json(rows[0]);
     } catch (error) {
       console.error("Erro ao criar funcionário:", error);
@@ -42,7 +42,11 @@ export default class FuncionarioController {
   static async putFuncionario(req, res) {
     try {
       const { id } = req.params;
-      const funcionario = req.body;
+      const {
+        nome, usuario, dataNascimento, sexo, cpf, rg,
+        identificador, email, telefone, cargo, rua, numero,
+        cidade, estado, cep, senha, foto
+      } = req.body;
 
       const { rows } = await pool.query(
         `UPDATE funcionarios SET
@@ -53,13 +57,16 @@ export default class FuncionarioController {
         WHERE id = $18
         RETURNING *`,
         [
-          funcionario.nome, funcionario.usuario, funcionario.dataNascimento, funcionario.sexo,
-          funcionario.cpf, funcionario.rg, funcionario.identificador, funcionario.email,
-          funcionario.telefone, funcionario.cargo, funcionario.rua, funcionario.numero,
-          funcionario.cidade, funcionario.estado, funcionario.cep, funcionario.senha, funcionario.foto,
+          nome, usuario, dataNascimento, sexo,
+          cpf, rg, identificador, email,
+          telefone, cargo, rua, numero,
+          cidade, estado, cep, senha, foto,
           id
         ]
       );
+
+      console.log("Dados recebidos para atualização:", req.body);
+      console.log("ID recebido:", id);
 
       res.status(200).json(rows[0]);
     } catch (error) {

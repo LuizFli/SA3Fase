@@ -25,6 +25,7 @@ import {
   Clear as ClearIcon,
   FilterList as FilterListIcon,
   DateRange as DateRangeIcon,
+  Check as CheckIcon
 } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -33,6 +34,8 @@ import ptBR from 'date-fns/locale/pt-BR';
 import axios from 'axios';
 import PageContainer from '../components/PageContainer';
 import CadastroDeVenda from '../components/CadastroDeVenda';
+import { getVendas, limparTodasVendas } from '../api/vendasApi'; // Importa a função para buscar vendas
+
 
 function Vendas() {
   // Estados para dados e carregamento
@@ -40,12 +43,19 @@ function Vendas() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para filtros
-  const [searchTerm, setSearchTerm] = useState('');
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  // Estados para filtros (valores em edição)
+  const [tempSearchTerm, setTempSearchTerm] = useState('');
+  const [tempStartDate, setTempStartDate] = useState(null);
+  const [tempEndDate, setTempEndDate] = useState(null);
+
+  // Estados para filtros aplicados
+  const [appliedSearchTerm, setAppliedSearchTerm] = useState('');
+  const [appliedStartDate, setAppliedStartDate] = useState(null);
+  const [appliedEndDate, setAppliedEndDate] = useState(null);
+
   const [showFilters, setShowFilters] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   // Estado para snackbar (feedback)
   const [snackbar, setSnackbar] = useState({
@@ -54,7 +64,7 @@ function Vendas() {
     severity: 'success'
   });
 
-  // Buscar vendas quando os filtros mudam
+  // Buscar vendas quando os filtros aplicados mudam
   useEffect(() => {
     const fetchVendas = async () => {
       setLoading(true);
@@ -62,15 +72,17 @@ function Vendas() {
       try {
         const params = {};
 
-        if (searchTerm) params.searchTerm = searchTerm;
-        if (startDate) params.startDate = startDate.toISOString();
-        if (endDate) params.endDate = endDate.toISOString();
+        if (appliedSearchTerm) params.searchTerm = appliedSearchTerm;
+        if (appliedStartDate) params.startDate = appliedStartDate.toISOString().split('T')[0];
+        if (appliedEndDate) params.endDate = appliedEndDate.toISOString().split('T')[0];
 
-        const response = await axios.get('/api/vendas', { params });
-        setVendas(response.data.vendas || []);
+        const vendasData = await getVendas(params);
+
+        // Aqui já recebemos o array de vendas diretamente do serviço
+        setVendas(vendasData);
       } catch (err) {
-        console.error('Erro ao buscar vendas:', err);
-        setError('Erro ao carregar vendas. Tente novamente mais tarde.');
+        console.error('Erro ao carregar vendas:', err);
+        setError(err.message || 'Erro ao carregar vendas');
         setVendas([]);
       } finally {
         setLoading(false);
@@ -78,12 +90,48 @@ function Vendas() {
     };
 
     fetchVendas();
-  }, [searchTerm, startDate, endDate]);
+  }, [appliedSearchTerm, appliedStartDate, appliedEndDate]);
+  const handleLimparTodasVendas = async () => {
+    // Confirmação antes de deletar
+    const confirmacao = window.confirm(
+      'ATENÇÃO: Isso irá apagar TODAS as vendas permanentemente. Deseja continuar?'
+    );
+    
+    if (!confirmacao) return;
+  
+    setIsClearing(true);
+    try {
+      await limparTodasVendas();
+      setVendas([]); // Limpa o estado local
+      setSnackbar({
+        open: true,
+        message: 'Todas as vendas foram removidas com sucesso!',
+        severity: 'success'
+      });
+    } catch (err) {
+      setSnackbar({
+        open: true,
+        message: `Erro ao limpar vendas: ${err.response?.data?.erro || err.message}`,
+        severity: 'error'
+      });
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
+  const handleApplyFilters = () => {
+    setAppliedSearchTerm(tempSearchTerm);
+    setAppliedStartDate(tempStartDate);
+    setAppliedEndDate(tempEndDate);
+  };
 
   const handleResetFilters = () => {
-    setSearchTerm('');
-    setStartDate(null);
-    setEndDate(null);
+    setTempSearchTerm('');
+    setTempStartDate(null);
+    setTempEndDate(null);
+    setAppliedSearchTerm('');
+    setAppliedStartDate(null);
+    setAppliedEndDate(null);
   };
 
   const handleOpenModal = () => {
@@ -149,7 +197,23 @@ function Vendas() {
               >
                 Cadastrar Venda
               </Button>
-              <Avatar alt="Usuário" src="/static/images/avatar/1.jpg" sx={{ width: 45, height: 45 }} />
+
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleLimparTodasVendas}
+                disabled={isClearing || vendas.length === 0}
+                sx={{
+                  fontWeight: 'bold',
+                  padding: '8px 20px',
+                  borderRadius: '8px',
+                  fontSize: '0.9rem',
+                }}
+              >
+                {isClearing ? <CircularProgress size={24} /> : 'Limpar Todas Vendas'}
+              </Button>
+
+              <Avatar alt="Usuário" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
             </Box>
           </Paper>
 
@@ -169,17 +233,17 @@ function Vendas() {
                   variant="outlined"
                   size="small"
                   fullWidth
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  value={tempSearchTerm}
+                  onChange={(e) => setTempSearchTerm(e.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
                         <SearchIcon />
                       </InputAdornment>
                     ),
-                    endAdornment: searchTerm && (
+                    endAdornment: tempSearchTerm && (
                       <InputAdornment position="end">
-                        <IconButton onClick={() => setSearchTerm('')}>
+                        <IconButton onClick={() => setTempSearchTerm('')}>
                           <ClearIcon fontSize="small" />
                         </IconButton>
                       </InputAdornment>
@@ -200,6 +264,7 @@ function Vendas() {
                 </Button>
               </Grid>
 
+
               <Grid item xs={12} sm={6} md={3}>
                 <Button
                   fullWidth
@@ -211,6 +276,17 @@ function Vendas() {
                   Limpar Filtros
                 </Button>
               </Grid>
+              <Grid item xs={12} sm={6} md={2}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CheckIcon />}
+                  onClick={handleApplyFilters}
+                >
+                  Aplicar
+                </Button>
+              </Grid>
             </Grid>
 
             {/* Filtros avançados */}
@@ -220,8 +296,8 @@ function Vendas() {
                   <Grid item xs={12} sm={6} md={3}>
                     <DatePicker
                       label="Data inicial"
-                      value={startDate}
-                      onChange={(newValue) => setStartDate(newValue)}
+                      value={tempStartDate}
+                      onChange={(newValue) => setTempStartDate(newValue)}
                       renderInput={(params) => <TextField {...params} fullWidth />}
                       inputFormat="dd/MM/yyyy"
                       components={{
@@ -233,8 +309,8 @@ function Vendas() {
                   <Grid item xs={12} sm={6} md={3}>
                     <DatePicker
                       label="Data final"
-                      value={endDate}
-                      onChange={(newValue) => setEndDate(newValue)}
+                      value={tempEndDate}
+                      onChange={(newValue) => setTempEndDate(newValue)}
                       renderInput={(params) => <TextField {...params} fullWidth />}
                       inputFormat="dd/MM/yyyy"
                       components={{
@@ -304,14 +380,14 @@ function Vendas() {
                         <TableCell>
                           {new Date(venda.data).toLocaleDateString('pt-BR')}
                         </TableCell>
-                        <TableCell>{venda.nome_vendedor || venda.identificador_vendedor}</TableCell>
+                        <TableCell>{venda.nome_vendedor}</TableCell>
                         <TableCell>{venda.auth_code}</TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
                       <TableCell colSpan={6} align="center">
-                        {error ? 'Erro ao carregar dados' : 'Nenhuma venda encontrada'}
+                        {error || 'Nenhuma venda encontrada'}
                       </TableCell>
                     </TableRow>
                   )}
@@ -345,9 +421,9 @@ function Vendas() {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity={snackbar.severity} 
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
           sx={{ width: '100%' }}
         >
           {snackbar.message}

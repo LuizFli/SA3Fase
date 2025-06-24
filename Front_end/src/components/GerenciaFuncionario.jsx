@@ -90,7 +90,7 @@ function GerenciamentoFuncionarios() {
         <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333', fontSize: '1.8rem' }}>
           Gerenciamento de Funcionários
         </Typography>
-        <Avatar alt="Usuário" src="/static/images/avatar/1.jpg" sx={{ width: 45, height: 45 }} />
+        <Avatar alt="Usuário" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
       </Paper>
 
       {/* Conteúdo principal */}
