@@ -33,20 +33,20 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const [loading, setLoading] = useState(false);
   const handleCurrencyChange = (event) => {
     let value = event.target.value;
-    
+
     // Remove todos os caracteres não numéricos exceto vírgula e ponto
     value = value.replace(/[^\d,.-]/g, '');
-    
+
     // Converte para formato numérico
     const numericValue = parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
-    
+
     // Atualiza o estado
     setFormData({
       ...formData,
       [event.target.name]: numericValue
     });
   };
-  
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -65,14 +65,14 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
       ...prev,
       [name]: value,
     }));
-  
+
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
         [name]: null,
       }));
     }
-  
+
     if (name === 'id_produto') {
       const veiculoSelecionado = produtos.find((p) => p.id === Number(value));
       if (veiculoSelecionado) {
@@ -89,6 +89,12 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
         }));
       }
     }
+  };
+  const formatarValor = (valor) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(valor);
   };
 
   const handleSubmit = async (e) => {
@@ -172,14 +178,14 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
               error={!!errors.id_produto}
               helperText={errors.id_produto}
               sx={{ width: 300 }}
-              disabled={loading}
+              disabled={loading || produtos.length === 0}
             >
               <MenuItem value="">
                 <em>Selecione um veículo</em>
               </MenuItem>
               {produtos.map((veiculo) => (
                 <MenuItem key={veiculo.id} value={veiculo.id}>
-                  {veiculo.marca} {veiculo.modelo} - {veiculo.ano} ({veiculo.placa})
+                  {veiculo.marca} {veiculo.modelo} - {veiculo.ano} ({veiculo.placa}) - {formatarValor(veiculo.valor)}
                 </MenuItem>
               ))}
             </TextField>
