@@ -29,14 +29,15 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
   };
 
   const handleConfirmDelete = () => {
+    // Chama a função apagarProduto passada via props, que fará a chamada à API
     apagarProduto(produtoToDelete);
     handleCloseConfirmModal();
   };
 
   return (
     <>
-      <ContainerTabela 
-        sx={{ 
+      <ContainerTabela
+        sx={{
           maxHeight: 'calc(100vh - 300px)',
           overflow: 'auto',
           '&::-webkit-scrollbar': {
@@ -61,13 +62,14 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Cor</Celula>
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Km</Celula>
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Placa</Celula>
+              <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Valor</Celula> {/* Adicionado Valor */}
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>ID</Celula>
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Ações</Celula>
             </Linha>
           </CabecalhoTabela>
           <CorpoTabela>
             {produtos.map((produto) => (
-              <Linha 
+              <Linha
                 key={produto.id}
                 sx={{ '&:hover': { backgroundColor: '#f9f9f9' } }}
               >
@@ -77,17 +79,18 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
                 <Celula sx={{ textAlign: 'center' }}>{produto.cor}</Celula>
                 <Celula sx={{ textAlign: 'center' }}>{produto.km.toLocaleString('pt-BR')}</Celula>
                 <Celula sx={{ textAlign: 'center' }}>{produto.placa}</Celula>
+                <Celula sx={{ textAlign: 'center' }}>{Number(produto.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Celula> {/* Exibe o valor formatado */}
                 <Celula sx={{ textAlign: 'center' }}>{produto.id.toString().padStart(4, '0')}</Celula>
                 <Celula sx={{ textAlign: 'center' }}>
-                  <Container sx={{ 
-                    display: 'flex', 
+                  <Container sx={{
+                    display: 'flex',
                     gap: '8px',
                     justifyContent: 'center'
                   }}>
                     <Botao
                       variant="contained"
                       startIcon={<Editar />}
-                      onClick={() => editarProduto(produto)}
+                      onClick={() => editarProduto(produto)} // Chama a função editarProduto passada como prop
                       sx={{
                         backgroundColor: '#FF9D00',
                         color: 'white',
@@ -100,7 +103,7 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
                     >
                       Editar
                     </Botao>
-                    
+
                     <Botao
                       variant="contained"
                       startIcon={<Excluir />}
@@ -146,9 +149,9 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
           <Typography sx={{ mb: 3 }}>
             Tem certeza que deseja apagar este produto? Esta ação não pode ser desfeita.
           </Typography>
-          <Container sx={{ 
-            display: 'flex', 
-            justifyContent: 'flex-end', 
+          <Container sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
             gap: 2
           }}>
             <Botao
