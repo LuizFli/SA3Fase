@@ -36,10 +36,12 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
     e.preventDefault();
     const novoProduto = {
       ...currentProduto,
+      // Garante que os campos numéricos são convertidos corretamente
       km: Number(currentProduto.km),
-      ano: Number(currentProduto.ano)
+      ano: Number(currentProduto.ano),
+      valor: Number(currentProduto.valor)
     };
-    onSubmit(novoProduto);
+    onSubmit(novoProduto); // Chama a função onSubmit passada como prop
   };
 
   return (
@@ -59,15 +61,15 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
         borderRadius: '10px',
         outline: 'none'
       }}>
-        <Texto variant="h4" sx={{ 
-          fontWeight: 'bold', 
+        <Texto variant="h4" sx={{
+          fontWeight: 'bold',
           color: '#333',
           fontSize: '1.8rem',
           mb: 3
         }}>
           Cadastrar Novo Produto
         </Texto>
-        
+
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
@@ -153,9 +155,26 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
             </Grid>
           </Grid>
 
-          <Container sx={{ 
-            display: 'flex', 
-            justifyContent: 'flex-end', 
+          {/* Novo campo de Valor */}
+          <FormControl fullWidth sx={{ mb: 3 }}>
+            <CampoTexto
+              label="Valor (R$)"
+              name="valor"
+              value={currentProduto.valor}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              type="number"
+              variant="outlined"
+              InputProps={{
+                startAdornment: 'R$',
+              }}
+            />
+          </FormControl>
+
+          <Container sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
             gap: 2,
             mt: 3
           }}>

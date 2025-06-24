@@ -36,10 +36,12 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
     e.preventDefault();
     const produtoAtualizado = {
       ...currentProduto,
+      // Garante que os campos numéricos são convertidos corretamente
       km: Number(currentProduto.km),
-      ano: Number(currentProduto.ano)
+      ano: Number(currentProduto.ano),
+      valor: Number(currentProduto.valor)
     };
-    onSubmit(produtoAtualizado);
+    onSubmit(produtoAtualizado); // Chama a função onSubmit passada como prop
   };
 
   return (
@@ -59,15 +61,15 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
         borderRadius: '10px',
         outline: 'none'
       }}>
-        <Texto variant="h4" sx={{ 
-          fontWeight: 'bold', 
+        <Texto variant="h4" sx={{
+          fontWeight: 'bold',
           color: '#333',
           fontSize: '1.8rem',
           mb: 3
         }}>
           Editar Produto
         </Texto>
-        
+
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
@@ -80,7 +82,7 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
                   required
                   fullWidth
                   variant="outlined"
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px'
                     }
@@ -97,7 +99,7 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
                   required
                   fullWidth
                   variant="outlined"
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px'
                     }
@@ -115,7 +117,7 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
                   fullWidth
                   type="number"
                   variant="outlined"
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px'
                     }
@@ -135,7 +137,7 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
                   fullWidth
                   type="number"
                   variant="outlined"
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px'
                     }
@@ -152,7 +154,7 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
                   required
                   fullWidth
                   variant="outlined"
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px'
                     }
@@ -169,7 +171,7 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
                   required
                   label="Cor"
                   variant="outlined"
-                  sx={{ 
+                  sx={{
                     '& .MuiOutlinedInput-root': {
                       borderRadius: '8px'
                     }
@@ -183,9 +185,31 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
             </Grid>
           </Grid>
 
-          <Container sx={{ 
-            display: 'flex', 
-            justifyContent: 'flex-end', 
+          {/* Novo campo de Valor */}
+          <FormControl fullWidth sx={{ mb: 3 }}>
+            <CampoTexto
+              label="Valor (R$)"
+              name="valor"
+              value={currentProduto.valor}
+              onChange={handleInputChange}
+              required
+              fullWidth
+              type="number"
+              variant="outlined"
+              InputProps={{
+                startAdornment: 'R$',
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px'
+                }
+              }}
+            />
+          </FormControl>
+
+          <Container sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
             gap: 2,
             mt: 3
           }}>

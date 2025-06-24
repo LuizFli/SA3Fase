@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  Box as Container, 
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Box as Container,
   Typography as Texto,
   Paper as Painel,
   Button as Botao,
@@ -11,17 +11,20 @@ import {
 } from '@mui/material';
 import { Add as Adicionar, Search as Buscar } from '@mui/icons-material';
 import PageContainer from '../components/PageContainer';
-import { useGlobal } from '../contexts/GlobalProvider';
 import ProdutoEstoque from '../components/ProdutoEstoque';
 import AdicionarModal from '../components/AdicionarModal';
 import EditarModal from '../components/EditarModal';
 
+// Importa as funções da sua API de produtos
+import { getProdutos, cadastrarProduto, atualizarProduto, excluirProduto } from '../api/produtosApi';
+
 function EstoqueProdutos() {
-  const { produtos, setProdutos } = useGlobal();
+  const [produtos, setProdutos] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
   const [termoBusca, setTermoBusca] = useState('');
   const [buscaId, setBuscaId] = useState('');
   const [currentProduto, setCurrentProduto] = useState({
@@ -31,32 +34,49 @@ function EstoqueProdutos() {
     ano: '',
     km: '',
     placa: '',
-    cor: ''
+    cor: '',
+    valor: ''
   });
 
-  // Função para filtrar produtos
-  const produtosFiltrados = produtos.filter(produto => {
-    if (buscaId) {
-      return produto.id.toString().includes(buscaId);
+  // Função para buscar produtos do backend usando a API
+  const fetchProdutos = useCallback(async () => {
+    try {
+      const data = await getProdutos({ searchTerm: termoBusca, id: buscaId });
+      // Garante que 'produtos' é sempre um array
+      if (data && Array.isArray(data.produtos)) {
+        setProdutos(data.produtos);
+      } else {
+        console.warn("A API retornou uma estrutura de dados inesperada ou 'produtos' não é um array:", data);
+        setProdutos([]);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+      setSnackbarMessage(error.message || 'Erro ao carregar produtos.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
     }
-    
-    const termo = termoBusca.toLowerCase();
-    return (
-      produto.marca.toLowerCase().includes(termo) ||
-      produto.modelo.toLowerCase().includes(termo) ||
-      produto.ano.toString().includes(termo) ||
-      produto.cor.toLowerCase().includes(termo) ||
-      produto.km.toString().includes(termo) ||
-      produto.placa.toLowerCase().includes(termo) ||
-      produto.id.toString().includes(termo)
-    );
-  });
+  }, [termoBusca, buscaId]);
 
-  const apagarProduto = (id) => {
-    const novosProdutos = produtos.filter(produto => produto.id !== id);
-    setProdutos(novosProdutos);
-    setSnackbarMessage('Produto removido com sucesso!');
-    setOpenSnackbar(true);
+  // Efeito para carregar produtos quando o componente monta e quando os termos de busca mudam
+  useEffect(() => {
+    fetchProdutos();
+  }, [fetchProdutos]);
+
+  // Função para apagar um produto usando a API
+  const apagarProduto = async (id) => {
+    try {
+      await excluirProduto(id); // Chama a função de exclusão da API
+
+      setSnackbarMessage('Produto removido com sucesso!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+      fetchProdutos(); // Recarrega a lista de produtos após a exclusão
+    } catch (error) {
+      console.error("Erro ao apagar produto:", error);
+      setSnackbarMessage(error.message || 'Erro ao remover produto.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
   };
 
   const handleOpenAddModal = () => {
@@ -66,8 +86,8 @@ function EstoqueProdutos() {
       ano: '',
       km: '',
       placa: '',
-      id: produtos.length > 0 ? Math.max(...produtos.map(p => p.id)) + 1 : 1,
-      cor: ''
+      cor: '',
+      valor: ''
     });
     setOpenAddModal(true);
   };
@@ -86,53 +106,72 @@ function EstoqueProdutos() {
     setOpenSnackbar(false);
   };
 
-  const handleAddSubmit = (produto) => {
-    setProdutos([...produtos, produto]);
-    setSnackbarMessage('Produto adicionado com sucesso!');
-    setOpenSnackbar(true);
-    handleCloseModal();
+  // Função para adicionar um novo produto usando a API
+  const handleAddSubmit = async (produto) => {
+    try {
+      await cadastrarProduto(produto); // Chama a função de cadastro da API
+
+      setSnackbarMessage('Produto adicionado com sucesso!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+      handleCloseModal();
+      fetchProdutos(); // Recarrega a lista de produtos após a adição
+    } catch (error) {
+      console.error("Erro ao adicionar produto:", error);
+      setSnackbarMessage(error.message || 'Erro ao adicionar produto.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
   };
 
-  const handleEditSubmit = (produtoAtualizado) => {
-    const novosProdutos = produtos.map(produto => 
-      produto.id === produtoAtualizado.id ? produtoAtualizado : produto
-    );
-    setProdutos(novosProdutos);
-    setSnackbarMessage('Produto atualizado com sucesso!');
-    setOpenSnackbar(true);
-    handleCloseModal();
+  // Função para editar um produto existente usando a API
+  const handleEditSubmit = async (produtoAtualizado) => {
+    try {
+      await atualizarProduto(produtoAtualizado.id, produtoAtualizado); // Chama a função de atualização da API
+
+      setSnackbarMessage('Produto atualizado com sucesso!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+      handleCloseModal();
+      fetchProdutos(); // Recarrega a lista de produtos após a edição
+    } catch (error) {
+      console.error("Erro ao atualizar produto:", error);
+      setSnackbarMessage(error.message || 'Erro ao atualizar produto.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
   };
 
   return (
     <PageContainer>
-      <Container sx={{ 
-        padding: '20px', 
+      <Container sx={{
+        padding: '20px',
         minHeight: '100vh',
         boxSizing: 'border-box'
       }}>
         {/* Cabeçalho */}
-        <Painel elevation={3} sx={{ 
+        <Painel elevation={3} sx={{
           padding: '15px 20px',
-          marginBottom: '20px', 
-          display: 'flex', 
+          marginBottom: '20px',
+          display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           borderRadius: '10px'
         }}>
-          <Texto variant="h4" sx={{ 
-            fontWeight: 'bold', 
+          <Texto variant="h4" sx={{
+            fontWeight: 'bold',
             color: '#333',
             fontSize: '1.8rem'
           }}>
             Estoque de Produtos
           </Texto>
-          
+
           <Container sx={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <Botao
               variant="contained"
               color="success"
-              sx={{ 
-                fontWeight: 'bold', 
+              sx={{
+                fontWeight: 'bold',
                 padding: '8px 20px',
                 borderRadius: '8px',
                 fontSize: '0.9rem'
@@ -142,16 +181,23 @@ function EstoqueProdutos() {
               Adicionar Produto
             </Botao>
 
+<<<<<<< HEAD
+            <Avatar
+              alt="Usuário"
+              src="/static/images/avatar/1.jpg"
+              sx={{ width: 45, height: 45 }}
+=======
             <Avatar 
               alt="Usuário" 
               src="/Imagens/Adm.png" 
               sx={{ width: 45, height: 45 }} 
+>>>>>>> a72026d137650e23152f56a46510f7fbc24a1535
             />
           </Container>
         </Painel>
-        
+
         {/* Barra de busca */}
-        <Painel elevation={2} sx={{ 
+        <Painel elevation={2} sx={{
           padding: '15px',
           marginBottom: '20px',
           borderRadius: '10px'
@@ -164,7 +210,7 @@ function EstoqueProdutos() {
               value={termoBusca}
               onChange={(e) => {
                 setTermoBusca(e.target.value);
-                setBuscaId('');
+                setBuscaId(''); // Limpa a busca por ID quando a busca geral é usada
               }}
               InputProps={{
                 startAdornment: <Buscar />,
@@ -172,7 +218,7 @@ function EstoqueProdutos() {
               }}
               sx={{ width: '300px' }}
             />
-            
+
             <CampoTexto
               placeholder="Buscar por ID"
               variant="outlined"
@@ -180,7 +226,7 @@ function EstoqueProdutos() {
               value={buscaId}
               onChange={(e) => {
                 setBuscaId(e.target.value);
-                setTermoBusca('');
+                setTermoBusca(''); // Limpa a busca geral quando a busca por ID é usada
               }}
               InputProps={{
                 startAdornment: <Buscar />,
@@ -192,17 +238,17 @@ function EstoqueProdutos() {
         </Painel>
 
         {/* Tabela de produtos */}
-        <Painel elevation={2} sx={{ 
+        <Painel elevation={2} sx={{
           width: '100%',
           overflow: 'auto',
           borderRadius: '10px'
         }}>
-          <ProdutoEstoque 
-            produtos={termoBusca || buscaId ? produtosFiltrados : produtos} 
+          <ProdutoEstoque
+            produtos={produtos}
             apagarProduto={apagarProduto}
-            editarProduto={handleOpenEditModal} 
+            editarProduto={handleOpenEditModal}
           />
-          
+
         </Painel>
 
         {/* Modal de Adição */}
@@ -230,7 +276,7 @@ function EstoqueProdutos() {
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
-          <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+          <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
             {snackbarMessage}
           </Alert>
         </Snackbar>

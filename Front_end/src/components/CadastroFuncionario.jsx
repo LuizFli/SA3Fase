@@ -50,7 +50,7 @@ function CadastroFuncionario() {
     const carregarFuncionarioParaEdicao = async () => {
       if (location.state?.funcionarioParaEditar) {
         try {
-          // 👇🏽 Adicione a requisição GET para buscar os dados atuais
+        //requisição GET para buscar os dados atuais
           const response = await axios.get(`http://localhost:3000/api/funcionarios/${location.state.indiceParaEditar}`);
           setFuncionario(response.data);
           setModoEdicao(true);
@@ -65,7 +65,7 @@ function CadastroFuncionario() {
 
   const atualizarFuncionario = async (dados) => {
     try {
-      const res = await axios.post("http://localhost:3000/api/funcionarios", dados);
+      const res = await axios.put("http://localhost:3000/api/funcionarios", dados);
       console.log(res.status, res.data); // se quiser usar depois
     } catch (error) {
       console.error("Erro ao atualizar funcionário:", error);
