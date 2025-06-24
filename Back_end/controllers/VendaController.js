@@ -9,7 +9,7 @@ export default class VendaController {
       let query = `
         SELECT 
           v.id_produto, 
-          p.nome as produto,  
+          p.marca || ' ' || p.modelo as produto,  
           v.valor, 
           v.data, 
           v.identificador_vendedor,
@@ -27,7 +27,8 @@ export default class VendaController {
       if (searchTerm) {
         query += `
           AND (
-            p.nome ILIKE $1 OR 
+            p.marca ILIKE $1 OR 
+            p.modelo ILIKE $1 OR
             v.id_produto::text ILIKE $1 OR 
             v.identificador_vendedor ILIKE $1 OR
             v.auth_code ILIKE $1 OR
@@ -56,7 +57,7 @@ export default class VendaController {
   
       // Verificar se há resultados
       if (!rows || rows.length === 0) {
-        return res.status(200).json([]); // Retorna array vazio se não houver resultados
+        return res.status(200).json([]);
       }
   
       // Retornar os dados
@@ -121,7 +122,7 @@ export default class VendaController {
       // 4. Retornar resposta enriquecida
       res.status(201).json({
         ...novaVenda.rows[0],
-        produto: produto.rows[0].nome,
+        produto: `${produto.rows[0].marca} ${produto.rows[0].modelo}`,
         nome_vendedor: vendedor.rows[0].nome
       });
 
@@ -136,5 +137,11 @@ export default class VendaController {
 
   static generateAuthCode() {
     return Math.random().toString(36).substring(2, 10).toUpperCase();
+  }
+
+  // Função auxiliar para formatar o nome do produto (opcional)
+  static formatProdutoNome(produto) {
+    return `${produto.marca} ${produto.modelo}` + 
+           (produto.ano ? ` ${produto.ano}` : '');
   }
 }
