@@ -50,6 +50,11 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
 
   const validateForm = () => {
     const newErrors = {};
+    if (!formData.id_produto) {
+      newErrors.id_produto = produtos.length === 0 
+        ? 'Nenhum veículo disponível' 
+        : 'Selecione um veículo';
+    }
 
     if (!formData.id_produto) newErrors.id_produto = 'Selecione um veículo';
     if (!formData.identificador_vendedor) newErrors.identificador_vendedor = 'Informe o vendedor';
@@ -183,11 +188,17 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
               <MenuItem value="">
                 <em>Selecione um veículo</em>
               </MenuItem>
-              {produtos.map((veiculo) => (
-                <MenuItem key={veiculo.id} value={veiculo.id}>
-                  {veiculo.marca} {veiculo.modelo} - {veiculo.ano} ({veiculo.placa}) - {formatarValor(veiculo.valor)}
+              {produtos.length === 0 ? (
+                <MenuItem disabled>
+                  {loading ? 'Carregando veículos...' : 'Nenhum veículo disponível'}
                 </MenuItem>
-              ))}
+              ) : (
+                produtos.map((veiculo) => (
+                  <MenuItem key={veiculo.id} value={veiculo.id}>
+                    {veiculo.marca} {veiculo.modelo} - {veiculo.ano} ({veiculo.placa})
+                  </MenuItem>
+                ))
+              )}
             </TextField>
           </Grid>
 

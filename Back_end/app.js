@@ -16,4 +16,5 @@ router.post('/vendas', VendasController.postVenda);
 router.delete('/vendas', VendasController.deleteAllVendas)
 
 
+
 export default router;
