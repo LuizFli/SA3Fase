@@ -144,7 +144,7 @@ function EstoqueProdutos() {
 
             <Avatar 
               alt="Usuário" 
-              src="/static/images/avatar/1.jpg" 
+              src="/Imagens/Adm.png" 
               sx={{ width: 45, height: 45 }} 
             />
           </Container>
