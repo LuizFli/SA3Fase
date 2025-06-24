@@ -34,6 +34,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import axios from 'axios';
 import PageContainer from '../components/PageContainer';
 import CadastroDeVenda from '../components/CadastroDeVenda';
+import { getVendas } from '../api/vendasApi'; // Importa a função para buscar vendas
 
 function Vendas() {
   // Estados para dados e carregamento
@@ -45,12 +46,12 @@ function Vendas() {
   const [tempSearchTerm, setTempSearchTerm] = useState('');
   const [tempStartDate, setTempStartDate] = useState(null);
   const [tempEndDate, setTempEndDate] = useState(null);
-  
+
   // Estados para filtros aplicados
   const [appliedSearchTerm, setAppliedSearchTerm] = useState('');
   const [appliedStartDate, setAppliedStartDate] = useState(null);
   const [appliedEndDate, setAppliedEndDate] = useState(null);
-  
+
   const [showFilters, setShowFilters] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
@@ -70,14 +71,16 @@ function Vendas() {
         const params = {};
 
         if (appliedSearchTerm) params.searchTerm = appliedSearchTerm;
-        if (appliedStartDate) params.startDate = appliedStartDate.toISOString();
-        if (appliedEndDate) params.endDate = appliedEndDate.toISOString();
+        if (appliedStartDate) params.startDate = appliedStartDate.toISOString().split('T')[0];
+        if (appliedEndDate) params.endDate = appliedEndDate.toISOString().split('T')[0];
 
-        const response = await axios.get('/api/vendas', { params });
-        setVendas(response.data.vendas || []);
+        const vendasData = await getVendas(params);
+
+        // Aqui já recebemos o array de vendas diretamente do serviço
+        setVendas(vendasData);
       } catch (err) {
-        console.error('Erro ao buscar vendas:', err);
-        setError('Erro ao carregar vendas. Tente novamente mais tarde.');
+        console.error('Erro ao carregar vendas:', err);
+        setError(err.message || 'Erro ao carregar vendas');
         setVendas([]);
       } finally {
         setLoading(false);
@@ -332,14 +335,14 @@ function Vendas() {
                         <TableCell>
                           {new Date(venda.data).toLocaleDateString('pt-BR')}
                         </TableCell>
-                        <TableCell>{venda.nome_vendedor || venda.identificador_vendedor}</TableCell>
+                        <TableCell>{venda.nome_vendedor}</TableCell>
                         <TableCell>{venda.auth_code}</TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
                       <TableCell colSpan={6} align="center">
-                        {error ? 'Erro ao carregar dados' : 'Nenhuma venda encontrada'}
+                        {error || 'Nenhuma venda encontrada'}
                       </TableCell>
                     </TableRow>
                   )}
@@ -373,9 +376,9 @@ function Vendas() {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity={snackbar.severity} 
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
           sx={{ width: '100%' }}
         >
           {snackbar.message}

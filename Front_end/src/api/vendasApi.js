@@ -22,18 +22,26 @@ export const cadastrarVenda = async (vendaData) => {
 
 export const getVendas = async (filters = {}) => {
   try {
-    const { searchTerm, startDate, endDate, page, rowsPerPage } = filters;
+    const { searchTerm, startDate, endDate } = filters;
     
     const params = new URLSearchParams();
     if (searchTerm) params.append('searchTerm', searchTerm);
     if (startDate) params.append('startDate', startDate);
     if (endDate) params.append('endDate', endDate);
-    if (page) params.append('page', page);
-    if (rowsPerPage) params.append('pageSize', rowsPerPage);
 
     const response = await axios.get(`${API_URL}?${params.toString()}`);
-    return response.data;
+    
+    // O backend agora retorna diretamente o array de vendas
+    return response.data || [];
+    
   } catch (error) {
-    throw new Error(error.response?.data?.erro || 'Erro ao buscar vendas');
+    console.error('Erro detalhado na requisição:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    
+    throw new Error(error.response?.data?.erro || error.response?.data?.message || 'Erro ao buscar vendas');
   }
 };

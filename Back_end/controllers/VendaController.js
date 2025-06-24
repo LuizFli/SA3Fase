@@ -4,12 +4,12 @@ export default class VendaController {
   static async getVendas(req, res) {
     try {
       const { searchTerm, startDate, endDate } = req.query;
-
-      // Construção da query base
+  
+      // Construção da query base com tratamento de parâmetros
       let query = `
         SELECT 
           v.id_produto, 
-          p.nome as produto, 
+          p.nome as produto,  
           v.valor, 
           v.data, 
           v.identificador_vendedor,
@@ -20,51 +20,58 @@ export default class VendaController {
         JOIN funcionarios f ON v.identificador_vendedor = f.identificador
         WHERE 1=1
       `;
-
+  
       const params = [];
-      let paramIndex = 1;
-
+      
       // Filtro de busca geral
       if (searchTerm) {
         query += `
           AND (
-            p.nome ILIKE $${paramIndex} OR 
-            v.id_produto::text ILIKE $${paramIndex} OR 
-            v.identificador_vendedor ILIKE $${paramIndex} OR
-            v.auth_code ILIKE $${paramIndex} OR
-            f.nome ILIKE $${paramIndex}
+            p.nome ILIKE $1 OR 
+            v.id_produto::text ILIKE $1 OR 
+            v.identificador_vendedor ILIKE $1 OR
+            v.auth_code ILIKE $1 OR
+            f.nome ILIKE $1
           )
         `;
         params.push(`%${searchTerm}%`);
-        paramIndex++;
       }
-
+  
       // Filtro de data
       if (startDate) {
-        query += ` AND v.data >= $${paramIndex}`;
+        query += ` AND v.data >= $${params.length + 1}`;
         params.push(new Date(startDate).toISOString());
-        paramIndex++;
       }
-
+  
       if (endDate) {
-        query += ` AND v.data <= $${paramIndex}`;
+        query += ` AND v.data <= $${params.length + 1}`;
         params.push(new Date(endDate).toISOString());
-        paramIndex++;
       }
-
+  
       // Ordenação padrão
       query += ` ORDER BY v.data DESC`;
-
-      // Executar query principal
-      const vendasResult = await pool.query(query, params);
-
-      res.status(200).json({
-        vendas: vendasResult.rows
-      });
-
+  
+      // Executar query
+      const { rows } = await pool.query(query, params);
+  
+      // Verificar se há resultados
+      if (!rows || rows.length === 0) {
+        return res.status(200).json([]); // Retorna array vazio se não houver resultados
+      }
+  
+      // Retornar os dados
+      res.status(200).json(rows);
+  
     } catch (error) {
-      console.error("Erro ao buscar vendas:", error);
-      res.status(500).json({ erro: "Erro ao buscar vendas" });
+      console.error("Erro detalhado ao buscar vendas:", {
+        error: error.message,
+        stack: error.stack
+      });
+      
+      res.status(500).json({ 
+        erro: "Erro ao buscar vendas",
+        detalhes: error.message 
+      });
     }
   }
 

@@ -31,14 +31,29 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const handleCurrencyChange = (event) => {
+    let value = event.target.value;
+    
+    // Remove todos os caracteres não numéricos exceto vírgula e ponto
+    value = value.replace(/[^\d,.-]/g, '');
+    
+    // Converte para formato numérico
+    const numericValue = parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
+    
+    // Atualiza o estado
+    setFormData({
+      ...formData,
+      [event.target.name]: numericValue
+    });
+  };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.id_produto) newErrors.id_produto = 'Selecione um veículo';
     if (!formData.identificador_vendedor) newErrors.identificador_vendedor = 'Informe o vendedor';
     if (!formData.auth_code) newErrors.auth_code = 'Código de autorização é obrigatório';
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length > 0;
   };
@@ -72,22 +87,22 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
-    
+
     const hasErrors = validateForm();
     if (hasErrors) return;
-  
+
     setLoading(true);
-    
+
     try {
       const vendaData = {
-        id_produto: Number(formData.id_produto),  
-        valor: Number(formData.valor),            
+        id_produto: Number(formData.id_produto),
+        valor: Number(formData.valor),
         identificador_vendedor: formData.identificador_vendedor,
-        auth_code: formData.auth_code || undefined 
+        auth_code: formData.auth_code || undefined
       };
-  
+
       const novaVenda = await cadastrarVenda(vendaData);
-      
+
       onClose();
       setFormData({
         id_produto: '',
@@ -96,12 +111,12 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
         identificador_vendedor: '',
         auth_code: ''
       });
-  
+
       // Chama a callback para atualizar a lista de vendas
       if (onVendaCadastrada) {
         onVendaCadastrada(novaVenda);
       }
-      
+
     } catch (err) {
       setSubmitError(err.message);
     } finally {
@@ -180,12 +195,13 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
             <TextField
               label="Valor (R$)"
               name="valor"
-              value={formData.valor}
-              onChange={handleChange}
-              type="number"
+              value={formData.valor ? new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+              }).format(formData.valor) : ''}
+              onChange={handleCurrencyChange}
               InputProps={{
                 startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                
               }}
               fullWidth
               disabled={loading}
