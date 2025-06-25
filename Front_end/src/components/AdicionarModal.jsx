@@ -20,24 +20,51 @@ const coresDisponiveis = [
   'Vermelho',
   'Azul',
   'Cinza',
-  'Verde'
+  'Verde',
+  'Amarelo',
+  'Roxo',
+  'Laranja'
 ];
+
+// Função utilitária para formatar a quilometragem com pontos a cada 3 números
+const formatKm = (value) => {
+  // Se o valor for explicitamente 0 (número ou string '0'), retorna '0'
+  if (value === 0 || value === '0') return '0';
+  if (!value) return ''; // Lida com valores vazios ou nulos/indefinidos
+
+  // Remove todos os caracteres não numéricos
+  const cleanValue = value.toString().replace(/\D/g, '');
+  // Adiciona pontos como separadores de milhares
+  return cleanValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
 
 const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProduto }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCurrentProduto(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    if (name === 'km') {
+      // Para o campo KM, formata o valor enquanto o usuário digita
+      setCurrentProduto(prev => ({
+        ...prev,
+        [name]: formatKm(value) // Usa a função de formatação
+      }));
+    } else {
+      // Para outros campos, mantém o comportamento padrão
+      setCurrentProduto(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Antes de enviar, limpa o valor de km removendo os pontos para garantir que seja um número puro
+    const kmParaEnviar = currentProduto.km.toString().replace(/\D/g, '');
+
     const novoProduto = {
       ...currentProduto,
-      // Garante que os campos numéricos são convertidos corretamente
-      km: Number(currentProduto.km),
+      km: Number(kmParaEnviar), // Converte a string limpa para número
       ano: Number(currentProduto.ano),
       valor: Number(currentProduto.valor)
     };
@@ -116,11 +143,12 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
                 <CampoTexto
                   label="Quilometragem (Km)"
                   name="km"
+                  // Alterado type para "text" para permitir a formatação
+                  type="text"
                   value={currentProduto.km}
                   onChange={handleInputChange}
                   required
                   fullWidth
-                  type="number"
                   variant="outlined"
                 />
               </FormControl>

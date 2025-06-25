@@ -4,7 +4,7 @@ const API_BASE_URL = 'http://localhost:3000/api/produtos'; // Endpoint da sua AP
 
 /**
  * Busca produtos do backend.
- * Pode incluir filtros por termo de busca geral e por ID.
+ * Pode incluir filtros por termo de busca geral e por ID, além de paginação.
  * @param {object} filters - Objeto contendo os filtros (searchTerm, id, page, pageSize).
  * @returns {Promise<object>} - Promessa que resolve para os dados dos produtos e informações de paginação.
  */
@@ -19,10 +19,18 @@ export const getProdutos = async (filters = {}) => {
     if (pageSize) params.append('pageSize', pageSize);
 
     const response = await axios.get(`${API_BASE_URL}?${params.toString()}`);
-    return response.data; // Retorna { produtos: [...], total: N, page: X, pageSize: Y }
+    // O backend já retorna um objeto com { produtos: [...], total: N, page: X, pageSize: Y }
+    return response.data;
   } catch (error) {
-    console.error("Erro ao buscar produtos:", error.response?.data?.erro || error.message);
-    throw new Error(error.response?.data?.erro || 'Erro ao buscar produtos.');
+    // Log detalhado para requisições GET, similar ao exemplo de vendas
+    console.error('Erro detalhado na requisição de produtos:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    // Lança um erro mais conciso para ser tratado no componente que chamou
+    throw new Error(error.response?.data?.detalhes || error.response?.data?.erro || 'Erro ao buscar produtos');
   }
 };
 
@@ -40,8 +48,8 @@ export const cadastrarProduto = async (produtoData) => {
     });
     return response.data;
   } catch (error) {
-    console.error("Erro ao cadastrar produto:", error.response?.data?.erro || error.message);
-    throw new Error(error.response?.data?.erro || 'Erro ao cadastrar produto.');
+    // Lança um erro conciso, o componente chamador tratará o log completo
+    throw new Error(error.response?.data?.detalhes || error.response?.data?.erro || 'Erro ao cadastrar produto');
   }
 };
 
@@ -60,8 +68,8 @@ export const atualizarProduto = async (id, produtoData) => {
     });
     return response.data;
   } catch (error) {
-    console.error(`Erro ao atualizar produto com ID ${id}:`, error.response?.data?.erro || error.message);
-    throw new Error(error.response?.data?.erro || 'Erro ao atualizar produto.');
+    // Lança um erro conciso, o componente chamador tratará o log completo
+    throw new Error(error.response?.data?.detalhes || error.response?.data?.erro || `Erro ao atualizar produto com ID ${id}`);
   }
 };
 
@@ -75,7 +83,7 @@ export const excluirProduto = async (id) => {
     const response = await axios.delete(`${API_BASE_URL}/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Erro ao excluir produto com ID ${id}:`, error.response?.data?.erro || error.message);
-    throw new Error(error.response?.data?.erro || 'Erro ao excluir produto.');
+    // Lança um erro conciso, o componente chamador tratará o log completo
+    throw new Error(error.response?.data?.detalhes || error.response?.data?.erro || `Erro ao excluir produto com ID ${id}`);
   }
 };
