@@ -8,18 +8,6 @@ const GlobalContext = createContext();
 export function GlobalProvider({ children }) {
   const [user, setUser] = useState(null);
   const [produtos , setProdutos] = useState([]);
-  useEffect(() => {
-    const fetchProdutos = async () => {
-      try {
-        const response = await axios.get('/api/produtos');
-        setProdutos(response.data);
-      } catch (error) {
-        console.error('Erro ao carregar produtos:', error);
-      }
-    };
-    
-    fetchProdutos();
-  }, []);
   const [funcionarios, setFuncionarios ] = useState([
     {
       id: 1,

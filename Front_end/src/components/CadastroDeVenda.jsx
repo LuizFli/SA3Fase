@@ -17,7 +17,7 @@ import { useGlobal } from '../contexts/GlobalProvider';
 import { cadastrarVenda } from '../api/vendasApi';
 
 function CadastroDeVenda({ onClose, onVendaCadastrada }) {
-  const { produtos = [], funcionarios = [] } = useGlobal();
+  const { produtos = [] , funcionarios  } = useGlobal();
 
   const [formData, setFormData] = useState({
     id_produto: '',

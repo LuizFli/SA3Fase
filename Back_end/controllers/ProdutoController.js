@@ -12,53 +12,50 @@ export default class ProdutoController {
       const params = [];
       let paramIndex = 1;
 
-      // Adiciona filtro por ID (prioritário)
       if (id) {
         whereClauses.push(`id = $${paramIndex}`);
         params.push(parseInt(id));
         paramIndex++;
-      } else if (searchTerm) { // Filtro de busca geral se não houver ID
+      } else if (searchTerm) {
         whereClauses.push(`(placa ILIKE $${paramIndex} OR marca ILIKE $${paramIndex} OR modelo ILIKE $${paramIndex} OR cor ILIKE $${paramIndex})`);
         params.push(`%${searchTerm}%`);
         paramIndex++;
       }
 
-      let fullWhereClause = '';
-      if (whereClauses.length > 0) {
-        fullWhereClause = ` WHERE ` + whereClauses.join(' AND ');
-      }
+      let fullWhereClause = whereClauses.length > 0 ? ` WHERE ` + whereClauses.join(' AND ') : '';
 
-      // Constrói a query principal completa
-      let fullQuery = baseSelectQuery + fullWhereClause;
-
-      // Constrói a query de contagem completa
-      let fullCountQuery = baseCountQuery + fullWhereClause;
-
-      // Executa a query de contagem primeiro, usando os parâmetros de filtro (sem os parâmetros de limite/offset)
-      const countResult = await pool.query(fullCountQuery, params); // Agora 'params' contém apenas os filtros
+      // Query de contagem
+      const countResult = await pool.query(baseCountQuery + fullWhereClause, params);
       const total = parseInt(countResult.rows[0].count);
 
-      // Agora adiciona a ordenação e a paginação à query principal
-      fullQuery += ` ORDER BY id ASC`;
+      // Query principal com paginação
+      let fullQuery = baseSelectQuery + fullWhereClause + ` ORDER BY id ASC`;
       const offset = (parseInt(page) - 1) * parseInt(pageSize);
       fullQuery += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-      params.push(parseInt(pageSize), offset); // Adiciona os parâmetros de paginação
+      params.push(parseInt(pageSize), offset);
 
-      // Executa a query principal
       const produtosResult = await pool.query(fullQuery, params);
 
+      // Garante que produtos seja sempre um array, mesmo quando vazio
+      const produtos = produtosResult.rows || [];
+
       res.status(200).json({
-        produtos: produtosResult.rows,
+        produtos, // Array garantido
         total,
         page: parseInt(page),
         pageSize: parseInt(pageSize),
       });
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
-      res.status(500).json({ erro: "Erro interno do servidor ao buscar produtos.", detalhes: error.message });
+      // Retorna array vazio em caso de erro
+      res.status(500).json({
+        produtos: [], // Array vazio mesmo em erro
+        total: 0,
+        erro: "Erro interno do servidor ao buscar produtos.",
+        detalhes: error.message
+      });
     }
   }
-
   static async postProduto(req, res) {
     try {
       const { placa, marca, modelo, km, cor, valor, ano } = req.body;
