@@ -1,5 +1,4 @@
 // app.js ou routes.js
-
 import express from 'express';
 import FuncionarioController from './controllers/FuncionarioController.js';
 import VendasController from './controllers/VendaController.js';

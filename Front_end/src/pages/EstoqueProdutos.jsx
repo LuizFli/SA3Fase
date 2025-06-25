@@ -182,10 +182,10 @@ function EstoqueProdutos() {
               Adicionar Produto
             </Botao>
 
-            <Avatar 
-              alt="Usuário" 
-              src="/Imagens/Adm.png" 
-              sx={{ width: 45, height: 45 }} 
+            <Avatar
+              alt="Usuário"
+              src="/Imagens/Adm.png"
+              sx={{ width: 45, height: 45 }}
             />
           </Container>
         </Painel>
