@@ -13,7 +13,6 @@ export default class FuncionarioController {
     }
   }
 
-  // NOVO MÉTODO ADICIONADO
   static async getFuncionarioById(req, res) {
     try {
       const { id } = req.params;
@@ -30,7 +29,6 @@ export default class FuncionarioController {
 
   static async postFuncionario(req, res) {
     try {
-      // CORREÇÃO: Alterado de dataNascimento para data_nascimento
       const {
         nome, usuario, data_nascimento, sexo, cpf, rg,
         identificador, email, telefone, cargo, rua, numero,
@@ -60,7 +58,6 @@ export default class FuncionarioController {
   static async putFuncionario(req, res) {
     try {
       const { id } = req.params;
-      // CORREÇÃO: Alterado de dataNascimento para data_nascimento
       const {
         nome, usuario, data_nascimento, sexo, cpf, rg,
         identificador, email, telefone, cargo, rua, numero,
