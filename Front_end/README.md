@@ -1,3 +1,15 @@
+***
+@@@
+
+ Para Rodar e necessario rodar o comando no  SA3Fase\Front_end> npm run install-all e  no SA3Fase\Back_end> npm run instal-all.
+
+@@@
+
+***
+
+
+
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
