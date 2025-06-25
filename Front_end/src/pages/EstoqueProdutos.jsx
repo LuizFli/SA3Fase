@@ -45,7 +45,7 @@ function EstoqueProdutos() {
       const data = await getProdutos({ searchTerm: termoBusca, id: buscaId });
       // Garante que 'produtos' é sempre um array
       if (data && Array.isArray(data.produtos)) {
-        setProdutos(data.produtos);
+        setProdutos(data.produtos.map(p => ({ ...p, status: 'ativo' }))); // Set initial status to 'ativo'
       } else {
         console.warn("A API retornou uma estrutura de dados inesperada ou 'produtos' não é um array:", data);
         setProdutos([]);
@@ -63,22 +63,7 @@ function EstoqueProdutos() {
     fetchProdutos();
   }, [fetchProdutos]);
 
-  // Função para apagar um produto usando a API
-  const apagarProduto = async (id) => {
-    try {
-      await excluirProduto(id); // Chama a função de exclusão da API
-
-      setSnackbarMessage('Produto removido com sucesso!');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
-      fetchProdutos(); // Recarrega a lista de produtos após a exclusão
-    } catch (error) {
-      console.error("Erro ao apagar produto:", error);
-      setSnackbarMessage(error.message || 'Erro ao remover produto.');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
-    }
-  };
+  // The apagarProduto function and its related calls are removed as per the request.
 
   const handleOpenAddModal = () => {
     setCurrentProduto({
@@ -239,7 +224,7 @@ function EstoqueProdutos() {
         }}>
           <ProdutoEstoque
             produtos={produtos}
-            apagarProduto={apagarProduto}
+            // apagarProduto is removed
             editarProduto={handleOpenEditModal}
           />
 

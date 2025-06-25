@@ -31,22 +31,38 @@ const coresDisponiveis = [
 
 // Função utilitária para formatar a quilometragem com pontos a cada 3 números
 const formatKm = (value) => {
-  // Se o valor for explicitamente 0 (número ou string '0'), retorna '0'
   if (value === 0 || value === '0') return '0';
-  if (!value) return ''; // Lida com valores vazios ou nulos/indefinidos
-
-  // Remove todos os caracteres não numéricos
+  if (!value) return '';
   const cleanValue = value.toString().replace(/\D/g, '');
-  // Adiciona pontos como separadores de milhares
   return cleanValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
+
+// Adicionada: Função para formatar valor monetário com pontos e vírgulas
+const formatMoney = (value) => {
+  if (value === 0 || value === '0') return '0,00';
+  if (!value) return '';
+  let cleanValue = value.toString().replace(/[^\d,]/g, '');
+  const parts = cleanValue.split(',');
+  if (parts.length > 2) {
+    cleanValue = parts[0] + ',' + parts.slice(1).join('');
+  }
+  cleanValue = cleanValue.replace(/\./g, ''); // Remove pontos existentes
+  const [integerPart, decimalPart] = cleanValue.split(',');
+  const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  if (decimalPart !== undefined) {
+    const limitedDecimalPart = decimalPart.slice(0, 2);
+    return `${formattedIntegerPart},${limitedDecimalPart}`;
+  }
+  return formattedIntegerPart;
+};
+
 
 const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProduto }) => {
 
   const { produtos, setProdutos } = useGlobal([]);
   const fetchProdutos = async () => {
     try {
-      console.log('Carregando produtos do servidor...'); // Log para depuração
+      console.log('Carregando produtos do servidor...');
       const response = await axios.get('http://localhost:3000/api/produtos');
       setProdutos(response.data.produtos);
     } catch (error) {
@@ -55,24 +71,27 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
   };
 
   useEffect(() => {    
-
     fetchProdutos();
   }, []);
   useEffect(() => {
-    console.log('Produtos atualizados:', produtos); // Log para depuração
+    console.log('Produtos atualizados:', produtos);
   }, [produtos]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
     if (name === 'km') {
-      // Para o campo KM, formata o valor enquanto o usuário digita
       setCurrentProduto(prev => ({
         ...prev,
-        [name]: formatKm(value) // Usa a função de formatação
+        [name]: formatKm(value)
+      }));
+    } else if (name === 'valor') { // Adicionada lógica para formatar o campo "valor"
+      const formatted = formatMoney(value);
+      setCurrentProduto(prev => ({
+        ...prev,
+        [name]: formatted
       }));
     } else {
-      // Para outros campos, mantém o comportamento padrão
       setCurrentProduto(prev => ({
         ...prev,
         [name]: value
@@ -82,17 +101,17 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Antes de enviar, limpa o valor de km removendo os pontos para garantir que seja um número puro
     const kmParaEnviar = currentProduto.km.toString().replace(/\D/g, '');
 
     const novoProduto = {
       ...currentProduto,
-      km: Number(kmParaEnviar), // Converte a string limpa para número
+      km: Number(kmParaEnviar),
       ano: Number(currentProduto.ano),
-      valor: Number(currentProduto.valor)
+      // Corrigido: Limpa o valor monetário removendo pontos e trocando vírgula por ponto antes de converter para número
+      valor: Number(currentProduto.valor.toString().replace(/\./g, '').replace(',', '.'))
     };
-    onSubmit(novoProduto); // Chama a função onSubmit passada como prop
-    fetchProdutos()
+    onSubmit(novoProduto);
+    fetchProdutos();
   };
 
   return (
@@ -133,6 +152,11 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
                   required
                   fullWidth
                   variant="outlined"
+                  sx={{ // Adicionado para consistência de estilo com EditarModal
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px'
+                    }
+                  }}
                 />
               </FormControl>
 
@@ -145,6 +169,11 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
                   required
                   fullWidth
                   variant="outlined"
+                  sx={{ // Adicionado para consistência de estilo com EditarModal
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px'
+                    }
+                  }}
                 />
               </FormControl>
 
@@ -158,6 +187,11 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
                   fullWidth
                   type="number"
                   variant="outlined"
+                  sx={{ // Adicionado para consistência de estilo com EditarModal
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px'
+                    }
+                  }}
                 />
               </FormControl>
             </Grid>
@@ -167,13 +201,17 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
                 <CampoTexto
                   label="Quilometragem (Km)"
                   name="km"
-                  // Alterado type para "text" para permitir a formatação
-                  type="text"
+                  type="text" // Mantido como "text" para formatação
                   value={currentProduto.km}
                   onChange={handleInputChange}
                   required
                   fullWidth
                   variant="outlined"
+                  sx={{ // Adicionado para consistência de estilo com EditarModal
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px'
+                    }
+                  }}
                 />
               </FormControl>
 
@@ -186,6 +224,11 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
                   required
                   fullWidth
                   variant="outlined"
+                  sx={{ // Adicionado para consistência de estilo com EditarModal
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px'
+                    }
+                  }}
                 />
               </FormControl>
 
@@ -198,6 +241,11 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
                   required
                   label="Cor"
                   variant="outlined"
+                  sx={{ // Adicionado para consistência de estilo com EditarModal
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px'
+                    }
+                  }}
                 >
                   {coresDisponiveis.map(cor => (
                     <MenuItem key={cor} value={cor}>{cor}</MenuItem>
@@ -207,7 +255,7 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
             </Grid>
           </Grid>
 
-          {/* Novo campo de Valor */}
+          {/* Campo de Valor com formatação */}
           <FormControl fullWidth sx={{ mb: 3 }}>
             <CampoTexto
               label="Valor (R$)"
@@ -216,10 +264,11 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
               onChange={handleInputChange}
               required
               fullWidth
-              type="number"
+              type="text" // Alterado para "text" para permitir a formatação monetária
               variant="outlined"
               InputProps={{
                 startAdornment: 'R$',
+                sx: { borderRadius: '8px' } // Adicionado para consistência de estilo com EditarModal
               }}
             />
           </FormControl>

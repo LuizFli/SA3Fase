@@ -20,28 +20,79 @@ const coresDisponiveis = [
   'Vermelho',
   'Azul',
   'Cinza',
-  'Verde'
+  'Verde',
+  'Amarelo',
+  'Roxo',
+  'Laranja'
 ];
 
+const formatKm = (value) => {
+  if (value === 0 || value === '0') return '0';
+  if (!value) return '';
+  const cleanValue = value.toString().replace(/\D/g, '');
+  return cleanValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
+
+const formatMoney = (value) => {
+  if (value === 0 || value === '0') return '0,00';
+  if (!value) return '';
+  let cleanValue = value.toString().replace(/[^\d,]/g, '');
+  const parts = cleanValue.split(',');
+  if (parts.length > 2) {
+    cleanValue = parts[0] + ',' + parts.slice(1).join('');
+  }
+  cleanValue = cleanValue.replace(/\./g, '');
+  const [integerPart, decimalPart] = cleanValue.split(',');
+  const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  if (decimalPart !== undefined) {
+    const limitedDecimalPart = decimalPart.slice(0, 2);
+    return `${formattedIntegerPart},${limitedDecimalPart}`;
+  }
+  return formattedIntegerPart;
+};
+
 const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProduto }) => {
+  React.useEffect(() => {
+    if (open && currentProduto) {
+      setCurrentProduto(prev => ({
+        ...prev,
+        km: formatKm(prev.km),
+        valor: formatMoney(prev.valor)
+      }));
+    }
+  }, [open, currentProduto?.id]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCurrentProduto(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    if (name === 'km') {
+      const formatted = formatKm(value);
+      setCurrentProduto(prev => ({
+        ...prev,
+        [name]: formatted
+      }));
+    } else if (name === 'valor') {
+      const formatted = formatMoney(value);
+      setCurrentProduto(prev => ({
+        ...prev,
+        [name]: formatted
+      }));
+    } else {
+      setCurrentProduto(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const produtoAtualizado = {
       ...currentProduto,
-      // Garante que os campos numéricos são convertidos corretamente
-      km: Number(currentProduto.km),
+      km: Number(currentProduto.km.toString().replace(/\./g, '')),
       ano: Number(currentProduto.ano),
-      valor: Number(currentProduto.valor)
+      valor: Number(currentProduto.valor.toString().replace(/\./g, '').replace(',', '.'))
     };
-    onSubmit(produtoAtualizado); // Chama a função onSubmit passada como prop
+    onSubmit(produtoAtualizado);
   };
 
   return (
@@ -135,7 +186,6 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
                   onChange={handleInputChange}
                   required
                   fullWidth
-                  type="number"
                   variant="outlined"
                   sx={{
                     '& .MuiOutlinedInput-root': {
@@ -185,7 +235,6 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
             </Grid>
           </Grid>
 
-          {/* Novo campo de Valor */}
           <FormControl fullWidth sx={{ mb: 3 }}>
             <CampoTexto
               label="Valor (R$)"
@@ -194,15 +243,10 @@ const EditarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProdut
               onChange={handleInputChange}
               required
               fullWidth
-              type="number"
               variant="outlined"
               InputProps={{
                 startAdornment: 'R$',
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px'
-                }
+                sx: { borderRadius: '8px' }
               }}
             />
           </FormControl>

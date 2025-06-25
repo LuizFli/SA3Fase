@@ -62,8 +62,9 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Cor</Celula>
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Km</Celula>
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Placa</Celula>
-              <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Valor</Celula> {/* Adicionado Valor */}
+              <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Valor</Celula>
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>ID</Celula>
+              <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>STATUS</Celula> {/* Added STATUS column */}
               <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Ações</Celula>
             </Linha>
           </CabecalhoTabela>
@@ -79,8 +80,20 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
                 <Celula sx={{ textAlign: 'center' }}>{produto.cor}</Celula>
                 <Celula sx={{ textAlign: 'center' }}>{produto.km.toLocaleString('pt-BR')}</Celula>
                 <Celula sx={{ textAlign: 'center' }}>{produto.placa}</Celula>
-                <Celula sx={{ textAlign: 'center' }}>{Number(produto.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Celula> {/* Exibe o valor formatado */}
+                <Celula sx={{ textAlign: 'center' }}>{Number(produto.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</Celula>
                 <Celula sx={{ textAlign: 'center' }}>{produto.id.toString().padStart(4, '0')}</Celula>
+                <Celula sx={{ textAlign: 'center' }}>
+                  <Container sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                    <Container sx={{
+                      width: '12px',
+                      height: '12px',
+                      borderRadius: '50%',
+                      // Assuming 'status' field exists, otherwise default to 'ativo'
+                      backgroundColor: produto.status === 'inativo' ? 'red' : 'green'
+                    }} />
+                    {produto.status === 'inativo' ? 'Inativo' : 'Ativo'}
+                  </Container>
+                </Celula>
                 <Celula sx={{ textAlign: 'center' }}>
                   <Container sx={{
                     display: 'flex',
@@ -90,7 +103,7 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
                     <Botao
                       variant="contained"
                       startIcon={<Editar />}
-                      onClick={() => editarProduto(produto)} // Chama a função editarProduto passada como prop
+                      onClick={() => editarProduto(produto)}
                       sx={{
                         backgroundColor: '#FF9D00',
                         color: 'white',
@@ -103,23 +116,7 @@ const ProdutoEstoque = ({ produtos, apagarProduto, editarProduto }) => {
                     >
                       Editar
                     </Botao>
-
-                    <Botao
-                      variant="contained"
-                      startIcon={<Excluir />}
-                      onClick={() => handleOpenConfirmModal(produto.id)}
-                      sx={{
-                        backgroundColor: '#f44336',
-                        color: 'white',
-                        fontWeight: 'bold',
-                        padding: '6px 12px',
-                        fontSize: '0.8rem',
-                        minWidth: '90px',
-                        '&:hover': { backgroundColor: '#d32f2f' }
-                      }}
-                    >
-                      Apagar
-                    </Botao>
+                    {/* Removed Delete Button */}
                   </Container>
                 </Celula>
               </Linha>
