@@ -6,8 +6,8 @@ const GlobalContext = createContext();
 // Provedor do contexto
 export function GlobalProvider({ children }) {
   const [user, setUser] = useState(null);
-  // Removendo 'produtos' e 'setProdutos' daqui, pois agora serão gerenciados via API e no componente EstoqueProdutos
-  const [funcionarios, setFuncionarios] = useState([
+  const [produtos , setProdutos] = useState([]);
+  const [funcionarios, setFuncionarios ] = useState([
     {
       id: 1,
       nome: "João Silva",
@@ -16,12 +16,12 @@ export function GlobalProvider({ children }) {
       ultimaVenda: `R$ 8.500,00`,
       foto: "",
       vendasTotais: '9',
-      financeiro: {
-        meta: 40.58,
-        vendaTotal: 80000,
-        comicao: 20000
+      financeiro:{
+          meta: 40.58,
+          vendaTotal:80000,
+          comicao:20000
       },
-    }
+  }
   ])
   const [vendas, setVendas] = useState([]);
   const [config, setConfig] = useState({
@@ -29,17 +29,20 @@ export function GlobalProvider({ children }) {
     comicao: 4, // Porcentagem de comissão
     meta: 2000000, // Meta de vendas em reais
   })
-
+  
   // Qualquer dado/função que você queira compartilhar globalmente
   const value = {
     user,
     setUser,
     vendas,
     setVendas,
-    funcionarios,
+    produtos , 
+    setProdutos,
+    funcionarios, 
     setFuncionarios,
     config,
     setConfig
+    
   };
 
   return (

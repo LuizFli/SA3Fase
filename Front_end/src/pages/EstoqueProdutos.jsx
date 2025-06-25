@@ -17,9 +17,10 @@ import EditarModal from '../components/EditarModal';
 
 // Importa as funções da sua API de produtos
 import { getProdutos, cadastrarProduto, atualizarProduto, excluirProduto } from '../api/produtosApi';
+import { useGlobal } from '../contexts/GlobalProvider';
 
 function EstoqueProdutos() {
-  const [produtos, setProdutos] = useState([]);
+  const {produtos, setProdutos} = useGlobal([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);

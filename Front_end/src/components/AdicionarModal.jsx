@@ -1,4 +1,6 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import {
   Modal,
   Paper as Painel,
@@ -12,6 +14,7 @@ import {
   Box as Container,
   Button as Botao
 } from '@mui/material';
+import { useGlobal } from '../contexts/GlobalProvider';
 
 const coresDisponiveis = [
   'Preto',
@@ -39,6 +42,26 @@ const formatKm = (value) => {
 };
 
 const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentProduto }) => {
+
+  const { produtos, setProdutos } = useGlobal([]);
+  const fetchProdutos = async () => {
+    try {
+      console.log('Carregando produtos do servidor...'); // Log para depuração
+      const response = await axios.get('http://localhost:3000/api/produtos');
+      setProdutos(response.data.produtos);
+    } catch (error) {
+      console.error('Erro ao carregar produtos:', error);
+    }
+  };
+
+  useEffect(() => {    
+
+    fetchProdutos();
+  }, []);
+  useEffect(() => {
+    console.log('Produtos atualizados:', produtos); // Log para depuração
+  }, [produtos]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
@@ -69,6 +92,7 @@ const AdicionarModal = ({ open, onClose, onSubmit, currentProduto, setCurrentPro
       valor: Number(currentProduto.valor)
     };
     onSubmit(novoProduto); // Chama a função onSubmit passada como prop
+    fetchProdutos()
   };
 
   return (
