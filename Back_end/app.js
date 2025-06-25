@@ -16,6 +16,7 @@ router.delete('/funcionarios/:id', FuncionarioController.deleteFuncionario);
 // Rotas para Vendas
 router.get('/vendas', VendasController.getVendas);
 router.post('/vendas', VendasController.postVenda);
+router.delete('/vendas', VendasController.deleteAllVendas); // Rota para limpar todas as vendas
 
 // Rotas para Produtos
 router.get('/produtos', ProdutoController.getProdutos);

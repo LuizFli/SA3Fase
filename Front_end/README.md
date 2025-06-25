@@ -1,12 +1,11 @@
 ***
 @@@
 
- Para Rodar e necessario rodar o comando no  SA3Fase\Front_end> npm run install-all e  no SA3Fase\Back_end> npm run instal-all.
+ ### Para Rodar e necessario rodar o comando no  SA3Fase\Front_end> npm run install-all e  no SA3Fase\Back_end> npm run instal-all.
 
 @@@
 
 ***
-
 
 
 
