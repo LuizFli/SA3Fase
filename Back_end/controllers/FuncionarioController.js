@@ -88,14 +88,14 @@ export default class FuncionarioController {
     }
   }
 
-  static async deleteFuncionario(req, res) {
+  static async inativarFuncionario(req, res) {
     try {
       const { id } = req.params;
-      await pool.query("DELETE FROM funcionarios WHERE id = $1", [id]);
-      res.status(204).send();
+      await pool.query("UPDATE funcionarios SET status = 'inativo' WHERE id = $1", [id]);
+      res.status(200).json({ message: "Funcionário desativado com sucesso" });
     } catch (error) {
-      console.error("Erro ao deletar funcionário:", error);
-      res.status(500).json({ erro: "Erro ao deletar funcionário" });
+      console.error("Erro ao desativar funcionário:", error);
+      res.status(500).json({ erro: "Erro ao desativar funcionário" });
     }
-  }
+}
 }

@@ -1,4 +1,3 @@
-// src/components/GerenciaFuncionario.jsx
 
 import { Avatar, Box, Button, Stack, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField } from '@mui/material';
 import React, { useState, useEffect } from 'react';
