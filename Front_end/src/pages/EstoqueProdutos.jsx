@@ -17,9 +17,10 @@ import EditarModal from '../components/EditarModal';
 
 // Importa as funções da sua API de produtos
 import { getProdutos, cadastrarProduto, atualizarProduto, excluirProduto } from '../api/produtosApi';
+import { useGlobal } from '../contexts/GlobalProvider';
 
 function EstoqueProdutos() {
-  const [produtos, setProdutos] = useState([]);
+  const {produtos, setProdutos} = useGlobal([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -181,17 +182,10 @@ function EstoqueProdutos() {
               Adicionar Produto
             </Botao>
 
-<<<<<<< HEAD
-            <Avatar
-              alt="Usuário"
-              src="/static/images/avatar/1.jpg"
-              sx={{ width: 45, height: 45 }}
-=======
             <Avatar 
               alt="Usuário" 
               src="/Imagens/Adm.png" 
               sx={{ width: 45, height: 45 }} 
->>>>>>> a72026d137650e23152f56a46510f7fbc24a1535
             />
           </Container>
         </Painel>
