@@ -1,3 +1,5 @@
+// controllers/FuncionarioController.js
+
 import pool from "../database.js";
 
 export default class FuncionarioController {
@@ -11,10 +13,26 @@ export default class FuncionarioController {
     }
   }
 
+  // NOVO MÉTODO ADICIONADO
+  static async getFuncionarioById(req, res) {
+    try {
+      const { id } = req.params;
+      const { rows } = await pool.query("SELECT * FROM funcionarios WHERE id = $1", [id]);
+      if (rows.length === 0) {
+        return res.status(404).json({ erro: "Funcionário não encontrado" });
+      }
+      res.status(200).json(rows[0]);
+    } catch (error) {
+      console.error("Erro ao buscar funcionário:", error);
+      res.status(500).json({ erro: "Erro ao buscar funcionário" });
+    }
+  }
+
   static async postFuncionario(req, res) {
     try {
+      // CORREÇÃO: Alterado de dataNascimento para data_nascimento
       const {
-        nome, usuario, dataNascimento, sexo, cpf, rg,
+        nome, usuario, data_nascimento, sexo, cpf, rg,
         identificador, email, telefone, cargo, rua, numero,
         cidade, estado, cep, senha, foto
       } = req.body;
@@ -26,7 +44,7 @@ export default class FuncionarioController {
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
         RETURNING *`,
         [
-          nome, usuario, dataNascimento, sexo, cpf, rg,
+          nome, usuario, data_nascimento, sexo, cpf, rg,
           identificador, email, telefone, cargo, rua, numero,
           cidade, estado, cep, senha, foto
         ]
@@ -42,12 +60,13 @@ export default class FuncionarioController {
   static async putFuncionario(req, res) {
     try {
       const { id } = req.params;
+      // CORREÇÃO: Alterado de dataNascimento para data_nascimento
       const {
-        nome, usuario, dataNascimento, sexo, cpf, rg,
+        nome, usuario, data_nascimento, sexo, cpf, rg,
         identificador, email, telefone, cargo, rua, numero,
         cidade, estado, cep, senha, foto
       } = req.body;
-
+  
       const { rows } = await pool.query(
         `UPDATE funcionarios SET
           nome = $1, usuario = $2, data_nascimento = $3, sexo = $4,
@@ -57,17 +76,14 @@ export default class FuncionarioController {
         WHERE id = $18
         RETURNING *`,
         [
-          nome, usuario, dataNascimento, sexo,
+          nome, usuario, data_nascimento, sexo,
           cpf, rg, identificador, email,
           telefone, cargo, rua, numero,
           cidade, estado, cep, senha, foto,
           id
         ]
       );
-
-      console.log("Dados recebidos para atualização:", req.body);
-      console.log("ID recebido:", id);
-
+  
       res.status(200).json(rows[0]);
     } catch (error) {
       console.error("Erro ao atualizar funcionário:", error);
