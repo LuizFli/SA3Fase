@@ -5,7 +5,7 @@ export default class ProdutoController {
     try {
       const { searchTerm, id, page = 1, pageSize = 10 } = req.query;
 
-      let baseSelectQuery = `SELECT id, placa, marca, modelo, km, cor, valor, ano FROM produtos`;
+      let baseSelectQuery = `SELECT id, placa, marca, modelo, km, cor, valor, ano, ativo FROM produtos`;
       let baseCountQuery = `SELECT COUNT(*) FROM produtos`;
 
       const whereClauses = [];
@@ -137,4 +137,98 @@ export default class ProdutoController {
       res.status(500).json({ erro: "Erro interno do servidor ao excluir produto.", detalhes: error.message });
     }
   }
+  static async postVenda(req, res) {
+    try {
+      const { id_produto, valor, identificador_vendedor, auth_code } = req.body;
+      
+      // Validação básica dos dados
+      if (!id_produto || !valor || !identificador_vendedor) {
+        return res.status(400).json({ erro: "Dados incompletos" });
+      }
+  
+      // 1. Verificar se o produto existe e está ativo
+      const produto = await pool.query(
+        'SELECT * FROM produtos WHERE id = $1 AND ativo = true', 
+        [id_produto]
+      );
+      
+      if (produto.rows.length === 0) {
+        return res.status(404).json({ 
+          erro: "Produto não encontrado ou já vendido" 
+        });
+      }
+  
+      // 2. Verificar se o vendedor existe e está ativo
+      const vendedor = await pool.query(
+        `SELECT * FROM funcionarios 
+         WHERE identificador = $1 AND ativo = true`,
+        [identificador_vendedor]
+      );
+  
+      if (vendedor.rows.length === 0) {
+        return res.status(404).json({ 
+          erro: "Vendedor não encontrado ou inativo" 
+        });
+      }
+  
+      // Iniciar transação
+      await pool.query('BEGIN');
+  
+      try {
+        // 3. Inserir a venda
+        const novaVenda = await pool.query(
+          `INSERT INTO vendas (
+            id_produto, 
+            valor, 
+            data, 
+            identificador_vendedor,
+            auth_code
+          ) VALUES (
+            $1, $2, $3, $4, $5
+          ) RETURNING *`,
+          [
+            id_produto,
+            valor || produto.rows[0].valor,
+            new Date().toISOString(),
+            identificador_vendedor,
+            auth_code || this.generateAuthCode()
+          ]
+        );
+  
+        // 4. Atualizar o produto para inativo
+        await pool.query(
+          'UPDATE produtos SET ativo = false WHERE id = $1',
+          [id_produto]
+        );
+  
+        // Commit da transação
+        await pool.query('COMMIT');
+  
+        // 5. Retornar resposta enriquecida
+        res.status(201).json({
+          ...novaVenda.rows[0],
+          produto: `${produto.rows[0].marca} ${produto.rows[0].modelo}`,
+          nome_vendedor: vendedor.rows[0].nome,
+          mensagem: "Venda cadastrada com sucesso e produto marcado como vendido"
+        });
+  
+      } catch (error) {
+        // Rollback em caso de erro
+        await pool.query('ROLLBACK');
+        throw error;
+      }
+  
+    } catch (error) {
+      console.error("Erro ao cadastrar venda:", {
+        message: error.message,
+        stack: error.stack
+      });
+      
+      res.status(500).json({
+        erro: "Erro ao cadastrar venda",
+        detalhes: error.message
+      });
+    }
+  }
+  
 }

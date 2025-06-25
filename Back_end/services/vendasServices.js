@@ -3,7 +3,7 @@ const db = require('../config/db');
 const VendasService = {
   async getVendas(filters = {}) {
     const { searchTerm, startDate, endDate } = filters;
-    
+
     let query = 'SELECT * FROM vendas WHERE 1=1';
     const params = [];
     let paramIndex = 1;
@@ -46,7 +46,7 @@ const VendasService = {
 
   async getTotalVendasCount(filters = {}) {
     const { searchTerm, startDate, endDate } = filters;
-    
+
     let query = 'SELECT COUNT(*) FROM vendas WHERE 1=1';
     const params = [];
     let paramIndex = 1;
@@ -80,7 +80,24 @@ const VendasService = {
     } catch (error) {
       throw error;
     }
+  },
+
+  async deleteVenda(id) {
+    try {
+      const query = 'DELETE FROM vendas WHERE id = $1 RETURNING *';
+      const { rows } = await db.query(query, [id]);
+
+      if (rows.length === 0) {
+        throw new Error('Venda não encontrada');
+      }
+
+      return rows[0];
+    } catch (error) {
+      throw error;
+    }
   }
+
+
 };
 
 module.exports = VendasService;

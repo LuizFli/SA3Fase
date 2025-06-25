@@ -15,9 +15,11 @@ import { Add } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { useGlobal } from '../contexts/GlobalProvider';
 import { cadastrarVenda } from '../api/vendasApi';
+import { use } from 'react';
 
 function CadastroDeVenda({ onClose, onVendaCadastrada }) {
-  const { produtos = [] , funcionarios  } = useGlobal();
+  const { produtos = [], funcionarios } = useGlobal();
+  const produtosAtivos = produtos.filter(p => p.ativo === true);
 
   const [formData, setFormData] = useState({
     id_produto: '',
@@ -51,8 +53,8 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.id_produto) {
-      newErrors.id_produto = produtos.length === 0 
-        ? 'Nenhum veículo disponível' 
+      newErrors.id_produto = produtos.length === 0
+        ? 'Nenhum veículo disponível'
         : 'Selecione um veículo';
     }
 
@@ -95,22 +97,15 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
       }
     }
   };
-  const formatarValor = (valor) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(valor);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
-
+  
     const hasErrors = validateForm();
     if (hasErrors) return;
-
+  
     setLoading(true);
-
+  
     try {
       const vendaData = {
         id_produto: Number(formData.id_produto),
@@ -118,9 +113,16 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
         identificador_vendedor: formData.identificador_vendedor,
         auth_code: formData.auth_code || undefined
       };
-
+  
       const novaVenda = await cadastrarVenda(vendaData);
-
+  
+      const updatedProdutos = produtos.map(p => 
+        p.id === Number(formData.id_produto) ? { ...p, ativo: false } : p
+      );
+      // Você precisará adicionar uma função setProdutos no seu GlobalProvider
+      // ou usar o método que você já tem para atualizar o estado global
+      // Exemplo: updateProdutos(updatedProdutos);
+  
       onClose();
       setFormData({
         id_produto: '',
@@ -129,12 +131,12 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
         identificador_vendedor: '',
         auth_code: ''
       });
-
+  
       // Chama a callback para atualizar a lista de vendas
       if (onVendaCadastrada) {
         onVendaCadastrada(novaVenda);
       }
-
+  
     } catch (err) {
       setSubmitError(err.message);
     } finally {
@@ -183,17 +185,17 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
               error={!!errors.id_produto}
               helperText={errors.id_produto}
               sx={{ width: 300 }}
-              disabled={loading || produtos.length === 0}
+              disabled={loading || produtosAtivos.length === 0}
             >
               <MenuItem value="">
                 <em>Selecione um veículo</em>
               </MenuItem>
-              {produtos.length === 0 ? (
+              {produtosAtivos.length === 0 ? (
                 <MenuItem disabled>
-                  {loading ? 'Carregando veículos...' : 'Nenhum veículo disponível'}
+                  {loading ? 'Carregando veículos...' : 'Nenhum veículo disponível para venda'}
                 </MenuItem>
               ) : (
-                produtos.map((veiculo) => (
+                produtosAtivos.map((veiculo) => (
                   <MenuItem key={veiculo.id} value={veiculo.id}>
                     {veiculo.marca} {veiculo.modelo} - {veiculo.ano} ({veiculo.placa})
                   </MenuItem>
