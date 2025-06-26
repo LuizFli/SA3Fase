@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography, List, ListItem, ListItemText, Divider } from '@mui/material';
 
 function AjudaConfig() {
   return (
@@ -19,9 +19,36 @@ function AjudaConfig() {
         <Typography variant="h6" sx={{ mb: 2 }}>
           Ajuda
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Em caso de dúvidas, entre em contato com o suporte.
+        <Divider sx={{ mb: 2 }} />
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          Precisa de suporte? Veja abaixo algumas dúvidas frequentes:
         </Typography>
+        <List>
+          <ListItem>
+            <ListItemText
+              primary="Como cadastrar uma venda?"
+              secondary="Acesse a página de Vendas e clique em 'Cadastrar Venda'. Preencha os campos obrigatórios e salve."
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Como editar meu perfil?"
+              secondary="Vá em Configurações > Perfil, altere os dados desejados e clique em Salvar."
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Como adicionar um novo funcionário?"
+              secondary="Acesse Configurações > Gerenciamento de Funcionários e clique em 'Adicionar Funcionário'."
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
+              primary="Precisa de mais ajuda?"
+              secondary="Entre em contato pelo e-mail: suporte@salesight.com"
+            />
+          </ListItem>
+        </List>
       </Paper>
     </Box>
   );

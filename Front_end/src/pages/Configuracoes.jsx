@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Paper, Tabs, Tab } from '@mui/material';
+import { Box, Typography, Paper, Tabs, Tab, Avatar } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -37,6 +37,7 @@ const Configuracoes = () => {
             marginBottom: '20px',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'space-between',
             borderRadius: '10px',
           }}
         >
@@ -50,6 +51,11 @@ const Configuracoes = () => {
           >
             Configurações
           </Typography>
+          <Avatar
+            alt="Administrador"
+            src="/Imagens/Adm.png"
+            sx={{ width: 45, height: 45 }}
+          />
         </Paper>
         <Paper
           elevation={2}

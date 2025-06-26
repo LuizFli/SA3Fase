@@ -3,11 +3,10 @@ import {
   Box, 
   Typography, 
   Avatar, 
-  IconButton,
+  Paper
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import LineChart from "../graphics/LineChart";
 import RadialChart from "../graphics/RadialChart";
 import BarChart from "../graphics/BarChart";
@@ -23,37 +22,29 @@ const TesteGraficos = () => {
         gap: 3,
         margin: 3,
       }}>
-    
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          mb: 1,
-          pl: 5,
-          pr: 5,
-          pt: 2,
-        }}>
-          <Box>
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-              Bem-vindo Arthur Viecili
-            </Typography>
-            <Typography variant="subtitle1" color="text.secondary" sx={{ fontWeight: 'bold' }}>
-              Aqui está o seu painel de previsão de vendas
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <IconButton>
-              <NotificationsActiveIcon  sx={{ color: '#e86f40'}} />
-            </IconButton>
-            <Avatar alt="Arthur Viecili" src="/Imagens/Adm.png" />
-          </Box>
-        </Box>
-
+        {/* Cabeçalho padrão com Paper */}
+        <Paper
+          elevation={3}
+          sx={{
+            padding: '15px 20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            borderRadius: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333', fontSize: '1.8rem' }}>
+            Bem-vindo Luiz Filipe
+          </Typography>
+          <Avatar alt="Luiz Filipe" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
+        </Paper>
+        <Typography variant="subtitle1" color="text.secondary" sx={{ fontWeight: 'bold', pl: 5, pr: 5 }}>
+          Aqui está o seu painel de previsão de vendas
+        </Typography>
 
         <Box sx={{ display: 'flex', width: '95%', justifyContent: 'center', alignItems: 'center', margin: '0 auto' }}>
           <LineChart />
         </Box>
-
 
         <Box sx={{ 
           display: 'flex',
