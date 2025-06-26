@@ -3,10 +3,13 @@ import express from 'express';
 import FuncionarioController from './controllers/FuncionarioController.js';
 import VendasController from './controllers/VendaController.js';
 import ProdutoController from './controllers/ProdutoController.js';
+import adminAuthRoutes from './routes/adminAuthRoutes.js'
 
 
 
 const router = express.Router();
+
+router.use(adminAuthRoutes);
 
 // Rotas para Funcionários
 router.get('/funcionarios', FuncionarioController.getFuncionarios);
