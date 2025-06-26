@@ -11,5 +11,8 @@
     "start": "node server.js",
     "install-all": "npm install axios cors express inity pg",
     "dev": "nodemon server.js"
+  },
+  "devDependencies": {
+    "jest": "^30.0.3"
   }
 }
