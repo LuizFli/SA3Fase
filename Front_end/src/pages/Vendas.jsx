@@ -34,8 +34,9 @@ import ptBR from 'date-fns/locale/pt-BR';
 import axios from 'axios';
 import PageContainer from '../components/PageContainer';
 import CadastroDeVenda from '../components/CadastroDeVenda';
-import { getVendas, limparTodasVendas } from '../api/vendasApi'; // Importa a função para buscar vendas
-
+import { getVendas, limparTodasVendas, deletarVenda } from '../api/vendasApi';
+import { atualizarStatusProduto } from '../api/produtosApi';
+import { useGlobal } from '../contexts/GlobalProvider';
 
 function Vendas() {
   // Estados para dados e carregamento
@@ -56,6 +57,7 @@ function Vendas() {
   const [showFilters, setShowFilters] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  const { produtos, setProdutos } = useGlobal();
 
   // Estado para snackbar (feedback)
   const [snackbar, setSnackbar] = useState({
@@ -91,14 +93,60 @@ function Vendas() {
 
     fetchVendas();
   }, [appliedSearchTerm, appliedStartDate, appliedEndDate]);
+  const fetchProdutos = async () => {
+    try {
+      console.log('Carregando produtos do servidor...'); // Log para depuração
+      const response = await axios.get('http://localhost:3000/api/produtos');
+      setProdutos(response.data.produtos);
+    } catch (error) {
+      console.error('Erro ao carregar produtos:', error);
+    }
+  };
+
+  useEffect(() => {    
+
+    fetchProdutos();
+    console.log('Produtos atualizados:', produtos); // Log para depuração
+  }, []);
+  const handleDeletarVenda = async (idVenda) => {
+    const confirmacao = window.confirm('Tem certeza que deseja excluir esta venda?');
+    if (!confirmacao) return;
+  
+    try {
+      const venda = vendas.find(v => v.id === idVenda);
+      if (!venda) throw new Error('Venda não encontrada.');
+  
+      // Deleta a venda
+      await deletarVenda(idVenda);
+  
+      // Atualiza o status do produto para "ativo"
+      await atualizarStatusProduto(venda.id_produto, 'ativo');
+  
+      // Atualiza o estado local das vendas
+      setVendas(vendas.filter(v => v.id !== idVenda));
+  
+      setSnackbar({
+        open: true,
+        message: 'Venda excluída e produto reativado com sucesso!',
+        severity: 'success'
+      });
+    } catch (err) {
+      console.error('Erro ao excluir venda ou atualizar produto:', err);
+      setSnackbar({
+        open: true,
+        message: `Erro ao excluir venda: ${err.message}`,
+        severity: 'error'
+      });
+    }
+  };
   const handleLimparTodasVendas = async () => {
     // Confirmação antes de deletar
     const confirmacao = window.confirm(
       'ATENÇÃO: Isso irá apagar TODAS as vendas permanentemente. Deseja continuar?'
     );
-    
+
     if (!confirmacao) return;
-  
+
     setIsClearing(true);
     try {
       await limparTodasVendas();
@@ -342,21 +390,14 @@ function Vendas() {
             <TableContainer>
               <Table>
                 <TableHead>
-                  <TableRow
-                    sx={{
-                      backgroundColor: '#e65f2b',
-                      '& th': {
-                        color: '#fff',
-                        fontSize: '1rem',
-                      },
-                    }}
-                  >
+                  <TableRow sx={{ backgroundColor: '#e65f2b', '& th': { color: '#fff', fontSize: '1rem' } }}>
                     <TableCell>ID Produto</TableCell>
                     <TableCell>Produto</TableCell>
                     <TableCell align="right">Valor</TableCell>
                     <TableCell>Data</TableCell>
                     <TableCell>Vendedor</TableCell>
                     <TableCell>Auth Code</TableCell>
+                    <TableCell>Ações</TableCell> {/* Nova coluna */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -382,9 +423,19 @@ function Vendas() {
                         </TableCell>
                         <TableCell>{venda.nome_vendedor}</TableCell>
                         <TableCell>{venda.auth_code}</TableCell>
+                        <TableCell>
+                          <Button 
+                            variant="outlined" 
+                            color="error" 
+                            size="small"
+                            onClick={() => handleDeletarVenda(venda.id)}
+                          >
+                            Excluir
+                          </Button>
+                        </TableCell>
                       </TableRow>
-                    ))
-                  ) : (
+                    )))
+                   : (
                     <TableRow>
                       <TableCell colSpan={6} align="center">
                         {error || 'Nenhuma venda encontrada'}
