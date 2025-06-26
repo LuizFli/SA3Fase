@@ -58,6 +58,14 @@ export const deletarVenda = async (idVenda) => {
     const response = await axios.delete(`${API_URL}/${idVenda}`);
     return response.data;
   } catch (error) {
+    // Adicione logs detalhados para depuração
+    console.error('Erro ao deletar venda:', {
+      url: `${API_URL}/${idVenda}`,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    
     throw new Error(error.response?.data?.erro || 'Erro ao deletar venda');
   }
 };

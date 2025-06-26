@@ -5,6 +5,7 @@ import VendasController from './controllers/VendaController.js';
 import ProdutoController from './controllers/ProdutoController.js';
 
 
+
 const router = express.Router();
 
 // Rotas para Funcionários
@@ -17,8 +18,8 @@ router.put('/funcionarios/:id/inativar', FuncionarioController.inativarFuncionar
 // Rotas para Vendas
 router.get('/vendas', VendasController.getVendas);
 router.post('/vendas', VendasController.postVenda);
-router.delete('/vendas/:id', VendasController.deleteVenda);
-router.delete('/vendas', VendasController.deleteAllVendas); // Rota para limpar todas as vendas
+router.delete('/vendas', VendasController.deleteAllVendas);
+router.delete('/vendas:id', VendasController.deleteVenda); // Rota para limpar todas as vendas
 
 // Rotas para Produtos
 router.get('/produtos', ProdutoController.getProdutos);

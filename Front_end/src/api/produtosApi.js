@@ -71,14 +71,26 @@ export const toggleStatusProduto = async (id, statusAtual) => {
   }
 };
 
-export const atualizarStatusProduto = async (idProduto, novoStatus) => {
+export const atualizarStatusProduto = async (id, novoStatus) => {
   try {
-    const response = await axios.put(`http://localhost:3000/api/produtos/${idProduto}`, {
-      status: novoStatus
-    });
+    // 1. Busca o produto atual
+    const { data: produto } = await axios.get(`http://localhost:3000/api/produtos/${id}`);
+    
+    // 2. Atualiza apenas o status
+    const produtoAtualizado = { ...produto, status: novoStatus };
+    
+    // 3. Envia o objeto completo
+    const response = await axios.put(
+      `http://localhost:3000/api/produtos/${id}`,
+      produtoAtualizado,
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+    
     return response.data;
   } catch (error) {
-    console.error('Erro ao atualizar status do produto:', error);
+    console.error("Erro ao atualizar status:", error.response?.data || error.message);
     throw error;
   }
 };

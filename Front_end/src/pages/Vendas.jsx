@@ -37,6 +37,7 @@ import CadastroDeVenda from '../components/CadastroDeVenda';
 import { getVendas, limparTodasVendas, deletarVenda } from '../api/vendasApi';
 import { atualizarStatusProduto } from '../api/produtosApi';
 import { useGlobal } from '../contexts/GlobalProvider';
+import { format } from 'date-fns';
 
 function Vendas() {
   // Estados para dados e carregamento
@@ -73,14 +74,24 @@ function Vendas() {
       setError(null);
       try {
         const params = {};
-
+        
         if (appliedSearchTerm) params.searchTerm = appliedSearchTerm;
-        if (appliedStartDate) params.startDate = appliedStartDate.toISOString().split('T')[0];
-        if (appliedEndDate) params.endDate = appliedEndDate.toISOString().split('T')[0];
-
+        
+        // Formatar datas corretamente
+        if (appliedStartDate) {
+          params.startDate = format(appliedStartDate, 'yyyy-MM-dd');
+        }
+        
+        if (appliedEndDate) {
+          params.endDate = format(appliedEndDate, 'yyyy-MM-dd');
+        }
+        
+        // Enviar como string
+        params.apenasAtivos = 'false';
+        
         const vendasData = await getVendas(params);
-
-        // Aqui já recebemos o array de vendas diretamente do serviço
+        
+        // Remover o mapeamento desnecessário
         setVendas(vendasData);
       } catch (err) {
         console.error('Erro ao carregar vendas:', err);
@@ -90,48 +101,54 @@ function Vendas() {
         setLoading(false);
       }
     };
-
+  
     fetchVendas();
   }, [appliedSearchTerm, appliedStartDate, appliedEndDate]);
   const fetchProdutos = async () => {
     try {
-      console.log('Carregando produtos do servidor...'); // Log para depuração
-      const response = await axios.get('http://localhost:3000/api/produtos');
-      setProdutos(response.data.produtos);
+      const response = await axios.get('http://localhost:3000/api/produtos', {
+        params: { status: 'disponivel' } // Novo parâmetro
+      });
+
+      // Nova estrutura de resposta
+      setProdutos(response.data.produtos || []);
     } catch (error) {
       console.error('Erro ao carregar produtos:', error);
+      setProdutos([]);
     }
   };
 
-  useEffect(() => {    
+  useEffect(() => {
 
     fetchProdutos();
     console.log('Produtos atualizados:', produtos); // Log para depuração
   }, []);
-  const handleDeletarVenda = async (idVenda) => {
+  const handleDeletarVenda = async (idVenda, idProduto) => {
     const confirmacao = window.confirm('Tem certeza que deseja excluir esta venda?');
     if (!confirmacao) return;
-  
+
     try {
-      const venda = vendas.find(v => v.id === idVenda);
-      if (!venda) throw new Error('Venda não encontrada.');
-  
-      // Deleta a venda
+      // Nova função de deleção
       await deletarVenda(idVenda);
-  
-      // Atualiza o status do produto para "ativo"
-      await atualizarStatusProduto(venda.id_produto, 'ativo');
-  
-      // Atualiza o estado local das vendas
-      setVendas(vendas.filter(v => v.id !== idVenda));
-  
+
+      // Atualizar status do produto
+      try {
+        await atualizarStatusProduto(idProduto, 'ativo');
+      } catch (updateError) {
+        console.warn('Erro ao atualizar produto, mas a venda foi excluída:', updateError);
+      }
+
+      // Atualizar estado local
+      setVendas(prev => prev.filter(v => v.id !== idVenda));
+
       setSnackbar({
         open: true,
-        message: 'Venda excluída e produto reativado com sucesso!',
+        message: 'Venda excluída com sucesso!',
         severity: 'success'
       });
+
     } catch (err) {
-      console.error('Erro ao excluir venda ou atualizar produto:', err);
+      console.error('Erro ao excluir venda:', err);
       setSnackbar({
         open: true,
         message: `Erro ao excluir venda: ${err.message}`,
@@ -197,11 +214,21 @@ function Vendas() {
   const handleVendaCadastrada = (novaVenda) => {
     setSnackbar({
       open: true,
-      message: `Venda do veículo ${novaVenda.veiculo} cadastrada com sucesso!`,
+      message: `Venda do veículo ${novaVenda.produto} cadastrada com sucesso!`,
       severity: 'success'
     });
-    // Atualiza a lista de vendas
-    setVendas(prev => [novaVenda, ...prev]);
+
+    // Atualizar lista de vendas com nova estrutura
+    setVendas(prev => [{
+      ...novaVenda,
+      id_produto: novaVenda.id_produto,
+      produto: novaVenda.produto,
+      valor: novaVenda.valor,
+      data: novaVenda.data,
+      nome_vendedor: novaVenda.nome_vendedor,
+      auth_code: novaVenda.auth_code
+    }, ...prev]);
+
     handleCloseModal();
   };
 
@@ -424,24 +451,24 @@ function Vendas() {
                         <TableCell>{venda.nome_vendedor}</TableCell>
                         <TableCell>{venda.auth_code}</TableCell>
                         <TableCell>
-                          <Button 
-                            variant="outlined" 
-                            color="error" 
+                          <Button
+                            variant="outlined"
+                            color="error"
                             size="small"
-                            onClick={() => handleDeletarVenda(venda.id)}
+                            onClick={() => handleDeletarVenda(venda.id, venda.id_produto)}
                           >
                             Excluir
                           </Button>
                         </TableCell>
                       </TableRow>
                     )))
-                   : (
-                    <TableRow>
-                      <TableCell colSpan={6} align="center">
-                        {error || 'Nenhuma venda encontrada'}
-                      </TableCell>
-                    </TableRow>
-                  )}
+                    : (
+                      <TableRow>
+                        <TableCell colSpan={6} align="center">
+                          {error || 'Nenhuma venda encontrada'}
+                        </TableCell>
+                      </TableRow>
+                    )}
                 </TableBody>
               </Table>
             </TableContainer>

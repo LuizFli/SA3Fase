@@ -1,5 +1,6 @@
 import pool from "../database.js";
 
+
 export default class ProdutoController {
   static async getProdutos(req, res) {
     try {
@@ -231,32 +232,32 @@ export default class ProdutoController {
     }
   }
   static async atualizarStatusProduto(req, res) {
-    try {
-      const { id } = req.params;
-      const { status } = req.body;
-  
-      if (!status) {
-        return res.status(400).json({ erro: "Status não fornecido." });
-      }
-  
-      const result = await pool.query(
-        'UPDATE produtos SET ativo = $1 WHERE id = $2 RETURNING *',
-        [status === 'ativo', id] // Converte 'ativo' para true
-      );
-  
-      if (result.rows.length === 0) {
-        return res.status(404).json({ erro: "Produto não encontrado." });
-      }
-  
-      res.status(200).json({
-        mensagem: "Status do produto atualizado com sucesso.",
-        produto: result.rows[0]
-      });
-    } catch (error) {
-      console.error("Erro ao atualizar status do produto:", error);
-      res.status(500).json({ erro: "Erro interno ao atualizar status.", detalhes: error.message });
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ erro: "Status não fornecido." });
     }
+
+    const result = await pool.query(
+      'UPDATE produtos SET ativo = $1 WHERE id = $2 RETURNING *',
+      [status === 'ativo', id] // Converte 'ativo' para true
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ erro: "Produto não encontrado." });
+    }
+
+    res.status(200).json({
+      mensagem: "Status do produto atualizado com sucesso.",
+      produto: result.rows[0]
+    });
+  } catch (error) {
+    console.error("Erro ao atualizar status do produto:", error);
+    res.status(500).json({ erro: "Erro interno ao atualizar status.", detalhes: error.message });
   }
-  
+}
+
   
 }
