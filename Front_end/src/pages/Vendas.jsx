@@ -35,6 +35,7 @@ import axios from 'axios';
 import PageContainer from '../components/PageContainer';
 import CadastroDeVenda from '../components/CadastroDeVenda';
 import { getVendas, limparTodasVendas, deletarVenda } from '../api/vendasApi';
+import { atualizarStatusProduto } from '../api/produtosApi';
 import { useGlobal } from '../contexts/GlobalProvider';
 
 function Vendas() {
@@ -110,16 +111,27 @@ function Vendas() {
   const handleDeletarVenda = async (idVenda) => {
     const confirmacao = window.confirm('Tem certeza que deseja excluir esta venda?');
     if (!confirmacao) return;
-
+  
     try {
+      const venda = vendas.find(v => v.id === idVenda);
+      if (!venda) throw new Error('Venda não encontrada.');
+  
+      // Deleta a venda
       await deletarVenda(idVenda);
-      setVendas(vendas.filter(venda => venda.id !== idVenda));
+  
+      // Atualiza o status do produto para "ativo"
+      await atualizarStatusProduto(venda.id_produto, 'ativo');
+  
+      // Atualiza o estado local das vendas
+      setVendas(vendas.filter(v => v.id !== idVenda));
+  
       setSnackbar({
         open: true,
-        message: 'Venda excluída com sucesso!',
+        message: 'Venda excluída e produto reativado com sucesso!',
         severity: 'success'
       });
     } catch (err) {
+      console.error('Erro ao excluir venda ou atualizar produto:', err);
       setSnackbar({
         open: true,
         message: `Erro ao excluir venda: ${err.message}`,

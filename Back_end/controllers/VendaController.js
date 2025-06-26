@@ -209,27 +209,44 @@ export default class VendaController {
   static async deleteVenda(req, res) {
     try {
       const { id } = req.params;
-
-      // 1. Verificar se a venda existe
+  
+      // Iniciar transação
+      await pool.query('BEGIN');
+  
+      // 1. Obter informações da venda (incluindo id_produto)
       const venda = await pool.query('SELECT * FROM vendas WHERE id = $1', [id]);
       if (venda.rows.length === 0) {
+        await pool.query('ROLLBACK');
         return res.status(404).json({ erro: "Venda não encontrada" });
       }
-
+  
+      const idProduto = venda.rows[0].id_produto;
+  
       // 2. Deletar a venda
       await pool.query('DELETE FROM vendas WHERE id = $1', [id]);
-
+  
+      // 3. Atualizar o produto para ativo novamente
+      await pool.query(
+        'UPDATE produtos SET ativo = true WHERE id = $1',
+        [idProduto]
+      );
+  
+      // Confirmar transação
+      await pool.query('COMMIT');
+  
       res.status(200).json({
-        mensagem: "Venda deletada com sucesso",
-        venda_deletada: venda.rows[0]
+        mensagem: "Venda deletada com sucesso e produto reativado",
+        venda_deletada: venda.rows[0],
+        produto_reativado: idProduto
       });
-
+  
     } catch (error) {
+      await pool.query('ROLLBACK');
       console.error("Erro ao deletar venda:", {
         error: error.message,
         stack: error.stack
       });
-
+  
       res.status(500).json({
         erro: "Erro ao deletar venda",
         detalhes: error.message

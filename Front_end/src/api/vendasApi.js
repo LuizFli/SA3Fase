@@ -1,6 +1,10 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/api/vendas'; // Ajuste conforme sua configuração
+const PRODUTOS_API_URL = 'http://localhost:3000/api/produtos'; // URL para produtos
+
+// Configuração global do Axios (opcional)
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const cadastrarVenda = async (vendaData) => {
   try {
@@ -9,10 +13,6 @@ export const cadastrarVenda = async (vendaData) => {
       valor: vendaData.valor,
       identificador_vendedor: vendaData.identificador_vendedor,
       auth_code: vendaData.auth_code
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
     });
     return response.data;
   } catch (error) {
@@ -30,8 +30,6 @@ export const getVendas = async (filters = {}) => {
     if (endDate) params.append('endDate', endDate);
 
     const response = await axios.get(`${API_URL}?${params.toString()}`);
-    
-    // O backend agora retorna diretamente o array de vendas
     return response.data || [];
     
   } catch (error) {
@@ -45,19 +43,38 @@ export const getVendas = async (filters = {}) => {
     throw new Error(error.response?.data?.erro || error.response?.data?.message || 'Erro ao buscar vendas');
   }
 };
+
 export const limparTodasVendas = async () => {
   try {
-    const response = await axios.delete('http://localhost:3000/api/vendas');
+    const response = await axios.delete(API_URL);
     return response.data;
   } catch (error) {
-    throw error;
+    throw new Error(error.response?.data?.erro || 'Erro ao limpar vendas');
   }
 };
+
 export const deletarVenda = async (idVenda) => {
   try {
     const response = await axios.delete(`${API_URL}/${idVenda}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.erro || 'Erro ao deletar venda');
+  }
+};
+
+export const fetchProdutosAtivos = async () => {
+  try {
+    const response = await axios.get(PRODUTOS_API_URL, {
+      params: { apenasAtivos: true }
+    });
+    return response.data || [];
+  } catch (error) {
+    console.error('Erro ao buscar produtos ativos:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    return [];
   }
 };

@@ -42,21 +42,26 @@ function EstoqueProdutos() {
   // Função para buscar produtos do backend usando a API
   const fetchProdutos = useCallback(async () => {
     try {
-      const data = await getProdutos({ searchTerm: termoBusca, id: buscaId });
-      // Garante que 'produtos' é sempre um array
+      const data = await getProdutos({ 
+        searchTerm: termoBusca, 
+        id: buscaId,
+        // ativo: true // Descomente se quiser filtrar apenas os ativos
+      });
+      
       if (data && Array.isArray(data.produtos)) {
-        setProdutos(data.produtos.map(p => ({ ...p, status: 'ativo' }))); // Set initial status to 'ativo'
+        setProdutos(data.produtos);
       } else {
-        console.warn("A API retornou uma estrutura de dados inesperada ou 'produtos' não é um array:", data);
+        console.warn("Dados inesperados:", data);
         setProdutos([]);
       }
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
-      setSnackbarMessage(error.message || 'Erro ao carregar produtos.');
+      setSnackbarMessage(error.message);
       setSnackbarSeverity('error');
       setOpenSnackbar(true);
     }
   }, [termoBusca, buscaId]);
+  
 
   // Efeito para carregar produtos quando o componente monta e quando os termos de busca mudam
   useEffect(() => {

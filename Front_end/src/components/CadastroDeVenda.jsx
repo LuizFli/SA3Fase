@@ -14,11 +14,10 @@ import {
 import { Add } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { useGlobal } from '../contexts/GlobalProvider';
-import { cadastrarVenda } from '../api/vendasApi';
-import { use } from 'react';
+import { cadastrarVenda, fetchProdutosAtivos } from '../api/vendasApi';
 
 function CadastroDeVenda({ onClose, onVendaCadastrada }) {
-  const { produtos = [], funcionarios } = useGlobal();
+  const { produtos = [], funcionarios, updateProdutos } = useGlobal();
   const produtosAtivos = produtos.filter(p => p.ativo === true);
 
   const [formData, setFormData] = useState({
@@ -33,22 +32,17 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
   const [loading, setLoading] = useState(false);
+
   const handleCurrencyChange = (event) => {
     let value = event.target.value;
-
-    // Remove todos os caracteres não numéricos exceto vírgula e ponto
     value = value.replace(/[^\d,.-]/g, '');
-
-    // Converte para formato numérico
     const numericValue = parseFloat(value.replace(/\./g, '').replace(',', '.')) || 0;
 
-    // Atualiza o estado
     setFormData({
       ...formData,
       [event.target.name]: numericValue
     });
   };
-
 
   const validateForm = () => {
     const newErrors = {};
@@ -57,8 +51,6 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
         ? 'Nenhum veículo disponível'
         : 'Selecione um veículo';
     }
-
-    if (!formData.id_produto) newErrors.id_produto = 'Selecione um veículo';
     if (!formData.identificador_vendedor) newErrors.identificador_vendedor = 'Informe o vendedor';
     if (!formData.auth_code) newErrors.auth_code = 'Código de autorização é obrigatório';
 
@@ -82,27 +74,19 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
 
     if (name === 'id_produto') {
       const veiculoSelecionado = produtos.find((p) => p.id === Number(value));
-      if (veiculoSelecionado) {
-        setFormData((prev) => ({
-          ...prev,
-          veiculo: `${veiculoSelecionado.marca} ${veiculoSelecionado.modelo}`,
-          valor: veiculoSelecionado.valor || 0,
-        }));
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          veiculo: '',
-          valor: 0,
-        }));
-      }
+      setFormData((prev) => ({
+        ...prev,
+        veiculo: veiculoSelecionado ? `${veiculoSelecionado.marca} ${veiculoSelecionado.modelo}` : '',
+        valor: veiculoSelecionado?.valor || 0,
+      }));
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
   
-    const hasErrors = validateForm();
-    if (hasErrors) return;
+    if (validateForm()) return;
   
     setLoading(true);
   
@@ -115,15 +99,14 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
       };
   
       const novaVenda = await cadastrarVenda(vendaData);
-  
-      const updatedProdutos = produtos.map(p => 
-        p.id === Number(formData.id_produto) ? { ...p, ativo: false } : p
-      );
-      // Você precisará adicionar uma função setProdutos no seu GlobalProvider
-      // ou usar o método que você já tem para atualizar o estado global
-      // Exemplo: updateProdutos(updatedProdutos);
-  
-      onClose();
+      
+      // Atualiza a lista de produtos após o cadastro
+      const produtosAtualizados = await fetchProdutosAtivos();
+      if (updateProdutos) {
+        updateProdutos(produtosAtualizados);
+      }
+
+      // Limpa o formulário e fecha o modal
       setFormData({
         id_produto: '',
         veiculo: '',
@@ -131,38 +114,44 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
         identificador_vendedor: '',
         auth_code: ''
       });
-  
-      // Chama a callback para atualizar a lista de vendas
+
+      // Notifica o componente pai sobre a nova venda
       if (onVendaCadastrada) {
         onVendaCadastrada(novaVenda);
       }
+
+      if (onClose) {
+        onClose();
+      }
   
     } catch (err) {
-      setSubmitError(err.message);
+      setSubmitError(err.message || 'Erro ao cadastrar venda');
     } finally {
       setLoading(false);
     }
   };
 
+  const formatCurrency = (value) => {
+    return value ? new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(value) : '';
+  };
+
   return (
-    <Paper
-      sx={{
-        width: '80%',
-        maxWidth: '800px',
-        padding: '30px',
-        borderRadius: '10px',
-        outline: 'none',
-      }}
-    >
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: 'bold',
-          color: '#333',
-          fontSize: '1.8rem',
-          mb: 3,
-        }}
-      >
+    <Paper sx={{
+      width: '80%',
+      maxWidth: '800px',
+      padding: '30px',
+      borderRadius: '10px',
+      outline: 'none',
+    }}>
+      <Typography variant="h4" sx={{
+        fontWeight: 'bold',
+        color: '#333',
+        fontSize: '1.8rem',
+        mb: 3,
+      }}>
         Cadastrar Nova Venda
       </Typography>
 
@@ -182,9 +171,9 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
               value={formData.id_produto}
               onChange={handleChange}
               fullWidth
+              sx={{width: 300}}
               error={!!errors.id_produto}
               helperText={errors.id_produto}
-              sx={{ width: 300 }}
               disabled={loading || produtosAtivos.length === 0}
             >
               <MenuItem value="">
@@ -209,9 +198,7 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
               label="Veículo Selecionado"
               name="veiculo"
               value={formData.veiculo}
-              InputProps={{
-                readOnly: true,
-              }}
+              InputProps={{ readOnly: true }}
               fullWidth
               disabled={loading}
             />
@@ -221,10 +208,7 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
             <TextField
               label="Valor (R$)"
               name="valor"
-              value={formData.valor ? new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-              }).format(formData.valor) : ''}
+              value={formatCurrency(formData.valor)}
               onChange={handleCurrencyChange}
               InputProps={{
                 startAdornment: <InputAdornment position="start">R$</InputAdornment>,
@@ -261,14 +245,12 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
           </Grid>
         </Grid>
 
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 2,
-            mt: 3,
-          }}
-        >
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: 2,
+          mt: 3,
+        }}>
           <Button
             variant="outlined"
             onClick={onClose}
@@ -287,7 +269,7 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
             variant="contained"
             color="success"
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Add />}
-            disabled={loading}
+            disabled={loading || produtosAtivos.length === 0}
             sx={{
               px: 4,
               py: 1,

@@ -4,6 +4,7 @@ import FuncionarioController from './controllers/FuncionarioController.js';
 import VendasController from './controllers/VendaController.js';
 import ProdutoController from './controllers/ProdutoController.js';
 
+
 const router = express.Router();
 
 // Rotas para Funcionários
@@ -24,5 +25,6 @@ router.get('/produtos', ProdutoController.getProdutos);
 router.post('/produtos', ProdutoController.postProduto);
 router.put('/produtos/:id', ProdutoController.putProduto);
 router.delete('/produtos/:id', ProdutoController.deleteProduto);
+router.put('/produtos/:id/status', ProdutoController.atualizarStatusProduto);
 
 export default router;
