@@ -34,7 +34,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import axios from 'axios';
 import PageContainer from '../components/PageContainer';
 import CadastroDeVenda from '../components/CadastroDeVenda';
-import { getVendas, limparTodasVendas, deletarVenda } from '../api/vendasApi';
+import { getVendas, deletarVenda } from '../api/vendasApi';
 import { atualizarStatusProduto } from '../api/produtosApi';
 import { useGlobal } from '../contexts/GlobalProvider';
 import { format } from 'date-fns';
@@ -57,7 +57,6 @@ function Vendas() {
 
   const [showFilters, setShowFilters] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [isClearing, setIsClearing] = useState(false);
   const { produtos, setProdutos } = useGlobal();
 
   // Estado para snackbar (feedback)
@@ -91,7 +90,6 @@ function Vendas() {
         
         const vendasData = await getVendas(params);
         
-        // Remover o mapeamento desnecessário
         setVendas(vendasData);
       } catch (err) {
         console.error('Erro ao carregar vendas:', err);
@@ -104,13 +102,13 @@ function Vendas() {
   
     fetchVendas();
   }, [appliedSearchTerm, appliedStartDate, appliedEndDate]);
+
   const fetchProdutos = async () => {
     try {
       const response = await axios.get('http://localhost:3000/api/produtos', {
-        params: { status: 'disponivel' } // Novo parâmetro
+        params: { status: 'disponivel' }
       });
 
-      // Nova estrutura de resposta
       setProdutos(response.data.produtos || []);
     } catch (error) {
       console.error('Erro ao carregar produtos:', error);
@@ -119,26 +117,23 @@ function Vendas() {
   };
 
   useEffect(() => {
-
     fetchProdutos();
-    console.log('Produtos atualizados:', produtos); // Log para depuração
+    console.log('Produtos atualizados:', produtos);
   }, []);
+
   const handleDeletarVenda = async (idVenda, idProduto) => {
     const confirmacao = window.confirm('Tem certeza que deseja excluir esta venda?');
     if (!confirmacao) return;
 
     try {
-      // Nova função de deleção
       await deletarVenda(idVenda);
 
-      // Atualizar status do produto
       try {
         await atualizarStatusProduto(idProduto, 'ativo');
       } catch (updateError) {
         console.warn('Erro ao atualizar produto, mas a venda foi excluída:', updateError);
       }
 
-      // Atualizar estado local
       setVendas(prev => prev.filter(v => v.id !== idVenda));
 
       setSnackbar({
@@ -154,33 +149,6 @@ function Vendas() {
         message: `Erro ao excluir venda: ${err.message}`,
         severity: 'error'
       });
-    }
-  };
-  const handleLimparTodasVendas = async () => {
-    // Confirmação antes de deletar
-    const confirmacao = window.confirm(
-      'ATENÇÃO: Isso irá apagar TODAS as vendas permanentemente. Deseja continuar?'
-    );
-
-    if (!confirmacao) return;
-
-    setIsClearing(true);
-    try {
-      await limparTodasVendas();
-      setVendas([]); // Limpa o estado local
-      setSnackbar({
-        open: true,
-        message: 'Todas as vendas foram removidas com sucesso!',
-        severity: 'success'
-      });
-    } catch (err) {
-      setSnackbar({
-        open: true,
-        message: `Erro ao limpar vendas: ${err.response?.data?.erro || err.message}`,
-        severity: 'error'
-      });
-    } finally {
-      setIsClearing(false);
     }
   };
 
@@ -218,7 +186,6 @@ function Vendas() {
       severity: 'success'
     });
 
-    // Atualizar lista de vendas com nova estrutura
     setVendas(prev => [{
       ...novaVenda,
       id_produto: novaVenda.id_produto,
@@ -272,22 +239,6 @@ function Vendas() {
               >
                 Cadastrar Venda
               </Button>
-
-              <Button
-                variant="contained"
-                color="error"
-                onClick={handleLimparTodasVendas}
-                disabled={isClearing || vendas.length === 0}
-                sx={{
-                  fontWeight: 'bold',
-                  padding: '8px 20px',
-                  borderRadius: '8px',
-                  fontSize: '0.9rem',
-                }}
-              >
-                {isClearing ? <CircularProgress size={24} /> : 'Limpar Todas Vendas'}
-              </Button>
-
               <Avatar alt="Usuário" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
             </Box>
           </Paper>
@@ -338,7 +289,6 @@ function Vendas() {
                   {showFilters ? 'Ocultar Filtros' : 'Mais Filtros'}
                 </Button>
               </Grid>
-
 
               <Grid item xs={12} sm={6} md={3}>
                 <Button
@@ -424,7 +374,7 @@ function Vendas() {
                     <TableCell>Data</TableCell>
                     <TableCell>Vendedor</TableCell>
                     <TableCell>Auth Code</TableCell>
-                    <TableCell>Ações</TableCell> {/* Nova coluna */}
+                    <TableCell>Ações</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -461,8 +411,8 @@ function Vendas() {
                           </Button>
                         </TableCell>
                       </TableRow>
-                    )))
-                    : (
+                    ))
+                    ) : (
                       <TableRow>
                         <TableCell colSpan={6} align="center">
                           {error || 'Nenhuma venda encontrada'}

@@ -4,25 +4,23 @@ import pool from "../database.js";
 
 export default class FuncionarioController {
 
-  static async getFuncionarios(req, res) {
-    try {
-      const { rows } = await pool.query("SELECT *, ativo FROM funcionarios ORDER BY nome");
-      res.status(200).json(rows);
-    } catch (error) {
-      console.error("Erro ao buscar funcionários:", error);
-      res.status(500).json({ erro: "Erro ao buscar funcionários" });
+ static async getFuncionarios(req, res) {
+  try {
+    const { identificador } = req.query;
+    let query = "SELECT *, ativo FROM funcionarios";
+    let params = [];
+    if (identificador) {
+      query += " WHERE identificador = $1";
+      params.push(identificador);
     }
+    query += " ORDER BY nome";
+    const { rows } = await pool.query(query, params);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Erro ao buscar funcionários:", error);
+    res.status(500).json({ erro: "Erro ao buscar funcionários" });
   }
-
-  // static async getFuncionarios(req, res) {
-  //   try {
-  //     const { rows } = await pool.query("SELECT * FROM funcionarios ORDER BY nome");
-  //     res.status(200).json(rows);
-  //   } catch (error) {
-  //     console.error("Erro ao buscar funcionários:", error);
-  //     res.status(500).json({ erro: "Erro ao buscar funcionários" });
-  //   }
-  // }
+}
 
   static async getFuncionarioById(req, res) {
     try {

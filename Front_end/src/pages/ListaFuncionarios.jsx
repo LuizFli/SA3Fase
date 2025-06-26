@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Box, Avatar, Paper } from '@mui/material';
 import Funcionario from '../components/Funcionario';
 import PageContainer from '../components/PageContainer';
-import { useGlobal } from '../contexts/GlobalProvider';
+import { getFuncionarios } from '../api/funcionariosApi'; // importe a função de busca da API
 
 const ListaFuncionarios = () => {
-  const { funcionarios, setFuncionarios } = useGlobal();
+  const [funcionarios, setFuncionarios] = useState([]);
+
+  useEffect(() => {
+    const fetchFuncionarios = async () => {
+      try {
+        const data = await getFuncionarios();
+        setFuncionarios(data);
+      } catch (error) {
+        setFuncionarios([]);
+      }
+    };
+    fetchFuncionarios();
+  }, []);
 
   return (
     <PageContainer>
@@ -77,11 +89,8 @@ const ListaFuncionarios = () => {
             }}
           >
             {funcionarios.map((funcionario) => (
-              <React.Fragment key={funcionario.id}>
-                <Funcionario
-                  funcionario={funcionario}
-                  onClick={() => handleAbrirDesempenho(funcionario)}
-                />
+              <React.Fragment key={funcionario.identificador || funcionario.id}>
+                <Funcionario funcionario={funcionario} />
               </React.Fragment>
             ))}
           </Box>

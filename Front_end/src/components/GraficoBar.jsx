@@ -9,47 +9,59 @@ class GraficoBar extends Component {
         chart: {
           type: "bar",
           height: 350,
-          toolbar: {
-            show: false // Remove o menu do gráfico
-          }
+          toolbar: { show: false }
         },
         plotOptions: {
           bar: {
             borderRadius: 4,
             borderRadiusApplication: "end",
-            horizontal: true, // Garantir que a barra seja horizontal
+            horizontal: true,
             colors: {
               ranges: [
                 {
                   from: 0,
                   to: 100,
-                  color: "#80FF00" // Cor verde para a barra
+                  color: "#80FF00"
                 }
               ]
             }
           }
         },
-        dataLabels: {
-          enabled: false // Desativa os rótulos de dados na barra
-        },
+        dataLabels: { enabled: false },
         xaxis: {
-          max: 100, // Define o valor máximo do eixo x
+          max: 100,
           labels: {
             formatter: function (value) {
-              return `${value}%`; // Adiciona o sufixo "k" aos valores
+              return `${value}%`;
             }
           }
         },
-        yaxis: {
-          show: false // Oculta o eixo y e seus rótulos
-        }
+        yaxis: { show: false }
       },
       series: [
         {
-          data: [props.meta] // Define o valor da barra
+          data: [this.parseMeta(props.meta)]
         }
       ]
     };
+  }
+
+  parseMeta(meta) {
+    // Garante que sempre será um número entre 0 e 100
+    const value = Math.max(0, Math.min(100, Number(meta) || 0));
+    return value;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.meta !== this.props.meta) {
+      this.setState({
+        series: [
+          {
+            data: [this.parseMeta(this.props.meta)]
+          }
+        ]
+      });
+    }
   }
 
   render() {
@@ -61,8 +73,8 @@ class GraficoBar extends Component {
               options={this.state.options}
               series={this.state.series}
               type="bar"
-              width="98%" // Define a largura do gráfico
-              height="100" // Define a altura do gráfico
+              width="98%"
+              height="100"
             />
           </div>
         </div>

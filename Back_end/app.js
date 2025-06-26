@@ -10,17 +10,16 @@ const router = express.Router();
 
 // Rotas para Funcionários
 router.get('/funcionarios', FuncionarioController.getFuncionarios);
-router.get('/funcionarios/:id', FuncionarioController.getFuncionarioById); // NOVA ROTA ADICIONADA
+router.get('/funcionarios/:id', FuncionarioController.getFuncionarioById); 
 router.post('/funcionarios', FuncionarioController.postFuncionario);
 router.put('/funcionarios/:id', FuncionarioController.putFuncionario);
-// Altere a rota para:
 router.put('/funcionarios/:id/toggle-status', FuncionarioController.toggleStatusFuncionario);
 
 // Rotas para Vendas
 router.get('/vendas', VendasController.getVendas);
 router.post('/vendas', VendasController.postVenda);
 router.delete('/vendas', VendasController.deleteAllVendas);
-router.delete('/vendas/:id', VendasController.deleteVenda); // Rota para limpar todas as vendas
+router.delete('/vendas/:id', VendasController.deleteVenda);
 
 // Rotas para Produtos
 router.get('/produtos', ProdutoController.getProdutos);

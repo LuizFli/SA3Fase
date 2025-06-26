@@ -62,7 +62,6 @@ function GerenciamentoFuncionarios() {
       };
       delete dadosParaEnviar.dataNascimento;
 
-      // Tratamento para upload de imagem
       if (dadosParaEnviar.foto instanceof File) {
         const formData = new FormData();
         Object.keys(dadosParaEnviar).forEach(key => {
@@ -115,14 +114,10 @@ function GerenciamentoFuncionarios() {
     if (window.confirm("Tem certeza que deseja inativar este funcionário?")) {
       setLoading(true);
       try {
-        
         const response = await axios.put(`http://localhost:3000/api/funcionarios/${id}/toggle-status`);
-
-        // Atualiza localmente o status para 'inativo'
         setFuncionarios(funcionarios.map(f =>
           f.id === id ? { ...f, ativo: response.data.ativo } : f
         ));
-
         alert("Funcionário inativado com sucesso.");
       } catch (error) {
         console.error("Erro ao inativar funcionário:", error);
@@ -138,12 +133,9 @@ function GerenciamentoFuncionarios() {
       setLoading(true);
       try {
         const response = await axios.put(`http://localhost:3000/api/funcionarios/${id}/toggle-status`);
-
-        // Atualiza o estado local
         setFuncionarios(funcionarios.map(f =>
           f.id === id ? { ...f, ativo: response.data.ativo } : f
         ));
-
         alert(response.data.message);
       } catch (error) {
         console.error("Erro ao alterar status:", error);
@@ -164,225 +156,247 @@ function GerenciamentoFuncionarios() {
   };
 
   return (
-    <Box sx={{ padding: '20px', minHeight: '100vh', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
-      <Paper elevation={3} sx={{ padding: '15px 20px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '10px' }}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#333', fontSize: '1.8rem' }}>
-          Gerenciamento de Funcionários
-        </Typography>
-        <Avatar alt="Usuário" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
-      </Paper>
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <Paper elevation={3} sx={{ padding: '20px', borderRadius: '10px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-          {loading ? (
-            <Typography align="center">Carregando...</Typography>
-          ) : (
-            <TableContainer sx={{ flex: 1 }}>
-              <Table stickyHeader aria-label="tabela de funcionários">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Nome</TableCell>
-                    <TableCell>Identificador</TableCell>
-                    <TableCell>Usuário</TableCell>
-                    <TableCell>E-mail</TableCell>
-                    <TableCell>Telefone</TableCell>
-                    <TableCell>Cargo</TableCell>
-                    <TableCell>Endereço/Rua</TableCell>
-                    <TableCell>Data Nasc.</TableCell>
-                    <TableCell>Senha</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Ações</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {funcionarios.length > 0 ? (
-                    funcionarios.map((funcionario) => (
-                      <TableRow key={funcionario.id} sx={{ backgroundColor: funcionario.status === 'inativo' ? 'rgba(255, 0, 0, 0.1)' : 'inherit' }}>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.nome || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, nome: e.target.value })}
-                            />
-                          ) : funcionario.nome}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.identificador || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, identificador: e.target.value })}
-                            />
-                          ) : funcionario.identificador}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.usuario || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
-                            />
-                          ) : funcionario.usuario}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.email || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, email: e.target.value })}
-                            />
-                          ) : funcionario.email}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.telefone || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, telefone: e.target.value })}
-                            />
-                          ) : funcionario.telefone}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.cargo || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, cargo: e.target.value })}
-                            />
-                          ) : funcionario.cargo}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.rua || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, rua: e.target.value })}
-                            />
-                          ) : funcionario.rua}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              value={funcionarioEditado.dataNascimento || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, dataNascimento: e.target.value })}
-                              type="date"
-                              InputLabelProps={{ shrink: true }}
-                            />
-                          ) : (
-                            funcionario.data_nascimento ? new Date(funcionario.data_nascimento).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField
-                              size="small"
-                              type={showPassword[funcionario.id] ? 'text' : 'password'}
-                              value={funcionarioEditado.senha || ''}
-                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, senha: e.target.value })}
-                              InputProps={{
-                                endAdornment: (
-                                  <IconButton onClick={() => handleClickShowPassword(funcionario.id)} edge="end">
-                                    {showPassword[funcionario.id] ? <VisibilityOff /> : <Visibility />}
-                                  </IconButton>
-                                )
-                              }}
-                            />
-                          ) : (
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                              <Typography>{showPassword[funcionario.id] ? funcionario.senha : '••••••••'}</Typography>
-                              <IconButton onClick={() => handleClickShowPassword(funcionario.id)} size="small">
-                                {showPassword[funcionario.id] ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
-                            </Stack>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            onClick={() => toggleStatusFuncionario(funcionario.id)}
-                            color={funcionario.ativo ? 'success' : 'error'}
+    <Box sx={{ 
+      flex: 1, 
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: '20px',
+      height: 'calc(90vh - 64px)' // Ajuste para altura total menos a altura do cabeçalho
+    }}>
+      <Paper elevation={3} sx={{ 
+        padding: '20px', 
+        borderRadius: '10px', 
+        flex: 1, 
+        display: 'flex', 
+        flexDirection: 'column',
+        minHeight: '350px'
+      }}>
+        {loading ? (
+          <Typography align="center">Carregando...</Typography>
+        ) : (
+          <TableContainer sx={{ 
+            flex: 1,
+            maxHeight: 'calc(100vh - 250px)', // Altura dinâmica
+            overflow: 'auto',
+            '&::-webkit-scrollbar': {
+              width: '8px',
+            },
+            '&::-webkit-scrollbar-track': {
+              background: '#f1f1f1',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#888',
+              borderRadius: '4px',
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              background: '#555',
+            }
+          }}>
+            <Table stickyHeader aria-label="tabela de funcionários">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Nome</TableCell>
+                  <TableCell>Identificador</TableCell>
+                  <TableCell>Usuário</TableCell>
+                  <TableCell>E-mail</TableCell>
+                  <TableCell>Telefone</TableCell>
+                  <TableCell>Cargo</TableCell>
+                  <TableCell>Endereço/Rua</TableCell>
+                  <TableCell>Data Nasc.</TableCell>
+                  <TableCell>Senha</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Ações</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {funcionarios.length > 0 ? (
+                  funcionarios.map((funcionario) => (
+                    <TableRow key={funcionario.id} sx={{ backgroundColor: funcionario.status === 'inativo' ? 'rgba(255, 0, 0, 0.1)' : 'inherit' }}>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
                             size="small"
-                          >
-                            {funcionario.ativo ? <CheckCircle /> : <Block />}
-                          </IconButton>
-                          {funcionario.ativo ? 'Ativo' : 'Inativo'}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <Stack direction="row" spacing={1}>
-                              <Button variant="contained" color="success" size="small" onClick={salvarEdicao} disabled={loading}>
-                                Salvar
-                              </Button>
-                              <Button variant="outlined" color="error" size="small" onClick={cancelarEdicao} disabled={loading}>
-                                Cancelar
-                              </Button>
-                            </Stack>
-                          ) : (
-                            <Stack direction="row" spacing={1}>
-                              <IconButton
-                                sx={{
-                                  backgroundColor: 'var(--secondary-color)',
-                                  borderRadius: '4px',
-                                  '&:hover': { backgroundColor: '#c45024' }
-                                }}
-                                onClick={() => editarDados(funcionario.id)}
-                                disabled={loading}
-                                size="small"
-                              >
-                                <Edit sx={{ color: 'white' }} />
-                              </IconButton>
-                              <IconButton
-                                sx={{
-                                  backgroundColor: 'var(--primary-color)',
-                                  borderRadius: '4px',
-                                  '&:hover': { backgroundColor: '#a32a2a' }
-                                }}
-                                onClick={() => handleDelete(funcionario.id)}
-                                disabled={loading}
-                                size="small"
-                              >
-                                <Delete sx={{ color: 'white' }} />
-                              </IconButton>
-                            </Stack>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={11} align="center">Nenhum funcionário cadastrado</TableCell>
+                            value={funcionarioEditado.nome || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, nome: e.target.value })}
+                          />
+                        ) : funcionario.nome}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            value={funcionarioEditado.identificador || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, identificador: e.target.value })}
+                          />
+                        ) : funcionario.identificador}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            value={funcionarioEditado.usuario || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                          />
+                        ) : funcionario.usuario}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            value={funcionarioEditado.email || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, email: e.target.value })}
+                          />
+                        ) : funcionario.email}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            value={funcionarioEditado.telefone || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, telefone: e.target.value })}
+                          />
+                        ) : funcionario.telefone}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            value={funcionarioEditado.cargo || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, cargo: e.target.value })}
+                          />
+                        ) : funcionario.cargo}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            value={funcionarioEditado.rua || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, rua: e.target.value })}
+                          />
+                        ) : funcionario.rua}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            value={funcionarioEditado.dataNascimento || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, dataNascimento: e.target.value })}
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        ) : (
+                          funcionario.data_nascimento ? new Date(funcionario.data_nascimento).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <TextField
+                            size="small"
+                            type={showPassword[funcionario.id] ? 'text' : 'password'}
+                            value={funcionarioEditado.senha || ''}
+                            onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, senha: e.target.value })}
+                            InputProps={{
+                              endAdornment: (
+                                <IconButton onClick={() => handleClickShowPassword(funcionario.id)} edge="end">
+                                  {showPassword[funcionario.id] ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              )
+                            }}
+                          />
+                        ) : (
+                          <Stack direction="row" alignItems="center" spacing={1}>
+                            <Typography>{showPassword[funcionario.id] ? funcionario.senha : '••••••••'}</Typography>
+                            <IconButton onClick={() => handleClickShowPassword(funcionario.id)} size="small">
+                              {showPassword[funcionario.id] ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </Stack>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={() => toggleStatusFuncionario(funcionario.id)}
+                          color={funcionario.ativo ? 'success' : 'error'}
+                          size="small"
+                        >
+                          {funcionario.ativo ? <CheckCircle /> : <Block />}
+                        </IconButton>
+                        {funcionario.ativo ? 'Ativo' : 'Inativo'}
+                      </TableCell>
+                      <TableCell>
+                        {editandoId === funcionario.id ? (
+                          <Stack direction="row" spacing={1}>
+                            <Button variant="contained" color="success" size="small" onClick={salvarEdicao} disabled={loading}>
+                              Salvar
+                            </Button>
+                            <Button variant="outlined" color="error" size="small" onClick={cancelarEdicao} disabled={loading}>
+                              Cancelar
+                            </Button>
+                          </Stack>
+                        ) : (
+                          <Stack direction="row" spacing={1}>
+                            <IconButton
+                              sx={{
+                                backgroundColor: 'var(--secondary-color)',
+                                borderRadius: '4px',
+                                '&:hover': { backgroundColor: '#c45024' }
+                              }}
+                              onClick={() => editarDados(funcionario.id)}
+                              disabled={loading}
+                              size="small"
+                            >
+                              <Edit sx={{ color: 'white' }} />
+                            </IconButton>
+                            <IconButton
+                              sx={{
+                                backgroundColor: 'var(--primary-color)',
+                                borderRadius: '4px',
+                                '&:hover': { backgroundColor: '#a32a2a' }
+                              }}
+                              onClick={() => handleDelete(funcionario.id)}
+                              disabled={loading}
+                              size="small"
+                            >
+                              <Delete sx={{ color: 'white' }} />
+                            </IconButton>
+                          </Stack>
+                        )}
+                      </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-          <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ width: '200px' }}
-              onClick={() => navigate('/cadastrofun')}
-              disabled={loading}
-            >
-              Adicionar Funcionário
-            </Button>
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                width: '200px',
-                '&:hover': { backgroundColor: '#3e8e41' }
-              }}
-              onClick={carregarFuncionarios}
-              disabled={loading}
-            >
-              Atualizar Lista
-            </Button>
-          </Stack>
-        </Paper>
-      </Box>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={11} align="center">Nenhum funcionário cadastrado</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ width: '200px' }}
+            onClick={() => navigate('/cadastrofun')}
+            disabled={loading}
+          >
+            Adicionar Funcionário
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: '#4CAF50',
+              color: 'white',
+              width: '200px',
+              '&:hover': { backgroundColor: '#3e8e41' }
+            }}
+            onClick={carregarFuncionarios}
+            disabled={loading}
+          >
+            Atualizar Lista
+          </Button>
+        </Stack>
+      </Paper>
     </Box>
   );
 }
