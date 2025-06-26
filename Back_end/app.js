@@ -13,7 +13,8 @@ router.get('/funcionarios', FuncionarioController.getFuncionarios);
 router.get('/funcionarios/:id', FuncionarioController.getFuncionarioById); // NOVA ROTA ADICIONADA
 router.post('/funcionarios', FuncionarioController.postFuncionario);
 router.put('/funcionarios/:id', FuncionarioController.putFuncionario);
-router.put('/funcionarios/:id/inativar', FuncionarioController.inativarFuncionario);
+// Altere a rota para:
+router.put('/funcionarios/:id/toggle-status', FuncionarioController.toggleStatusFuncionario);
 
 // Rotas para Vendas
 router.get('/vendas', VendasController.getVendas);

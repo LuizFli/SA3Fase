@@ -1,7 +1,6 @@
-
 import { Avatar, Box, Button, Stack, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { Delete, Edit, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Delete, Edit, Visibility, VisibilityOff, Block, CheckCircle } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 
@@ -24,7 +23,7 @@ function GerenciamentoFuncionarios() {
       const funcionariosCompletos = response.data.map(f => ({
         ...f,
         data_nascimento: f.data_nascimento || '',
-        cpf: f.cpf || '',
+        status: f.status || 'ativo'
       }));
       setFuncionarios(funcionariosCompletos);
     } catch (error) {
@@ -49,7 +48,6 @@ function GerenciamentoFuncionarios() {
     setFuncionarioEditado({
       ...funcionario,
       dataNascimento: dataFormatada,
-      cpf: funcionario.cpf || '',
     });
     setEditandoId(id);
   };
@@ -64,16 +62,39 @@ function GerenciamentoFuncionarios() {
       };
       delete dadosParaEnviar.dataNascimento;
 
-      const response = await axios.put(
-        `http://localhost:3000/api/funcionarios/${editandoId}`,
-        dadosParaEnviar
-      );
+      // Tratamento para upload de imagem
+      if (dadosParaEnviar.foto instanceof File) {
+        const formData = new FormData();
+        Object.keys(dadosParaEnviar).forEach(key => {
+          formData.append(key, dadosParaEnviar[key]);
+        });
 
-      const funcionariosAtualizados = funcionarios.map((f) =>
-        f.id === editandoId ? { ...f, ...response.data } : f
-      );
+        const response = await axios.put(
+          `http://localhost:3000/api/funcionarios/${editandoId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        );
 
-      setFuncionarios(funcionariosAtualizados);
+        const funcionariosAtualizados = funcionarios.map((f) =>
+          f.id === editandoId ? { ...f, ...response.data } : f
+        );
+        setFuncionarios(funcionariosAtualizados);
+      } else {
+        const response = await axios.put(
+          `http://localhost:3000/api/funcionarios/${editandoId}`,
+          dadosParaEnviar
+        );
+
+        const funcionariosAtualizados = funcionarios.map((f) =>
+          f.id === editandoId ? { ...f, ...response.data } : f
+        );
+        setFuncionarios(funcionariosAtualizados);
+      }
+
       setEditandoId(null);
       setFuncionarioEditado({});
       alert("Funcionário atualizado com sucesso!");
@@ -91,18 +112,54 @@ function GerenciamentoFuncionarios() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Tem certeza que deseja excluir este funcionário?")) {
+    if (window.confirm("Tem certeza que deseja inativar este funcionário?")) {
       setLoading(true);
       try {
-        await axios.delete(`http://localhost:3000/api/funcionarios/${id}`);
-        setFuncionarios(funcionarios.filter(f => f.id !== id));
-        alert("Funcionário excluído com sucesso.");
+        
+        const response = await axios.put(`http://localhost:3000/api/funcionarios/${id}/toggle-status`);
+
+        // Atualiza localmente o status para 'inativo'
+        setFuncionarios(funcionarios.map(f =>
+          f.id === id ? { ...f, ativo: response.data.ativo } : f
+        ));
+
+        alert("Funcionário inativado com sucesso.");
       } catch (error) {
-        console.error("Erro ao excluir funcionário:", error);
-        alert(error.response?.data?.erro || "Erro ao excluir funcionário.");
+        console.error("Erro ao inativar funcionário:", error);
+        alert(error.response?.data?.erro || "Erro ao inativar funcionário.");
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  const toggleStatusFuncionario = async (id) => {
+    if (window.confirm("Tem certeza que deseja alterar o status deste funcionário?")) {
+      setLoading(true);
+      try {
+        const response = await axios.put(`http://localhost:3000/api/funcionarios/${id}/toggle-status`);
+
+        // Atualiza o estado local
+        setFuncionarios(funcionarios.map(f =>
+          f.id === id ? { ...f, ativo: response.data.ativo } : f
+        ));
+
+        alert(response.data.message);
+      } catch (error) {
+        console.error("Erro ao alterar status:", error);
+        alert(error.response?.data?.erro || "Erro ao alterar status");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFuncionarioEditado({
+        ...funcionarioEditado,
+        foto: e.target.files[0]
+      });
     }
   };
 
@@ -124,27 +181,85 @@ function GerenciamentoFuncionarios() {
                 <TableHead>
                   <TableRow>
                     <TableCell>Nome</TableCell>
+                    <TableCell>Identificador</TableCell>
                     <TableCell>Usuário</TableCell>
                     <TableCell>E-mail</TableCell>
                     <TableCell>Telefone</TableCell>
                     <TableCell>Cargo</TableCell>
                     <TableCell>Endereço/Rua</TableCell>
-                    <TableCell>Data de Nascimento</TableCell>
-                    <TableCell>CPF</TableCell>
+                    <TableCell>Data Nasc.</TableCell>
                     <TableCell>Senha</TableCell>
+                    <TableCell>Status</TableCell>
                     <TableCell>Ações</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {funcionarios.length > 0 ? (
                     funcionarios.map((funcionario) => (
-                      <TableRow key={funcionario.id}>
-                        <TableCell>{editandoId === funcionario.id ? <TextField size="small" value={funcionarioEditado.nome || ''} onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, nome: e.target.value })} /> : funcionario.nome}</TableCell>
-                        <TableCell>{editandoId === funcionario.id ? <TextField size="small" value={funcionarioEditado.usuario || ''} onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })} /> : funcionario.usuario}</TableCell>
-                        <TableCell>{editandoId === funcionario.id ? <TextField size="small" value={funcionarioEditado.email || ''} onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, email: e.target.value })} /> : funcionario.email}</TableCell>
-                        <TableCell>{editandoId === funcionario.id ? <TextField size="small" value={funcionarioEditado.telefone || ''} onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, telefone: e.target.value })} /> : funcionario.telefone}</TableCell>
-                        <TableCell>{editandoId === funcionario.id ? <TextField size="small" value={funcionarioEditado.cargo || ''} onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, cargo: e.target.value })} /> : funcionario.cargo}</TableCell>
-                        <TableCell>{editandoId === funcionario.id ? <TextField size="small" value={funcionarioEditado.rua || ''} onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, rua: e.target.value })} /> : funcionario.rua}</TableCell>
+                      <TableRow key={funcionario.id} sx={{ backgroundColor: funcionario.status === 'inativo' ? 'rgba(255, 0, 0, 0.1)' : 'inherit' }}>
+                        <TableCell>
+                          {editandoId === funcionario.id ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.nome || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, nome: e.target.value })}
+                            />
+                          ) : funcionario.nome}
+                        </TableCell>
+                        <TableCell>
+                          {editandoId === funcionario.id ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.identificador || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, identificador: e.target.value })}
+                            />
+                          ) : funcionario.identificador}
+                        </TableCell>
+                        <TableCell>
+                          {editandoId === funcionario.id ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.usuario || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, usuario: e.target.value })}
+                            />
+                          ) : funcionario.usuario}
+                        </TableCell>
+                        <TableCell>
+                          {editandoId === funcionario.id ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.email || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, email: e.target.value })}
+                            />
+                          ) : funcionario.email}
+                        </TableCell>
+                        <TableCell>
+                          {editandoId === funcionario.id ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.telefone || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, telefone: e.target.value })}
+                            />
+                          ) : funcionario.telefone}
+                        </TableCell>
+                        <TableCell>
+                          {editandoId === funcionario.id ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.cargo || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, cargo: e.target.value })}
+                            />
+                          ) : funcionario.cargo}
+                        </TableCell>
+                        <TableCell>
+                          {editandoId === funcionario.id ? (
+                            <TextField
+                              size="small"
+                              value={funcionarioEditado.rua || ''}
+                              onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, rua: e.target.value })}
+                            />
+                          ) : funcionario.rua}
+                        </TableCell>
                         <TableCell>
                           {editandoId === funcionario.id ? (
                             <TextField
@@ -156,13 +271,6 @@ function GerenciamentoFuncionarios() {
                             />
                           ) : (
                             funcionario.data_nascimento ? new Date(funcionario.data_nascimento).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : ''
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {editandoId === funcionario.id ? (
-                            <TextField size="small" value={funcionarioEditado.cpf || ''} onChange={(e) => setFuncionarioEditado({ ...funcionarioEditado, cpf: e.target.value })} />
-                          ) : (
-                            funcionario.cpf
                           )}
                         </TableCell>
                         <TableCell>
@@ -190,18 +298,49 @@ function GerenciamentoFuncionarios() {
                           )}
                         </TableCell>
                         <TableCell>
+                          <IconButton
+                            onClick={() => toggleStatusFuncionario(funcionario.id)}
+                            color={funcionario.ativo ? 'success' : 'error'}
+                            size="small"
+                          >
+                            {funcionario.ativo ? <CheckCircle /> : <Block />}
+                          </IconButton>
+                          {funcionario.ativo ? 'Ativo' : 'Inativo'}
+                        </TableCell>
+                        <TableCell>
                           {editandoId === funcionario.id ? (
                             <Stack direction="row" spacing={1}>
-                              <Button variant="contained" color="success" size="small" onClick={salvarEdicao} disabled={loading}>Salvar</Button>
-                              <Button variant="outlined" color="error" size="small" onClick={cancelarEdicao} disabled={loading}>Cancelar</Button>
+                              <Button variant="contained" color="success" size="small" onClick={salvarEdicao} disabled={loading}>
+                                Salvar
+                              </Button>
+                              <Button variant="outlined" color="error" size="small" onClick={cancelarEdicao} disabled={loading}>
+                                Cancelar
+                              </Button>
                             </Stack>
                           ) : (
                             <Stack direction="row" spacing={1}>
-                              {/* CORREÇÃO APLICADA AQUI: Removido o <Button> externo */}
-                              <IconButton sx={{ backgroundColor: 'var(--secondary-color)', borderRadius: '4px', '&:hover': { backgroundColor: '#c45024' } }} onClick={() => editarDados(funcionario.id)} disabled={loading} size="small">
+                              <IconButton
+                                sx={{
+                                  backgroundColor: 'var(--secondary-color)',
+                                  borderRadius: '4px',
+                                  '&:hover': { backgroundColor: '#c45024' }
+                                }}
+                                onClick={() => editarDados(funcionario.id)}
+                                disabled={loading}
+                                size="small"
+                              >
                                 <Edit sx={{ color: 'white' }} />
                               </IconButton>
-                              <IconButton sx={{ backgroundColor: 'var(--primary-color)', borderRadius: '4px', '&:hover': { backgroundColor: '#a32a2a' } }} onClick={() => handleDelete(funcionario.id)} disabled={loading} size="small">
+                              <IconButton
+                                sx={{
+                                  backgroundColor: 'var(--primary-color)',
+                                  borderRadius: '4px',
+                                  '&:hover': { backgroundColor: '#a32a2a' }
+                                }}
+                                onClick={() => handleDelete(funcionario.id)}
+                                disabled={loading}
+                                size="small"
+                              >
                                 <Delete sx={{ color: 'white' }} />
                               </IconButton>
                             </Stack>
@@ -211,7 +350,7 @@ function GerenciamentoFuncionarios() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={10} align="center">Nenhum funcionário cadastrado</TableCell>
+                      <TableCell colSpan={11} align="center">Nenhum funcionário cadastrado</TableCell>
                     </TableRow>
                   )}
                 </TableBody>
@@ -219,10 +358,26 @@ function GerenciamentoFuncionarios() {
             </TableContainer>
           )}
           <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
-            <Button variant="contained" color="primary" sx={{ width: '200px' }} onClick={() => navigate('/cadastrofun')} disabled={loading}>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: '200px' }}
+              onClick={() => navigate('/cadastrofun')}
+              disabled={loading}
+            >
               Adicionar Funcionário
             </Button>
-            <Button variant="contained" sx={{ backgroundColor: '#4CAF50', color: 'white', width: '200px', '&:hover': { backgroundColor: '#3e8e41' } }} onClick={carregarFuncionarios} disabled={loading}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                width: '200px',
+                '&:hover': { backgroundColor: '#3e8e41' }
+              }}
+              onClick={carregarFuncionarios}
+              disabled={loading}
+            >
               Atualizar Lista
             </Button>
           </Stack>
