@@ -3,15 +3,26 @@
 import pool from "../database.js";
 
 export default class FuncionarioController {
+
   static async getFuncionarios(req, res) {
     try {
-      const { rows } = await pool.query("SELECT * FROM funcionarios ORDER BY nome");
+      const { rows } = await pool.query("SELECT *, ativo FROM funcionarios ORDER BY nome");
       res.status(200).json(rows);
     } catch (error) {
       console.error("Erro ao buscar funcionários:", error);
       res.status(500).json({ erro: "Erro ao buscar funcionários" });
     }
   }
+
+  // static async getFuncionarios(req, res) {
+  //   try {
+  //     const { rows } = await pool.query("SELECT * FROM funcionarios ORDER BY nome");
+  //     res.status(200).json(rows);
+  //   } catch (error) {
+  //     console.error("Erro ao buscar funcionários:", error);
+  //     res.status(500).json({ erro: "Erro ao buscar funcionários" });
+  //   }
+  // }
 
   static async getFuncionarioById(req, res) {
     try {
@@ -88,14 +99,34 @@ export default class FuncionarioController {
     }
   }
 
-  static async inativarFuncionario(req, res) {
-    try {
-      const { id } = req.params;
-      await pool.query("UPDATE funcionarios SET status = 'inativo' WHERE id = $1", [id]);
-      res.status(200).json({ message: "Funcionário desativado com sucesso" });
-    } catch (error) {
-      console.error("Erro ao desativar funcionário:", error);
-      res.status(500).json({ erro: "Erro ao desativar funcionário" });
+static async toggleStatusFuncionario(req, res) {
+  try {
+    const { id } = req.params;
+    
+    // Primeiro verifica se o funcionário existe
+    const funcionario = await pool.query("SELECT id, ativo FROM funcionarios WHERE id = $1", [id]);
+    if (funcionario.rows.length === 0) {
+      return res.status(404).json({ erro: "Funcionário não encontrado" });
     }
+
+    // Inverte o status booleano
+    const novoStatus = !funcionario.rows[0].ativo;
+    
+    // Atualiza no banco de dados
+    await pool.query("UPDATE funcionarios SET ativo = $1 WHERE id = $2", [novoStatus, id]);
+    
+    res.status(200).json({ 
+      message: `Funcionário ${novoStatus ? 'reativado' : 'inativado'} com sucesso`,
+      ativo: novoStatus
+    });
+  } catch (error) {
+    console.error("Erro ao alterar status do funcionário:", error);
+    res.status(500).json({ 
+      erro: "Erro ao alterar status do funcionário",
+      detalhes: error.message
+    });
+  }
 }
+
+
 }
