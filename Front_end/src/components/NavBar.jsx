@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, List, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, styled, Card, CardMedia } from '@mui/material';
-import { Home, People, Apps, Settings, Logout, Edit, Work as CasesIcon } from '@mui/icons-material';
+import { Home, People, Apps, Settings, Logout, Payments, Work as CasesIcon } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
 
 const drawerWidth = 300;
@@ -56,9 +56,8 @@ export default function PermanentSidebar() {
   const menuItems = [
     { text: 'Inicio', icon: <Home />, path: '/dashboard' },
     { text: 'Funcionários', icon: <People />, path: '/funcionarios' },
-    { text: 'Gerenciar Acesso', icon: <CasesIcon />, path: '/gerenciaFun' },
     { text: 'Produtos', icon: <Apps />, path: '/produtos' },
-    { text: 'Vendas', icon: <Edit />, path: '/vendas'},
+    { text: 'Vendas', icon: <Payments />, path: '/vendas'},
     { text: 'Configurações', icon: <Settings />, path: '/configuracoes' },
     { text: 'Sair', icon: <Logout />, path: '/' },
   ];
