@@ -1,89 +1,52 @@
-// import FuncionarioController from '../../controllers/FuncionarioController.js';
-// import pool from '../../database.js';
-// import { expect } from 'chai';
-// import sinon from 'sinon';
+// backend/tests/unit/FuncionarioController.test.js
+import FuncionarioController from '../../controllers/FuncionarioController.js';
+import pool from '../../database.js';
+import { expect } from 'chai';
+import sinon from 'sinon';
 
-// describe('FuncionarioController', () => {
-//   afterEach(() => {
-//     sinon.restore();
-//   });
+describe('FuncionarioController - Cadastro com sucesso', () => {
+  afterEach(() => {
+    sinon.restore(); // Limpa todos os stubs após cada teste
+  });
 
-//   describe('postFuncionario', () => {
-//     it('deve criar um funcionário com sucesso quando todos os campos obrigatórios são fornecidos', async () => {
-//       const req = {
-//         body: {
-//           nome: 'João Silva',
-//           usuario: 'joao.silva',
-//           data_nascimento: '1990-01-01',
-//           sexo: 'M',
-//           cpf: '12345678901',
-//           rg: '1234567',
-//           identificador: '123',
-//           email: 'joao@example.com',
-//           telefone: '11999999999',
-//           cargo: 'Vendedor',
-//           rua: 'Rua A',
-//           numero: '123',
-//           cidade: 'São Paulo',
-//           estado: 'SP',
-//           cep: '01001000',
-//           senha: 'senha123',
-//           foto: 'foto.jpg'
-//         }
-//       };
-//       const res = {
-//         status: sinon.stub().returnsThis(),
-//         json: sinon.spy()
-//       };
+  it('deve cadastrar funcionário quando todos campos obrigatórios são preenchidos', async () => {
+    // 1. Setup - Dados de teste
+    const funcionarioValido = {
+      nome: 'Ana Silva',
+      usuario: 'ana.silva',
+      data_nascimento: '1990-01-01',
+      sexo: 'F',
+      cpf: '12345678901',
+      rg: '1234567',
+      identificador: 'func123',
+      email: 'ana@empresa.com',
+      telefone: '11999999999',
+      cargo: 'Atendente',
+      rua: 'Rua das Flores',
+      numero: '100',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cep: '01001000',
+      senha: 'senhaSegura123',
+      foto: 'foto.jpg'
+    };
 
-//       const mockRows = [{ id: 1, ...req.body }];
-//       sinon.stub(pool, 'query').resolves({ rows: mockRows });
+    // 2. Mock - Simula o banco de dados
+    const mockResultado = { id: 1, ...funcionarioValido };
+    sinon.stub(pool, 'query').resolves({ rows: [mockResultado] });
 
-//       await FuncionarioController.postFuncionario(req, res);
+    // 3. Execução - Chama a função do controller
+    const req = { body: funcionarioValido };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy()
+    };
 
-//       expect(res.status.calledWith(201)).to.be.true;
-//       expect(res.json.calledWith(mockRows[0])).to.be.true;
-//     });
+    await FuncionarioController.postFuncionario(req, res);
 
-//     it('deve retornar erro quando campos obrigatórios estão faltando', async () => {
-//       const req = {
-//         body: {
-//           // Faltando vários campos obrigatórios
-//           nome: 'João Silva',
-//           usuario: 'joao.silva'
-//         }
-//       };
-//       const res = {
-//         status: sinon.stub().returnsThis(),
-//         json: sinon.spy()
-//       };
-
-//       await FuncionarioController.postFuncionario(req, res);
-
-//       expect(res.status.calledWith(500)).to.be.true;
-//       expect(res.json.calledWith({ erro: 'Erro ao criar funcionário' })).to.be.true;
-//     });
-//   });
-
-//   describe('getFuncionarios', () => {
-//     it('deve retornar lista de funcionários ordenada por nome', async () => {
-//       const req = {};
-//       const res = {
-//         status: sinon.stub().returnsThis(),
-//         json: sinon.spy()
-//       };
-
-//       const mockRows = [
-//         { id: 1, nome: 'Ana Souza' },
-//         { id: 2, nome: 'João Silva' }
-//       ];
-//       sinon.stub(pool, 'query').resolves({ rows: mockRows });
-
-//       await FuncionarioController.getFuncionarios(req, res);
-
-//       expect(pool.query.calledWith('SELECT * FROM funcionarios ORDER BY nome')).to.be.true;
-//       expect(res.status.calledWith(200)).to.be.true;
-//       expect(res.json.calledWith(mockRows)).to.be.true;
-//     });
-//   });
-// });
+    // 4. Verificação - Confirma o comportamento esperado
+    expect(res.status.calledWith(201)).to.be.true;
+    expect(res.json.calledWith(mockResultado)).to.be.true;
+    expect(pool.query.calledOnce).to.be.true;
+  });
+});
