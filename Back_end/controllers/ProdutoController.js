@@ -1,6 +1,5 @@
 import pool from "../database.js";
 
-
 export default class ProdutoController {
   static async getProdutos(req, res) {
     try {
