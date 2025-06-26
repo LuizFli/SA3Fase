@@ -20,7 +20,7 @@ router.put('/funcionarios/:id/toggle-status', FuncionarioController.toggleStatus
 router.get('/vendas', VendasController.getVendas);
 router.post('/vendas', VendasController.postVenda);
 router.delete('/vendas', VendasController.deleteAllVendas);
-router.delete('/vendas:id', VendasController.deleteVenda); // Rota para limpar todas as vendas
+router.delete('/vendas/:id', VendasController.deleteVenda); // Rota para limpar todas as vendas
 
 // Rotas para Produtos
 router.get('/produtos', ProdutoController.getProdutos);
