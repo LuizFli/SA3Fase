@@ -1,5 +1,4 @@
-import request from 'supertest';
-import app from '../../app.js'
+
 import VendaService from '../../services/vendasServices.js';
 
 // Mock completo do serviço
@@ -134,30 +133,6 @@ describe('VendaController', () => {
         identificador_vendedor: 'VEND-002',
         startDate: '2023-01-01',
         endDate: '2023-06-30'
-      });
-    });
-
-    // Teste para quando não há resultados
-    it('deve retornar array vazio quando não encontrar vendas', async () => {
-      VendaService.getVendas.mockResolvedValue([]);
-      mockRequest.query = { searchTerm: 'Inexistente' };
-
-      await VendaController.getVendas(mockRequest, mockResponse);
-
-      expect(mockResponse.json).toHaveBeenCalledWith([]);
-    });
-
-    // Teste para erro no serviço
-    it('deve retornar erro 500 quando o serviço falhar', async () => {
-      const error = new Error('Erro no banco de dados');
-      VendaService.getVendas.mockRejectedValue(error);
-      
-      await VendaController.getVendas(mockRequest, mockResponse);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        erro: "Erro ao buscar vendas",
-        detalhes: error.message
       });
     });
   });

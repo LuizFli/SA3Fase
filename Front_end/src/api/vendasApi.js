@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api/vendas'; // Ajuste conforme sua configuração
+const API_URL = 'http://localhost:3000/api/vendas'; // URL para vendas
 const PRODUTOS_API_URL = 'http://localhost:3000/api/produtos'; // URL para produtos
 
-// Configuração global do Axios (opcional)
+
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 export const cadastrarVenda = async (vendaData) => {
@@ -58,7 +58,7 @@ export const deletarVenda = async (idVenda) => {
     const response = await axios.delete(`${API_URL}/${idVenda}`);
     return response.data;
   } catch (error) {
-    // Adicione logs detalhados para depuração
+    
     console.error('Erro ao deletar venda:', {
       url: `${API_URL}/${idVenda}`,
       status: error.response?.status,

@@ -127,7 +127,7 @@ export default class ProdutoController {
       res.status(200).json({ mensagem: "Produto excluído com sucesso!", produto: deletedProduct.rows[0] });
     } catch (error) {
       console.error("Erro ao excluir produto:", error);
-      // Verifica se o erro é uma violação de chave estrangeira (código SQLSTATE 23503)
+     
       if (error.code === '23503') {
         return res.status(409).json({ // Retorna 409 Conflict
           erro: "Conflito de exclusão",
