@@ -110,24 +110,6 @@ function GerenciamentoFuncionarios() {
     setFuncionarioEditado({});
   };
 
-  // const handleDelete = async (id) => {
-  //   if (window.confirm("Tem certeza que deseja inativar este funcionário?")) {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axios.put(`http://localhost:3000/api/funcionarios/${id}/toggle-status`);
-  //       setFuncionarios(funcionarios.map(f =>
-  //         f.id === id ? { ...f, ativo: response.data.ativo } : f
-  //       ));
-  //       alert("Funcionário inativado com sucesso.");
-  //     } catch (error) {
-  //       console.error("Erro ao inativar funcionário:", error);
-  //       alert(error.response?.data?.erro || "Erro ao inativar funcionário.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
-
   const toggleStatusFuncionario = async (id) => {
     if (window.confirm("Tem certeza que deseja alterar o status deste funcionário?")) {
       setLoading(true);
