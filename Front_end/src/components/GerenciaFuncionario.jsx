@@ -110,23 +110,23 @@ function GerenciamentoFuncionarios() {
     setFuncionarioEditado({});
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Tem certeza que deseja inativar este funcionário?")) {
-      setLoading(true);
-      try {
-        const response = await axios.put(`http://localhost:3000/api/funcionarios/${id}/toggle-status`);
-        setFuncionarios(funcionarios.map(f =>
-          f.id === id ? { ...f, ativo: response.data.ativo } : f
-        ));
-        alert("Funcionário inativado com sucesso.");
-      } catch (error) {
-        console.error("Erro ao inativar funcionário:", error);
-        alert(error.response?.data?.erro || "Erro ao inativar funcionário.");
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
+  // const handleDelete = async (id) => {
+  //   if (window.confirm("Tem certeza que deseja inativar este funcionário?")) {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axios.put(`http://localhost:3000/api/funcionarios/${id}/toggle-status`);
+  //       setFuncionarios(funcionarios.map(f =>
+  //         f.id === id ? { ...f, ativo: response.data.ativo } : f
+  //       ));
+  //       alert("Funcionário inativado com sucesso.");
+  //     } catch (error) {
+  //       console.error("Erro ao inativar funcionário:", error);
+  //       alert(error.response?.data?.erro || "Erro ao inativar funcionário.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
 
   const toggleStatusFuncionario = async (id) => {
     if (window.confirm("Tem certeza que deseja alterar o status deste funcionário?")) {
@@ -161,7 +161,7 @@ function GerenciamentoFuncionarios() {
       display: 'flex', 
       flexDirection: 'column', 
       gap: '20px',
-      height: 'calc(90vh - 64px)' // Ajuste para altura total menos a altura do cabeçalho
+      height: 'calc(90vh - 64px)'
     }}>
       <Paper elevation={3} sx={{ 
         padding: '20px', 
@@ -176,7 +176,7 @@ function GerenciamentoFuncionarios() {
         ) : (
           <TableContainer sx={{ 
             flex: 1,
-            maxHeight: 'calc(100vh - 250px)', // Altura dinâmica
+            maxHeight: 'calc(100vh - 250px)',
             overflow: 'auto',
             '&::-webkit-scrollbar': {
               width: '8px',
@@ -346,18 +346,7 @@ function GerenciamentoFuncionarios() {
                             >
                               <Edit sx={{ color: 'white' }} />
                             </IconButton>
-                            <IconButton
-                              sx={{
-                                backgroundColor: 'var(--primary-color)',
-                                borderRadius: '4px',
-                                '&:hover': { backgroundColor: '#a32a2a' }
-                              }}
-                              onClick={() => handleDelete(funcionario.id)}
-                              disabled={loading}
-                              size="small"
-                            >
-                              <Delete sx={{ color: 'white' }} />
-                            </IconButton>
+                            
                           </Stack>
                         )}
                       </TableCell>
