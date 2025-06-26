@@ -97,7 +97,6 @@ function CadastroFuncionario() {
     }
   };
 
-  // Validação CPF
   const validarCPF = (cpf) => {
     cpf = cpf.replace(/\D/g, '');
     return cpf.length === 11 || cpf.length === 14;
