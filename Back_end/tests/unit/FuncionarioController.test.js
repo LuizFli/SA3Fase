@@ -1,4 +1,3 @@
-// backend/tests/unit/FuncionarioController.test.js
 import FuncionarioController from '../../controllers/FuncionarioController.js';
 import pool from '../../database.js';
 import { expect } from 'chai';
@@ -6,11 +5,11 @@ import sinon from 'sinon';
 
 describe('FuncionarioController - Cadastro com sucesso', () => {
   afterEach(() => {
-    sinon.restore(); // Limpa todos os stubs após cada teste
+    sinon.restore();
   });
 
   it('deve cadastrar funcionário quando todos campos obrigatórios são preenchidos', async () => {
-    // 1. Setup - Dados de teste
+  
     const funcionarioValido = {
       nome: 'Ana Silva',
       usuario: 'ana.silva',
@@ -31,11 +30,10 @@ describe('FuncionarioController - Cadastro com sucesso', () => {
       foto: 'foto.jpg'
     };
 
-    // 2. Mock - Simula o banco de dados
     const mockResultado = { id: 1, ...funcionarioValido };
     sinon.stub(pool, 'query').resolves({ rows: [mockResultado] });
 
-    // 3. Execução - Chama a função do controller
+
     const req = { body: funcionarioValido };
     const res = {
       status: sinon.stub().returnsThis(),
@@ -44,7 +42,6 @@ describe('FuncionarioController - Cadastro com sucesso', () => {
 
     await FuncionarioController.postFuncionario(req, res);
 
-    // 4. Verificação - Confirma o comportamento esperado
     expect(res.status.calledWith(201)).to.be.true;
     expect(res.json.calledWith(mockResultado)).to.be.true;
     expect(pool.query.calledOnce).to.be.true;
