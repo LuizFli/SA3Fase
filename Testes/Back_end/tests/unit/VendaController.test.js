@@ -4,13 +4,14 @@ import pool from '../../../Back_end/database.js';
 jest.mock('../../../Back_end/database.js', () => ({
   query: jest.fn(),
 }));
+//  importação do back e do banco do back orignal da SA
 
 describe('VendaService - Filtros de Busca', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  // Mock mais inteligente que filtra os resultados
+
   const mockQueryImplementation = (query, params) => {
     const mockVendas = [
       {
@@ -30,7 +31,6 @@ describe('VendaService - Filtros de Busca', () => {
       }
     ];
 
-    // Filtra os resultados baseado nos parâmetros
     let filtered = [...mockVendas];
     
     if (params?.includes('%iPhone%')) {
@@ -54,7 +54,7 @@ describe('VendaService - Filtros de Busca', () => {
 
     await VendaService.getVendas(filters);
     
-    // Verificação mais flexível
+
     expect(pool.query.mock.calls[0][0]).toMatch(/v\.data >= \$1 AND v\.data <= \$2/);
     expect(pool.query.mock.calls[0][1]).toEqual([filters.startDate, filters.endDate]);
   });
