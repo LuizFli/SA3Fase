@@ -1,147 +1,103 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import CadastroDeVenda from '../../src/components/CadastroDeVenda';
+import VendaService from '../../services/vendasServices.js';
+import pool from '../../database.js';
 
-// Mock dos dados
-const mockProdutos = [
-  {
-    id: 1,
-    marca: 'Fiat',
-    modelo: 'Uno',
-    ano: '2020',
-    placa: 'ABC1234',
-    valor: 20000,
-    ativo: true
-  }
-];
-
-const mockFuncionarios = [
-  {
-    identificador: 'joabe123',
-    nome: 'Joabe',
-    ativo: true
-  },
-  {
-    identificador: 'arthur123',
-    nome: 'Arthur',
-    ativo: false
-  }
-];
-
-// Mock do useGlobal
-jest.mock('../../src/contexts/GlobalProvider', () => ({
-  useGlobal: () => ({
-    produtos: mockProdutos,
-    funcionarios: mockFuncionarios,
-    updateProdutos: jest.fn()
-  })
+jest.mock('../../database.js', () => ({
+  query: jest.fn(),
+  connect: jest.fn()
 }));
 
-// Mock da API
-jest.mock('../../src/api/vendasApi', () => ({
-  cadastrarVenda: jest.fn(),
-  fetchProdutosAtivos: jest.fn().mockResolvedValue(mockProdutos)
-}));
-
-describe('CadastroDeVenda', () => {
+describe('Testes para cadastro de vendas', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('Cenário: Cadastro de venda com informações válidas', () => {
-    it('deve registrar a venda com sucesso', async () => {
-      const mockOnClose = jest.fn();
-      const mockOnVendaCadastrada = jest.fn();
+  const mockProdutos = {
+    1: { id: 1, marca: 'Toyota', modelo: 'Corolla', valor: 90000.00, ativo: true },
+    2: { id: 2, marca: 'Honda', modelo: 'Civic', valor: 85000.00, ativo: false }
+  };
+
+  const mockFuncionarios = {
+    'vendedor1': { identificador: 'vendedor1', nome: 'João', ativo: true },
+    'vendedor2': { identificador: 'vendedor2', nome: 'Maria', ativo: false }
+  };
+
+  const mockClient = {
+    query: jest.fn(),
+    release: jest.fn()
+  };
+
+  describe('Cadastro de vendas', () => {
+    test('Deve cadastrar uma nova venda com sucesso', async () => {
+      // Mock das consultas do banco
+      pool.query
+        .mockResolvedValueOnce({ rows: [mockProdutos[1]] }) // Consulta produto
+        .mockResolvedValueOnce({ rows: [mockFuncionarios['vendedor1']] }); // Consulta vendedor
+
+      pool.connect.mockResolvedValue(mockClient);
       
-      const { cadastrarVenda } = require('../../src/api/vendasApi');
-      cadastrarVenda.mockResolvedValue({
+      mockClient.query
+        .mockResolvedValueOnce() // BEGIN
+        .mockResolvedValueOnce({ // INSERT venda
+          rows: [{
+            id: 1,
+            id_produto: 1,
+            valor: 50000,
+            data: new Date().toISOString(),
+            identificador_vendedor: 'vendedor1',
+            auth_code: 'AUTH1234'
+          }]
+        })
+        .mockResolvedValueOnce() // UPDATE produto
+        .mockResolvedValueOnce(); // COMMIT
+
+      const novaVenda = {
         id_produto: 1,
-        produto: 'Fiat Uno',
-        valor: 20000,
-        identificador_vendedor: 'joabe123',
-        auth_code: 'A1B2C3'
-      });
+        valor: 50000,
+        identificador_vendedor: 'vendedor1',
+        auth_code: 'AUTH1234',
+      };
 
-      render(
-        <CadastroDeVenda 
-          onClose={mockOnClose} 
-          onVendaCadastrada={mockOnVendaCadastrada} 
-        />
-      );
+      const result = await VendaService.createVenda(novaVenda);
 
-      // Selecionar veículo
-      fireEvent.change(screen.getByLabelText('Veículo'), { target: { value: '1' } });
-      
-      // Preencher campos
-      fireEvent.change(screen.getByLabelText('Identificador do Vendedor'), {
-        target: { value: 'joabe123' }
-      });
-      fireEvent.change(screen.getByLabelText('Código de Autorização'), {
-        target: { value: 'A1B2C3' }
-      });
-
-      // Clicar em salvar
-      fireEvent.click(screen.getByText('Cadastrar Venda'));
-
-      await waitFor(() => {
-        expect(cadastrarVenda).toHaveBeenCalledWith({
-          id_produto: 1,
-          valor: 20000,
-          identificador_vendedor: 'joabe123',
-          auth_code: 'A1B2C3'
-        });
-        expect(mockOnVendaCadastrada).toHaveBeenCalled();
-      });
+      expect(result).toHaveProperty('id', 1);
+      expect(result).toHaveProperty('produto', 'Toyota Corolla');
+      expect(result).toHaveProperty('nome_vendedor', 'João');
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
     });
-  });
 
-  describe('Cenário: Cadastro de venda sem identificador do vendedor', () => {
-    it('deve mostrar mensagem de erro', async () => {
-      render(<CadastroDeVenda onClose={jest.fn()} />);
+    test('Deve retornar erro ao tentar cadastrar venda com produto inexistente', async () => {
+      // Mock para produto não encontrado
+      pool.query.mockResolvedValueOnce({ rows: [] });
 
-      // Selecionar veículo
-      fireEvent.change(screen.getByLabelText('Veículo'), { target: { value: '1' } });
-      
-      // Não preencher identificador do vendedor
-      // Preencher código autenticador
-      fireEvent.change(screen.getByLabelText('Código de Autorização'), {
-        target: { value: 'A1B2C3' }
-      });
+      const novaVenda = {
+        id_produto: 999,
+        valor: 40000,
+        identificador_vendedor: 'vendedor1',
+        auth_code: 'AUTH5678',
+      };
 
-      // Clicar em salvar
-      fireEvent.click(screen.getByText('Cadastrar Venda'));
-
-      await waitFor(() => {
-        expect(screen.getByText('Informe o vendedor')).toBeInTheDocument();
-      });
+      await expect(VendaService.createVenda(novaVenda))
+        .rejects
+        .toThrow('Produto não encontrado');
     });
-  });
 
-  describe('Cenário: Cadastro de venda com funcionário inativo', () => {
-    it('deve mostrar mensagem de erro', async () => {
-      const { cadastrarVenda } = require('../../src/api/vendasApi');
-      cadastrarVenda.mockRejectedValue(new Error('Funcionário inativo'));
+    test('Deve retornar erro ao tentar cadastrar venda com vendedor inexistente', async () => {
+      // Mock das consultas
+      pool.query
+        .mockResolvedValueOnce({ rows: [mockProdutos[1]] }) // Produto existe
+        .mockResolvedValueOnce({ rows: [] }); // Vendedor não existe
 
-      render(<CadastroDeVenda onClose={jest.fn()} />);
+      const novaVenda = {
+        id_produto: 1,
+        valor: 40000,
+        identificador_vendedor: 'vendedor999',
+        auth_code: 'AUTH5678',
+      };
 
-      // Selecionar veículo
-      fireEvent.change(screen.getByLabelText('Veículo'), { target: { value: '1' } });
-      
-      // Preencher com identificador de funcionário inativo
-      fireEvent.change(screen.getByLabelText('Identificador do Vendedor'), {
-        target: { value: 'arthur123' }
-      });
-      fireEvent.change(screen.getByLabelText('Código de Autorização'), {
-        target: { value: 'Z3X2Y1' }
-      });
-
-      // Clicar em salvar
-      fireEvent.click(screen.getByText('Cadastrar Venda'));
-
-      await waitFor(() => {
-        expect(screen.getByText(/Funcionário inativo/)).toBeInTheDocument();
-      });
+      await expect(VendaService.createVenda(novaVenda))
+        .rejects
+        .toThrow('Vendedor não encontrado');
     });
   });
 });

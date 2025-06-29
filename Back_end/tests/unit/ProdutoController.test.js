@@ -1,18 +1,17 @@
-// Importações necessárias para os testes de unidade
 import ProdutoController from '../../controllers/ProdutoController.js';
 import pool from '../../database.js';
-import { expect } from 'chai';
-import sinon from 'sinon';
+
+jest.mock('../../database.js', () => ({
+  query: jest.fn(),
+}));
 
 describe('ProdutoController', () => {
-  // Restaura os stubs após cada teste
-  afterEach(() => {
-    sinon.restore();
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('postProduto', () => {
-    // Deve criar um produto com sucesso quando todos os campos obrigatórios são fornecidos
-    it('deve criar um produto com sucesso quando todos os campos obrigatórios são fornecidos', async () => {
+    test('deve criar um produto com sucesso quando todos os campos obrigatórios são fornecidos', async () => {
       const req = {
         body: {
           placa: 'TEST-1234',
@@ -25,21 +24,20 @@ describe('ProdutoController', () => {
         }
       };
       const res = {
-        status: sinon.stub().returnsThis(),
-        json: sinon.spy()
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
       };
 
       const mockNewProduct = { id: 1, ...req.body };
-      sinon.stub(pool, 'query').resolves({ rows: [mockNewProduct] });
+      pool.query.mockResolvedValue({ rows: [mockNewProduct] });
 
       await ProdutoController.postProduto(req, res);
 
-      expect(res.status.calledWith(201)).to.be.true;
-      expect(res.json.calledWith(mockNewProduct)).to.be.true;
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(mockNewProduct);
     });
 
-    // Deve retornar erro quando campos obrigatórios estão faltando
-    it('deve retornar erro quando campos obrigatórios estão faltando', async () => {
+    test('deve retornar erro quando campos obrigatórios estão faltando', async () => {
       const req = {
         body: {
           placa: 'INCO-0000',
@@ -48,24 +46,23 @@ describe('ProdutoController', () => {
         }
       };
       const res = {
-        status: sinon.stub().returnsThis(),
-        json: sinon.spy()
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
       };
 
       await ProdutoController.postProduto(req, res);
 
-      expect(res.status.calledWith(400)).to.be.true;
-      expect(res.json.calledWith({ erro: "Todos os campos são obrigatórios." })).to.be.true;
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ erro: "Todos os campos são obrigatórios." });
     });
   });
 
   describe('getProdutos', () => {
-    // Deve retornar lista de produtos com paginação e ordenação padrão
-    it('deve retornar lista de produtos com paginação e ordenação padrão', async () => {
+    test('deve retornar lista de produtos com paginação e ordenação padrão', async () => {
       const req = { query: { page: '1', pageSize: '10' } };
       const res = {
-        status: sinon.stub().returnsThis(),
-        json: sinon.spy()
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
       };
 
       const mockProdutos = [
@@ -73,20 +70,20 @@ describe('ProdutoController', () => {
         { id: 2, placa: 'XYZ-5678', marca: 'Honda', modelo: 'Civic', km: 30000, cor: 'Preto', valor: 70000, ano: 2021, ativo: true },
       ];
 
-      // Stub para a query de contagem
-      sinon.stub(pool, 'query').onFirstCall().resolves({ rows: [{ count: 2 }] });
-      // Stub para a query de seleção de produtos
-      pool.query.onSecondCall().resolves({ rows: mockProdutos });
+      // Mock para a query de contagem
+      pool.query
+        .mockResolvedValueOnce({ rows: [{ count: 2 }] }) // Primeira chamada - contagem
+        .mockResolvedValueOnce({ rows: mockProdutos }); // Segunda chamada - produtos
 
       await ProdutoController.getProdutos(req, res);
 
-      expect(res.status.calledWith(200)).to.be.true;
-      expect(res.json.calledWith({
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
         produtos: mockProdutos,
         total: 2,
         page: 1,
         pageSize: 10,
-      })).to.be.true;
+      });
     });
   });
 });
