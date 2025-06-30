@@ -50,12 +50,26 @@ describe('FuncionarioController - Cadastro com sucesso', () => {
   test('deve retornar erro quando campos obrigatórios não são preenchidos', async () => {
     const funcionarioIncompleto = {
       nome: 'Ana Silva',
-      // Faltando campos obrigatórios como usuario, cpf, etc.
-      email: 'ana@empresa.com'
+      usuario: '',
+      data_nascimento: '',
+      sexo: '',
+      cpf: '',
+      rg: '1234567',
+      identificador: '',
+      email: '',
+      telefone: '11999999999',
+      cargo: 'Atendente',
+      rua: 'Rua das Flores',
+      numero: '100',
+      cidade: 'São Paulo',
+      estado: 'SP',
+      cep: '01001000',
+      senha: 'senhaSegura123',
+      foto: 'foto.jpg'
     };
 
     // Mock para simular erro do banco ao tentar inserir dados incompletos
-    pool.query.mockRejectedValue(new Error('null value in column "usuario" violates not-null constraint'));
+    pool.query.mockRejectedValue(new Error('valor nulo na coluna "usuario" viola restrição não nula'));
 
     const req = { body: funcionarioIncompleto };
     const res = {
@@ -80,9 +94,9 @@ describe('FuncionarioController - Cadastro com sucesso', () => {
       cpf: '12345678901',
       rg: '1234567',
       identificador: 'func123',
-      email: 'ana.santos@empresa.com', // Email atualizado
-      telefone: '11888888888', // Telefone atualizado
-      cargo: 'Gerente', // Cargo atualizado
+      email: 'ana.santos@empresa.com', 
+      telefone: '11888888888', 
+      cargo: 'Gerente',
       rua: 'Rua das Flores',
       numero: '100',
       cidade: 'São Paulo',
@@ -110,9 +124,8 @@ describe('FuncionarioController - Cadastro com sucesso', () => {
     expect(res.json).toHaveBeenCalledWith(mockResultadoAtualizado);
     expect(pool.query).toHaveBeenCalledTimes(1);
     
-    // Verificar se o UPDATE foi chamado com os parâmetros corretos
     const queryCall = pool.query.mock.calls[0];
     expect(queryCall[0]).toContain('UPDATE funcionarios SET');
-    expect(queryCall[1]).toContain(funcionarioId); // ID deve estar nos parâmetros
+    expect(queryCall[1]).toContain(funcionarioId); 
   });
 });
