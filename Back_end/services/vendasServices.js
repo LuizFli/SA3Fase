@@ -155,10 +155,10 @@ export default class VendaService {
       // Deletar a venda
       await client.query('DELETE FROM vendas WHERE id = $1', [id]);
 
-      // Reativar o produto
+      // Reativar o produto (garanta que está usando booleano true)
       await client.query(
-        'UPDATE produtos SET ativo = true WHERE id = $1',
-        [idProduto]
+        'UPDATE produtos SET ativo = $1 WHERE id = $2',
+        [true, idProduto]
       );
 
       await client.query('COMMIT');
