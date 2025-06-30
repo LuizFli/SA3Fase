@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, Paper, Tabs, Tab, Avatar } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupIcon from '@mui/icons-material/Group';
+import LineAxisIcon from '@mui/icons-material/LineAxis';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import PageContainer from '../components/PageContainer';
@@ -9,6 +10,7 @@ import GerenciaFuncionario from '../components/GerenciaFuncionario';
 import PerfilConfig from '../components/PerfilConfig';
 import NotificacoesConfig from '../components/NotificacoesConfig';
 import AjudaConfig from '../components/AjudaConfig';
+import MetaConfig from '../components/MetaConfig';
 
 function TabPanel({ children, value, index }) {
   return (
@@ -117,6 +119,7 @@ const Configuracoes = () => {
               }}
             >
               <Tab icon={<PersonIcon />} iconPosition="start" label="Perfil" />
+              <Tab icon={<LineAxisIcon />} iconPosition="start" label="Meta" />
               <Tab icon={<GroupIcon />} iconPosition="start" label="Gerenciamento de Funcionários" />
               <Tab icon={<NotificationsIcon />} iconPosition="start" label="Notificações" />
               <Tab icon={<HelpOutlineIcon />} iconPosition="start" label="Ajuda" />
@@ -128,12 +131,15 @@ const Configuracoes = () => {
               <PerfilConfig />
             </TabPanel>
             <TabPanel value={tab} index={1}>
-              <GerenciaFuncionario />
+              <MetaConfig />
             </TabPanel>
             <TabPanel value={tab} index={2}>
-              <NotificacoesConfig />
+              <GerenciaFuncionario />
             </TabPanel>
             <TabPanel value={tab} index={3}>
+              <NotificacoesConfig />
+            </TabPanel>
+            <TabPanel value={tab} index={4}>
               <AjudaConfig />
             </TabPanel>
           </Box>
