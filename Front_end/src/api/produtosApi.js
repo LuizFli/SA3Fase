@@ -4,13 +4,13 @@ const API_BASE_URL = 'http://localhost:3000/api/produtos';
 
 export const getProdutos = async (filters = {}) => {
   try {
-    const { searchTerm, id, page, pageSize, ativo } = filters;
+    const { searchTerm, id, startDate, endDate, ativo } = filters;
 
     const params = new URLSearchParams();
     if (searchTerm) params.append('searchTerm', searchTerm);
     if (id) params.append('id', id);
-    if (page) params.append('page', page);
-    if (pageSize) params.append('pageSize', pageSize);
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
     if (ativo !== undefined) params.append('ativo', ativo); // Novo filtro por status
 
     const response = await axios.get(`${API_BASE_URL}?${params.toString()}`);
