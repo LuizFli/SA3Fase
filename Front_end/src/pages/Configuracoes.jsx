@@ -5,6 +5,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import LineAxisIcon from '@mui/icons-material/LineAxis';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useAuth } from '../contexts/AuthContext';
 import PageContainer from '../components/PageContainer';
 import GerenciaFuncionario from '../components/GerenciaFuncionario';
 import PerfilConfig from '../components/PerfilConfig';
@@ -22,6 +23,23 @@ function TabPanel({ children, value, index }) {
 
 const Configuracoes = () => {
   const [tab, setTab] = useState(0);
+  const { user } = useAuth();
+
+  // Proteção caso o contexto ainda não esteja carregado
+  if (!user) {
+    return (
+      <PageContainer>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          minHeight: '50vh'
+        }}>
+          <Typography variant="h6">Carregando...</Typography>
+        </Box>
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer>
@@ -54,8 +72,8 @@ const Configuracoes = () => {
             Configurações
           </Typography>
           <Avatar
-            alt="Administrador"
-            src="/Imagens/Adm.png"
+            alt={user?.name || 'Administrador'}
+            src={user?.avatar || "/Imagens/Adm.png"}
             sx={{ width: 45, height: 45 }}
           />
         </Paper>

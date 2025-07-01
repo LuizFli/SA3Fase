@@ -5,8 +5,7 @@ import VendasController from './controllers/VendaController.js';
 import ProdutoController from './controllers/ProdutoController.js';
 import NotificacaoController from './controllers/NotificacaoController.js';
 import AuthController from './controllers/AuthController.js';
-
-
+import UserController from './controllers/UserController.js';
 
 const router = express.Router();
 
@@ -42,5 +41,10 @@ router.put('/notificacoes/:id/lida', NotificacaoController.marcarComoLida);
 router.put('/notificacoes/marcar-todas-lidas', NotificacaoController.marcarTodasComoLidas);
 router.get('/notificacoes/contador', NotificacaoController.getContadorNaoLidas);
 console.log('✅ Rotas de notificações registradas!');
+
+// Rotas para Usuários
+router.get('/users/:id', UserController.getProfile);
+router.put('/users/:id/profile', UserController.updateProfile);
+router.put('/users/:id/password', UserController.updatePassword);
 
 export default router;

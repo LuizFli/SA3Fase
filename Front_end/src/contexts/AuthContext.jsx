@@ -1,11 +1,10 @@
 import { createContext, useContext, useState } from 'react';
-import { useGlobal } from './GlobalProvider';
 import axios from 'axios';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const { user, setUser } = useGlobal(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -24,7 +23,9 @@ export function AuthProvider({ children }) {
           id: response.data.user.id,
           name: response.data.user.name,
           username: response.data.user.username,
-          role: response.data.user.role
+          role: response.data.user.role,
+          email: response.data.user.email,
+          avatar: response.data.user.avatar
         };
         
         setUser(userData);
@@ -39,17 +40,25 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // const logout = () => {
-  //   setUser(null);
-  //   // Opcional: Chamada para o endpoint de logout se estiver usando sessões
-  //   axios.post('http://localhost:3000/api/auth/logout').catch(console.error);
-  // };
+  const logout = () => {
+    setUser(null);
+    setError(null);
+  };
+
+  const updateUser = (updatedUserData) => {
+    setUser(prev => ({
+      ...prev,
+      ...updatedUserData
+    }));
+  };
 
   return (
     <AuthContext.Provider value={{ 
       user, 
+      setUser,
       login, 
-      // logout, 
+      logout,
+      updateUser,
       loading, 
       error 
     }}>
@@ -59,5 +68,9 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

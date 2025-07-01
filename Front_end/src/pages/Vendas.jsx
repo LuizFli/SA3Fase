@@ -37,9 +37,28 @@ import CadastroDeVenda from '../components/CadastroDeVenda';
 import { getVendas, deletarVenda } from '../api/vendasApi';
 import { atualizarStatusProduto } from '../api/produtosApi';
 import { useGlobal } from '../contexts/GlobalProvider';
+import { useAuth } from '../contexts/AuthContext';
 import { format } from 'date-fns';
 
 function Vendas() {
+  const { user } = useAuth();
+
+  // Proteção caso o contexto ainda não esteja carregado
+  if (!user) {
+    return (
+      <PageContainer>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          minHeight: '50vh'
+        }}>
+          <Typography variant="h6">Carregando...</Typography>
+        </Box>
+      </PageContainer>
+    );
+  }
+
   // Estados para dados e carregamento
   const [vendas, setVendas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -226,7 +245,7 @@ function Vendas() {
               Vendas
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <Avatar alt="Usuário" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
+              <Avatar alt={user?.name || "Usuário"} src={user?.avatar || "/Imagens/Adm.png"} sx={{ width: 45, height: 45 }} />
             </Box>
           </Paper>
 

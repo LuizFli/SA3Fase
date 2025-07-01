@@ -23,7 +23,9 @@ export default class AuthService {
             id: user.id,
             name: user.name,
             username: user.username,
-            role: user.role
+            role: user.role,
+            email: user.email,
+            avatar: user.avatar
           }
         };
     }

@@ -25,6 +25,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { format } from 'date-fns';
+import { useAuth } from '../contexts/AuthContext';
 import PageContainer from '../components/PageContainer';
 import ProdutoEstoque from '../components/ProdutoEstoque';
 import AdicionarModal from '../components/AdicionarModal';
@@ -33,6 +34,7 @@ import { getProdutos, cadastrarProduto, atualizarProduto, excluirProduto } from 
 import { useGlobal } from '../contexts/GlobalProvider';
 
 function EstoqueProdutos() {
+  const { user } = useAuth();
   const {produtos, setProdutos} = useGlobal([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -183,6 +185,22 @@ function EstoqueProdutos() {
     }
   };
 
+  // Proteção caso o contexto ainda não esteja carregado
+  if (!user) {
+    return (
+      <PageContainer>
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center',
+          minHeight: '50vh'
+        }}>
+          <Typography variant="h6">Carregando...</Typography>
+        </Box>
+      </PageContainer>
+    );
+  }
+
   return (
     <PageContainer>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
@@ -206,8 +224,8 @@ function EstoqueProdutos() {
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
               <Avatar
-                alt="Usuário"
-                src="/Imagens/Adm.png"
+                alt={user?.name || "Usuário"}
+                src={user?.avatar || "/Imagens/Adm.png"}
                 sx={{ width: 45, height: 45 }}
               />
             </Box>
