@@ -1,6 +1,7 @@
 // controllers/FuncionarioController.js
 
 import pool from "../database.js";
+import NotificacaoService from "../services/notificacoesService.js";
 
 export default class FuncionarioController {
 
@@ -57,7 +58,17 @@ export default class FuncionarioController {
         ]
       );
 
-      res.status(201).json(rows[0]);
+      const funcionarioCadastrado = rows[0];
+
+      // Criar notificação de cadastro
+      try {
+        await NotificacaoService.notificarCadastroFuncionario(funcionarioCadastrado);
+      } catch (notifError) {
+        console.error('Erro ao criar notificação de funcionário:', notifError);
+        // Não interrompe o fluxo principal
+      }
+
+      res.status(201).json(funcionarioCadastrado);
     } catch (error) {
       console.error("Erro ao criar funcionário:", error);
       res.status(500).json({ erro: "Erro ao criar funcionário" });

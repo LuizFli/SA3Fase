@@ -1,4 +1,5 @@
 import pool from "../database.js";
+import NotificacaoService from "../services/notificacoesService.js";
 
 export default class ProdutoController {
   static async getProdutos(req, res) {
@@ -70,7 +71,17 @@ export default class ProdutoController {
         [placa, marca, modelo, parseInt(km), cor, parseFloat(valor), parseInt(ano)] // Conversão de tipo explícita
       );
 
-      res.status(201).json(newProduct.rows[0]);
+      const produtoCadastrado = newProduct.rows[0];
+
+      // Criar notificação de cadastro
+      try {
+        await NotificacaoService.notificarCadastroProduto(produtoCadastrado);
+      } catch (notifError) {
+        console.error('Erro ao criar notificação de produto:', notifError);
+        // Não interrompe o fluxo principal
+      }
+
+      res.status(201).json(produtoCadastrado);
     } catch (error) {
       console.error("Erro ao cadastrar produto:", error);
       res.status(500).json({ erro: "Erro interno do servidor ao cadastrar produto.", detalhes: error.message });

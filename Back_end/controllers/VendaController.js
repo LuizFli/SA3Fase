@@ -1,5 +1,6 @@
 
 import VendaService from '../services/vendasServices.js'
+import NotificacaoService from '../services/notificacoesService.js'
 
 export default class VendaController {
   static async getVendas(req, res) {
@@ -18,6 +19,15 @@ export default class VendaController {
   static async postVenda(req, res) {
     try {
       const novaVenda = await VendaService.createVenda(req.body);
+      
+      // Criar notificação de venda
+      try {
+        await NotificacaoService.notificarCadastroVenda(novaVenda);
+      } catch (notifError) {
+        console.error('Erro ao criar notificação de venda:', notifError);
+        // Não interrompe o fluxo principal
+      }
+
       res.status(201).json(novaVenda);
     } catch (error) {
       console.error("Erro ao cadastrar venda:", error);
