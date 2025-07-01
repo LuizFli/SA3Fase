@@ -17,7 +17,7 @@ const ProdutoEstoque = ({ produtos, editarProduto }) => {
   return (
     <ContainerTabela
       sx={{
-        maxHeight: 'calc(100vh - 300px)',
+        maxHeight: '100%', // Remove conflito com o pai
         overflow: 'auto',
         '&::-webkit-scrollbar': {
           width: '8px',
@@ -34,17 +34,83 @@ const ProdutoEstoque = ({ produtos, editarProduto }) => {
     >
       <Tabela sx={{ minWidth: 650 }} stickyHeader>
         <CabecalhoTabela>
-          <Linha sx={{ backgroundColor: '#e0e0e0' }}>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Marca</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Modelo</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Ano</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Cor</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Km</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Placa</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Valor</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>ID</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Status</Celula>
-            <Celula sx={{ fontWeight: 'bold', fontSize: '1rem', textAlign: 'center' }}>Ações</Celula>
+          <Linha sx={{ 
+            backgroundColor: '#e65f2b !important',
+            '& .MuiTableCell-head': {
+              backgroundColor: '#e65f2b !important',
+              color: '#fff !important'
+            }
+          }}>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Marca</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Modelo</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Ano</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Cor</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Km</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Placa</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Valor</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>ID</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Status</Celula>
+            <Celula sx={{ 
+              fontWeight: 'bold', 
+              fontSize: '1rem', 
+              textAlign: 'center', 
+              color: '#fff !important',
+              backgroundColor: '#e65f2b !important'
+            }}>Ações</Celula>
           </Linha>
         </CabecalhoTabela>
         <CorpoTabela>

@@ -1,6 +1,6 @@
-import { Avatar, Box, Button, Stack, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField } from '@mui/material';
+import { Avatar, Box, Button, Stack, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField, Divider } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import { Delete, Edit, Visibility, VisibilityOff, Block, CheckCircle } from '@mui/icons-material';
+import { Delete, Edit, Visibility, VisibilityOff, Block, CheckCircle, Group } from '@mui/icons-material';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 
@@ -138,27 +138,37 @@ function GerenciamentoFuncionarios() {
   };
 
   return (
-    <Box sx={{ 
-      flex: 1, 
-      display: 'flex', 
-      flexDirection: 'column', 
-      gap: '20px',
-      height: 'calc(90vh - 64px)'
-    }}>
-      <Paper elevation={3} sx={{ 
-        padding: '20px', 
-        borderRadius: '10px', 
-        flex: 1, 
-        display: 'flex', 
-        flexDirection: 'column',
-        minHeight: '350px'
-      }}>
+    <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px', height: '100%' }}>
+      <Paper
+        elevation={3}
+        sx={{
+          padding: '20px',
+          borderRadius: '10px',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          minHeight: 0,
+          maxWidth: '100%',
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Group />
+          Gerenciamento de Funcionários
+        </Typography>
+        
+        <Divider sx={{ mb: 3 }} />
+        
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          Gerencie todos os funcionários da empresa. Edite informações, altere status e adicione novos funcionários.
+        </Typography>
+
         {loading ? (
           <Typography align="center">Carregando...</Typography>
         ) : (
           <TableContainer sx={{ 
             flex: 1,
-            maxHeight: 'calc(100vh - 250px)',
+            maxHeight: 'calc(100vh - 300px)',
             overflow: 'auto',
             '&::-webkit-scrollbar': {
               width: '8px',

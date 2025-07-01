@@ -226,19 +226,6 @@ function Vendas() {
               Vendas
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={handleOpenModal}
-                sx={{
-                  fontWeight: 'bold',
-                  padding: '8px 20px',
-                  borderRadius: '8px',
-                  fontSize: '0.9rem',
-                }}
-              >
-                Cadastrar Venda
-              </Button>
               <Avatar alt="Usuário" src="/Imagens/Adm.png" sx={{ width: 45, height: 45 }} />
             </Box>
           </Paper>
@@ -356,73 +343,168 @@ function Vendas() {
           )}
 
           {/* Tabela de vendas */}
-          <Paper
-            elevation={2}
-            sx={{
-              width: '100%',
+          <Paper elevation={2} sx={{
+            width: '100%',
+            overflow: 'auto',
+            borderRadius: '10px',
+            maxHeight: '70vh' // Limita a altura da tabela
+          }}>
+            <TableContainer sx={{
+              maxHeight: '100%', // Remove conflito de altura
               overflow: 'auto',
-              borderRadius: '10px',
-            }}
-          >
-            <TableContainer>
-              <Table>
+              '&::-webkit-scrollbar': {
+                width: '8px',
+                height: '8px'
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#888',
+                borderRadius: '4px'
+              },
+              '&::-webkit-scrollbar-thumb:hover': {
+                backgroundColor: '#555'
+              }
+            }}>
+              <Table sx={{ minWidth: 650 }} stickyHeader>
                 <TableHead>
-                  <TableRow sx={{ backgroundColor: '#e65f2b', '& th': { color: '#fff', fontSize: '1rem' } }}>
-                    <TableCell>ID Produto</TableCell>
-                    <TableCell>Produto</TableCell>
-                    <TableCell align="right">Valor</TableCell>
-                    <TableCell>Data</TableCell>
-                    <TableCell>Vendedor</TableCell>
-                    <TableCell>Auth Code</TableCell>
-                    <TableCell>Ações</TableCell>
+                  <TableRow sx={{ 
+                    backgroundColor: '#e65f2b !important',
+                    '& .MuiTableCell-head': {
+                      backgroundColor: '#e65f2b !important',
+                      color: '#fff !important'
+                    }
+                  }}>
+                    <TableCell sx={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '1rem', 
+                      textAlign: 'center', 
+                      color: '#fff !important',
+                      backgroundColor: '#e65f2b !important'
+                    }}>ID Produto</TableCell>
+                    <TableCell sx={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '1rem', 
+                      textAlign: 'center', 
+                      color: '#fff !important',
+                      backgroundColor: '#e65f2b !important'
+                    }}>Produto</TableCell>
+                    <TableCell sx={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '1rem', 
+                      textAlign: 'center', 
+                      color: '#fff !important',
+                      backgroundColor: '#e65f2b !important'
+                    }}>Valor</TableCell>
+                    <TableCell sx={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '1rem', 
+                      textAlign: 'center', 
+                      color: '#fff !important',
+                      backgroundColor: '#e65f2b !important'
+                    }}>Data</TableCell>
+                    <TableCell sx={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '1rem', 
+                      textAlign: 'center', 
+                      color: '#fff !important',
+                      backgroundColor: '#e65f2b !important'
+                    }}>Vendedor</TableCell>
+                    <TableCell sx={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '1rem', 
+                      textAlign: 'center', 
+                      color: '#fff !important',
+                      backgroundColor: '#e65f2b !important'
+                    }}>Auth Code</TableCell>
+                    <TableCell sx={{ 
+                      fontWeight: 'bold', 
+                      fontSize: '1rem', 
+                      textAlign: 'center', 
+                      color: '#fff !important',
+                      backgroundColor: '#e65f2b !important'
+                    }}>Ações</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {loading ? (
                     <TableRow>
-                      <TableCell colSpan={6} align="center">
+                      <TableCell colSpan={7} align="center">
                         <CircularProgress />
                       </TableCell>
                     </TableRow>
                   ) : vendas.length > 0 ? (
                     vendas.map((venda) => (
-                      <TableRow key={`${venda.id_produto}-${venda.data}-${venda.auth_code}`} hover>
-                        <TableCell>{venda.id_produto}</TableCell>
-                        <TableCell>{venda.produto}</TableCell>
-                        <TableCell align="right">
-                          {new Intl.NumberFormat('pt-BR', {
+                      <TableRow 
+                        key={`${venda.id_produto}-${venda.data}-${venda.auth_code}`} 
+                        sx={{ 
+                          '&:hover': { backgroundColor: '#f9f9f9' }
+                        }}
+                      >
+                        <TableCell sx={{ textAlign: 'center' }}>
+                          {venda.id_produto.toString().padStart(4, '0')}
+                        </TableCell>
+                        <TableCell sx={{ textAlign: 'center' }}>{venda.produto}</TableCell>
+                        <TableCell sx={{ textAlign: 'center' }}>
+                          {Number(venda.valor).toLocaleString('pt-BR', {
                             style: 'currency',
                             currency: 'BRL',
-                          }).format(venda.valor)}
+                          })}
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ textAlign: 'center' }}>
                           {new Date(venda.data).toLocaleDateString('pt-BR')}
                         </TableCell>
-                        <TableCell>{venda.nome_vendedor}</TableCell>
-                        <TableCell>{venda.auth_code}</TableCell>
-                        <TableCell>
+                        <TableCell sx={{ textAlign: 'center' }}>{venda.nome_vendedor}</TableCell>
+                        <TableCell sx={{ textAlign: 'center' }}>{venda.auth_code}</TableCell>
+                        <TableCell sx={{ textAlign: 'center' }}>
                           <Button
-                            variant="outlined"
+                            variant="contained"
                             color="error"
                             size="small"
                             onClick={() => handleDeletarVenda(venda.id, venda.id_produto)}
+                            sx={{
+                              fontWeight: 'bold',
+                              padding: '6px 12px',
+                              fontSize: '0.8rem',
+                              minWidth: '90px'
+                            }}
                           >
                             Excluir
                           </Button>
                         </TableCell>
                       </TableRow>
                     ))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={6} align="center">
-                          {error || 'Nenhuma venda encontrada'}
-                        </TableCell>
-                      </TableRow>
-                    )}
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} align="center">
+                        {error || 'Nenhuma venda encontrada'}
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
           </Paper>
+
+          {/* Botão adicional abaixo da tabela */}
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            marginTop: '20px' 
+          }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleOpenModal}
+              sx={{
+                fontWeight: 'bold',
+                padding: '12px 30px',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                minWidth: '200px'
+              }}
+            >
+              Cadastrar Venda
+            </Button>
+          </Box>
         </Box>
       </LocalizationProvider>
 
