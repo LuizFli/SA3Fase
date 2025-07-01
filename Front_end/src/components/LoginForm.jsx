@@ -74,13 +74,13 @@ const checkedIcon = (
             d="M4.8916 11.1731L9.16089 15.5367L16.6321 7.90039"
             stroke="#E65F2B"
             strokeWidth="1.5"
-            fill="none" 
+            fill="none"
         />
     </Box>
 );
 
 const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Usuário é obrigatório'),
+    username: Yup.string().required('Nome de usuário é obrigatório'), // Valida username
     password: Yup.string().min(6, 'Senha deve ter no mínimo 6 caracteres').required('Senha é obrigatória'),
 });
 
@@ -91,7 +91,7 @@ export default function LoginForm() {
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            await login(values.email, values.password);
+            await login(values.username, values.password);
             navigate('/dashboard');
         } catch (err) {
             console.error('Login failed:', err);
@@ -103,7 +103,7 @@ export default function LoginForm() {
     return (
         <Box sx={{ width: '100%' }}>
             <Formik
-                initialValues={{ email: '', password: '', remember: false }}
+                initialValues={{ username: '', password: '', remember: false }}
                 validationSchema={LoginSchema}
                 onSubmit={handleSubmit}
             >
@@ -112,13 +112,13 @@ export default function LoginForm() {
                         <FormControl fullWidth margin="normal">
                             <Field
                                 as={TextField}
-                                name="email"
-                                label="Email"
+                                name="username" // Mude de 'email' para 'username'
+                                label="Nome de usuário"
                                 variant="standard"
                                 fullWidth
                                 autoComplete="username"
-                                error={touched.email && Boolean(errors.email)}
-                                helperText={touched.email && errors.email}
+                                error={touched.username && Boolean(errors.username)}
+                                helperText={touched.username && errors.username}
                             />
                         </FormControl>
 
@@ -165,7 +165,7 @@ export default function LoginForm() {
                                         checkedIcon={checkedIcon}
                                     />
                                 }
-                                label=' Lembrar-me'	
+                                label=' Lembrar-me'
                             />
 
                             <Button
