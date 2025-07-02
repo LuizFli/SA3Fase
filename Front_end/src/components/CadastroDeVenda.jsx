@@ -15,6 +15,7 @@ import { Add } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import { useGlobal } from '../contexts/GlobalProvider';
 import { cadastrarVenda, fetchProdutosAtivos } from '../api/vendasApi';
+import { getFuncionarioByIdentificador } from '../api/funcionariosApi';
 
 function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const { produtos = [], funcionarios, updateProdutos } = useGlobal();
@@ -32,6 +33,7 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(true);
 
   const handleCurrencyChange = (event) => {
     let value = event.target.value;
@@ -43,20 +45,41 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
       [event.target.name]: numericValue
     });
   };
+const verificarVendedorAtivo = async (identificador) => {
+    if (!identificador) return false;
+    const vendedor = await getFuncionarioByIdentificador(identificador);
+    return vendedor?.ativo === true;  // Retorna explicitamente true/false
+};
 
-  const validateForm = () => {
+  const validateForm = async () => {  // Tornar a função assíncrona
     const newErrors = {};
+    
     if (!formData.id_produto) {
       newErrors.id_produto = produtos.length === 0
         ? 'Nenhum veículo disponível'
         : 'Selecione um veículo';
     }
-    if (!formData.identificador_vendedor) newErrors.identificador_vendedor = 'Informe o vendedor';
+    
+    if (!formData.identificador_vendedor) {
+      newErrors.identificador_vendedor = 'Informe o vendedor';
+    } else {
+      // Verificar status do vendedor apenas se o identificador foi fornecido
+      try {
+        const ativo = await verificarVendedorAtivo(formData.identificador_vendedor);
+        if (ativo === false) {
+          newErrors.identificador_vendedor = 'Vendedor inativo';
+        }
+      } catch (error) {
+        newErrors.identificador_vendedor = 'Erro ao verificar vendedor';
+        console.error(error);
+      }
+    }
+    
     if (!formData.auth_code) newErrors.auth_code = 'Código de autorização é obrigatório';
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length > 0;
-  };
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,11 +105,13 @@ function CadastroDeVenda({ onClose, onVendaCadastrada }) {
     }
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitError(null);
   
-    if (validateForm()) return;
+    // Adicionar await aqui para esperar o resultado da validação
+    const formIsInvalid = await validateForm();
+    if (formIsInvalid) return;
   
     setLoading(true);
   
