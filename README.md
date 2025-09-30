@@ -10,12 +10,31 @@
 
 ## Índice
 * [Introdução](#SaleSight)
-* [Índice](#Índice)
+* [Docker Setup](#docker-setup)
 * [Tecnologias Utilizadas](#tecnologias-utilizadas)
 * [Requisitos Funcionais](#requisitos-funcionais)
 * [Requisitos Não Funcionais](#requisitos-não-funcionais)
 * [Protótipo de Páginas](#protótipo-de-páginas)
 * [Desenvolvedores do Projeto](#desenvolvedores-do-projeto)
+
+## 🐳 Docker Setup
+
+### Execução Rápida:
+```bash
+docker-compose up -d --build
+```
+
+### Acessos:
+- **Frontend**: http://localhost:8080
+- **Backend**: http://localhost:3000  
+- **PostgreSQL**: localhost:5432
+
+### Teste do Sistema:
+```powershell
+.\test-simple.ps1
+```
+
+📖 **Documentação completa**: [README-DOCKER.md](README-DOCKER.md)
 
 ## Tenologias utilizadas
 <div align="center">

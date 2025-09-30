@@ -1,0 +1,71 @@
+services:
+  # Serviço do Banco de Dados PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: sa3fase-postgres
+    environment:
+      POSTGRES_DB: sales_sight
+      POSTGRES_USER: abilio
+      POSTGRES_PASSWORD: ukmEBxU6oQsqfFTKhv6yZLrEI00dPUwW
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./Back_end/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - sa3fase-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U abilio -d sales_sight"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Serviço do Backend
+  backend:
+    build: 
+      context: ./Back_end
+      dockerfile: Dockerfile
+    container_name: sa3fase-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_USER=abilio
+      - DB_PASSWORD=ukmEBxU6oQsqfFTKhv6yZLrEI00dPUwW
+      - DB_NAME=sales_sight
+      - DB_PORT=5432
+      - USE_EXTERNAL_DB=false
+    volumes:
+      - ./Back_end:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sa3fase-network
+    restart: unless-stopped
+
+  # Serviço do Frontend
+  frontend:
+    build: 
+      context: ./Front_end
+      dockerfile: Dockerfile
+    container_name: sa3fase-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - sa3fase-network
+    restart: unless-stopped
+
+networks:
+  sa3fase-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
